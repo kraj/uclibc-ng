@@ -122,23 +122,15 @@ closelog_intern(int sig)
 }
 
 static void
-openlog_intern(const char *ident, int logstat, int logfac)
+openlog_intern(void)
 {
 	int fd;
 	int logType = SOCK_DGRAM;
 
-	if (ident != NULL)
-		LogTag = ident;
-	LogStat = logstat;
-	/* (we were checking also for logfac != 0, but it breaks
-	 * openlog(xx, LOG_KERN) since LOG_KERN == 0) */
-	if ((logfac & ~LOG_FACMASK) == 0) /* if we don't have invalid bits */
-		LogFacility = (unsigned)logfac >> 3;
-
 	fd = LogFile;
 	if (fd == -1) {
  retry:
-		if (logstat & LOG_NDELAY) {
+		if (1) { /* if statement left in to make .diff cleaner */
 			LogFile = fd = socket(AF_UNIX, logType, 0);
 			if (fd == -1) {
 				return;
@@ -172,7 +164,18 @@ void
 openlog(const char *ident, int logstat, int logfac)
 {
 	__UCLIBC_MUTEX_LOCK(mylock);
-	openlog_intern(ident, logstat, logfac);
+
+	if (ident != NULL)
+		LogTag = ident;
+	LogStat = logstat;
+	/* (we were checking also for logfac != 0, but it breaks
+	 * openlog(xx, LOG_KERN) since LOG_KERN == 0) */
+	if ((logfac & ~LOG_FACMASK) == 0) /* if we don't have invalid bits */
+		LogFacility = (unsigned)logfac >> 3;
+
+	if (logstat & LOG_NDELAY)
+		openlog_intern();
+
 	__UCLIBC_MUTEX_UNLOCK(mylock);
 }
 
@@ -206,7 +209,7 @@ __vsyslog(int pri, const char *fmt, va_list ap)
 	if ((LogMask & LOG_MASK(LOG_PRI(pri))) == 0)
 		goto getout;
 	if (LogFile < 0 || !connected)
-		openlog_intern(NULL, LogStat | LOG_NDELAY, (int)LogFacility << 3);
+		openlog_intern();
 
 	/* Set default facility if none specified. */
 	if ((pri & LOG_FACMASK) == 0)
@@ -266,14 +269,23 @@ __vsyslog(int pri, const char *fmt, va_list ap)
 	/* Output the message to the local logger using NUL as a message delimiter. */
 	p = tbuf;
 	*last_chr = '\0';
+ retry:
 	if (LogFile >= 0) {
 		do {
 			/* can't just use write, it can result in SIGPIPE */
 			rc = send(LogFile, p, last_chr + 1 - p, MSG_NOSIGNAL);
 			if (rc < 0) {
-				/* I don't think looping forever on EAGAIN is a good idea.
-				 * Imagine that syslogd is SIGSTOPed... */
-				if (/* (errno != EAGAIN) && */ (errno != EINTR)) {
+				switch (errno) {
+				case EINTR:
+					break;
+				case ECONNRESET:
+					/* syslogd restarted, reopen log */
+					closelog_intern(1);
+					openlog_intern();
+					goto retry;
+				case EAGAIN:
+					/* syslogd stalled, noting we can do */
+				default:
 					closelog_intern(1); /* 1: do not reset LogXXX globals to default */
 					goto write_err;
 				}
