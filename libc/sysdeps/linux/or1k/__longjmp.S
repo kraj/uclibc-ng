@@ -29,7 +29,7 @@
 
 .globl     __longjmp;
 .type      __longjmp,@function;
-.align     2;
+.align     4;
 
 __longjmp:    
 #	l.lwz   r11,(JB_SR*4)(r3)
