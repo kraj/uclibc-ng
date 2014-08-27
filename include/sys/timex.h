@@ -20,6 +20,7 @@
 
 #include <features.h>
 #include <sys/time.h>
+#include <time.h>
 
 /* These definitions from linux/timex.h as of 2.2.0.  */
 
@@ -66,8 +67,12 @@ struct timex
 #define ADJ_ESTERROR		0x0008	/* estimated time error */
 #define ADJ_STATUS		0x0010	/* clock status */
 #define ADJ_TIMECONST		0x0020	/* pll time constant */
-#define ADJ_TICK		0x4000	/* tick value */
-#define ADJ_OFFSET_SINGLESHOT	0x8001	/* old-fashioned adjtime */
+#define ADJ_TAI			0x0080  /* set TAI offset */
+#define ADJ_MICRO		0x1000  /* select microsecond resolution */
+#define ADJ_NANO		0x2000  /* select nanosecond resolution */
+#define ADJ_TICK		0x4000  /* tick value */
+#define ADJ_OFFSET_SINGLESHOT	0x8001  /* old-fashioned adjtime */
+#define ADJ_OFFSET_SS_READ	0xa001  /* read-only adjtime */
 
 /* xntp 3.4 compatibility names */
 #define MOD_OFFSET	ADJ_OFFSET
@@ -125,7 +130,9 @@ libc_hidden_proto(adjtimex)
 extern int ntp_gettime (struct ntptimeval *__ntv) __THROW;
 extern int ntp_adjtime (struct timex *__tntx) __THROW;
 #endif
-
+#if defined __UCLIBC_HAS_REALTIME__
+extern int clock_adjtime (clockid_t __clock_id, struct timex *__ntx) __THROW;
+#endif
 __END_DECLS
 
 #endif /* sys/timex.h */
