@@ -22,17 +22,18 @@ int
 pthread_spin_lock (pthread_spinlock_t *lock)
 {
   __asm__ __volatile__
-    ("1: ldstub  [%0], %%g5\n"
-     "   brnz,pn %%g5, 2f\n"
-     "    membar #StoreLoad | #StoreStore\n"
+    ("1: ldstub [%0], %%g2\n"
+     "   orcc   %%g2, 0x0, %%g0\n"
+     "   bne,a  2f\n"
+     "   ldub   [%0], %%g2\n"
      ".subsection 2\n"
-     "2: ldub    [%0], %%g5\n"
-     "   brnz,pt %%g5, 2b\n"
-     "    membar #LoadLoad\n"
-     "   b,a,pt  %%xcc, 1b\n"
+     "2: orcc   %%g2, 0x0, %%g0\n"
+     "   bne,a  2b\n"
+     "   ldub   [%0], %%g2\n"
+     "   b,a    1b\n"
      ".previous"
      : /* no outputs */
      : "r" (lock)
-     : "g5", "memory");
+     : "g2", "memory", "cc");
   return 0;
 }

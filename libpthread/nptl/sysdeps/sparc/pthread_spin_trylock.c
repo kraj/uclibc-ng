@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
@@ -16,12 +16,13 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <setjmp.h>
-#include <stdint.h>
-#include <unwind.h>
+#include <errno.h>
+#include "pthreadP.h"
 
-#define _JMPBUF_CFA_UNWINDS_ADJ(_jmpbuf, _context, _adj) \
-  _JMPBUF_UNWINDS_ADJ (_jmpbuf, (void *) _Unwind_GetCFA (_context), _adj)
-
-#define _JMPBUF_UNWINDS_ADJ(_jmpbuf, _address, _adj) \
-  ((uintptr_t) (_address) - (_adj) < (uintptr_t) (_jmpbuf)[JB_SP] - (_adj))
+int
+pthread_spin_trylock (pthread_spinlock_t *lock)
+{
+  int res;
+  __asm__ __volatile__ ("ldstub [%1], %0" : "=r" (res) : "r" (lock) : "memory");
+  return res == 0 ? 0 : EBUSY;
+}
