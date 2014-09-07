@@ -38,11 +38,10 @@ TESTS := tst-align tst-align2 tst-atfork1 tst-attr1 tst-attr2 tst-attr3	\
 	tst-cancelx12 tst-cancelx13 tst-cancelx14 tst-cancelx15 tst-cancelx16 \
 	tst-cancelx18 tst-cancelx20 tst-cancelx21 tst-cleanupx0 tst-cleanupx1 \
 	tst-cleanupx2 tst-cleanupx3 tst-cleanupx4 tst-cond22 tst-cond23 \
-	tst-dlsym1 tst-getpid1 tst-getpid2 tst-getpid3 tst-join6 tst-tsd6 \
+	tst-getpid1 tst-getpid2 tst-getpid3 tst-join6 tst-tsd6 \
 	tst-oddstacklimit tst-oncex3 tst-oncex4 tst-rwlock2a  \
-	tst-basic7 tst-fini1 tst-signal7 \
-	tst-unload tst-vfork1x tst-vfork2x tst-sem10 tst-sem11 tst-sem12 \
-	tst-typesizes tst-initializers1-c89 tst-initializers1-c99 \
+	tst-basic7 tst-signal7 tst-vfork1x tst-vfork2x tst-sem10 tst-sem11 \
+	tst-sem12 tst-typesizes tst-initializers1-c89 tst-initializers1-c99 \
 	tst-initializers1-gnu89 tst-initializers1-gnu99
 
 #
@@ -68,7 +67,8 @@ GLIBC_TESTS_DISABLED := tst-eintr1_glibc tst-eintr2_glibc \
 
 
 ifeq ($(HAVE_SHARED),)
-TESTS_DISABLED += tst-tls3 tst-tls4 tst-tls5
+TESTS_DISABLED += tst-tls3 tst-tls4 tst-tls5 tst-dlsym1 tst-fini1	\
+		tst-unload
 else
 GLIBC_TESTS_DISABLED += tst-tls3_glibc tst-tls4_glibc tst-tls5_glibc
 endif
@@ -109,7 +109,7 @@ LDFLAGS_tst-rwlock14 = -lrt
 LDFLAGS_tst-fini1 = -Wl,-rpath=./ tst-fini1mod.so
 LDFLAGS_tst-fini1mod.so = -Wl,-soname=tst-fini1mod.so
 LDFLAGS_tst-unload = -ldl
-LDFLAGS_tst-cancel5 := -lpthread -lpthread_nonshared
+LDFLAGS_tst-cancel5 := -lpthread
 LDFLAGS_tst-cancel23 := -lc -lpthread
 LDFLAGS_tst-vfork1x := -lc -lpthread
 LDFLAGS_tst-vfork2x := -lc -lpthread
