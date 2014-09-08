@@ -23,17 +23,17 @@
 static int
 do_test (void)
 {
-  void *p = dlopen ("libpthread.so.0", RTLD_LAZY);
+  void *p = dlopen ("libpthread.so.1", RTLD_LAZY);
 
   if (p == NULL)
     {
-      puts ("failed to load libpthread.so.0");
+      puts ("failed to load libpthread.so.1");
       return 1;
     }
 
   if (dlclose (p) != 0)
     {
-      puts ("dlclose (libpthread.so.0) failed");
+      puts ("dlclose (libpthread.so.1) failed");
       return 1;
     }
 
