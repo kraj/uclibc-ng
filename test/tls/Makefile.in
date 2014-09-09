@@ -12,6 +12,10 @@ ifeq ($(HAVE_SHARED),)
 TESTS_DISABLED := $(TESTS)
 endif
 
+ifeq ($(TARGET_ARCH),arc)
+TESTS_DISABLED += tst-tls12 tst-tls-at-ctor
+endif
+
 # All these tests need tls.h, which is not installed with glibc
 GLIBC_TESTS_DISABLED := $(addsuffix _glibc,$(filter-out $(TESTS_DISABLED),$(TESTS)))
 
