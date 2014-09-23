@@ -889,7 +889,7 @@ register void *__gp __asm__("$29");
 
 #define TLS_GD(x)							\
   ({ int *__l;								\
-     asm ("movi  a8, " #x "@TLSFUNC\n\t"				\
+     __asm__ ("movi  a8, " #x "@TLSFUNC\n\t"				\
 	  "movi a10, " #x "@TLSARG\n\t"					\
 	  "callx8.tls a8, " #x "@TLSCALL\n\t"				\
 	  "mov %0, a10\n\t"						\
@@ -900,7 +900,7 @@ register void *__gp __asm__("$29");
 
 #define TLS_LD(x)							\
   ({ int *__l;								\
-     asm ("movi  a8, " #x "@TLSFUNC\n\t"				\
+     __asm__ ("movi  a8, " #x "@TLSFUNC\n\t"				\
 	  "movi a10, " #x "@TLSARG\n\t"					\
 	  "callx8.tls a8, " #x "@TLSCALL\n\t"				\
 	  "movi %0, " #x "@TPOFF\n\t"					\
@@ -915,7 +915,7 @@ register void *__gp __asm__("$29");
 #define TLS_LE(x)							\
   ({ int *__l;								\
      int __t;								\
-     asm ("rur %0, threadptr\n\t"					\
+     __asm__ ("rur %0, threadptr\n\t"					\
 	  "movi %1, " #x "@TPOFF\n\t"					\
 	  "add %0, %0, %1\n\t"						\
 	  : "=r" (__l), "=r" (__t) );					\
