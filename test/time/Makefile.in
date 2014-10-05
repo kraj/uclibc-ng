@@ -4,6 +4,10 @@
 TESTS_DISABLED := bug-asctime bug-asctime_r time tst-mktime2 tst-posixtz \
 	tst-strftime tst-strptime tst-timezone
 
+ifeq ($(TARGET_avr32),y)
+TESTS_DISABLED += tst-timerfd
+endif
+
 ifneq ($(UCLIBC_HAS_XLOCALE),y)
 TESTS_DISABLED += tst-ftime_l tst_wcsftime
 endif
