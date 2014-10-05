@@ -11,6 +11,10 @@ ifeq ($(UCLIBC_LINUX_SPECIFIC),)
 TESTS_DISABLED += tst-fallocate
 endif
 
+ifeq ($(TARGET_avr32),y)
+TESTS_DISABLED += tst-fallocate tst-posix_fallocate tst-fallocate64
+endif
+
 # The logic is similar for HAS_ADVANCED_REALTIME and
 # tst-posix_fallocate/tst-posix_fallocate64
 ifeq ($(UCLIBC_HAS_ADVANCED_REALTIME),)

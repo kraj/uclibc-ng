@@ -2,6 +2,11 @@
 # Licensed under the LGPL v2.1, see the file COPYING.LIB in this tarball.
 
 TESTS_DISABLED := outb tst-fnmatch bug-glob1 tst-gnuglob
+
+ifeq ($(TARGET_avr32),y)
+TESTS_DISABLED += tst-inotify
+endif
+
 ifeq  ($(UCLIBC_HAS_LFS),)
 TESTS_DISABLED += dirent64
 TESTS_DISABLED += tst-statfs # assuming host has LFS on
