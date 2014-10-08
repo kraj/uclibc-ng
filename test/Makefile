@@ -18,7 +18,7 @@ endif
 ifneq ($(findstring -static,$(LDFLAGS)),)
 	DIRS := $(filter-out dlopen,$(DIRS))
 endif
-ifneq ($(UCLIBC_HAS_THREADS),y)
+ifneq ($(UCLIBC_HAS_THREADS)$(ARCH_USE_MMU),yy)
 	DIRS := $(filter-out pthread,$(DIRS))
 endif
 ifneq ($(UCLIBC_HAS_FULL_RPC),y)
