@@ -60,8 +60,10 @@ config TARGET_avr32
 config TARGET_bfin
 	bool "bfin"
 
-config TARGET_c6x
-	bool "c6x"
+# someone could sync this tree:
+# http://linux-c6x.org/git/?p=uClibc.git;a=summary
+#config TARGET_c6x
+#	bool "c6x"
 
 config TARGET_cris
 	bool "cris"
