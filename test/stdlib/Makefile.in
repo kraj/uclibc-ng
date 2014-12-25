@@ -6,6 +6,7 @@ DODIFF_testatexit  := 1
 DODIFF_teston_exit := 1
 DODIFF_teststrtol  := 1
 
-ifeq ($(ARCH_USE_MMU),)
-TESTS_DISABLED := test-mkostemp-O_CLOEXEC
+TESTS_DISABLED :=
+ifeq ($(UCLIBC_HAS_PTY),)
+TESTS_DISABLED += ptytest
 endif

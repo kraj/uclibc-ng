@@ -18,7 +18,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <errno.h>
-#include <getopt.h>
 #include <malloc.h>
 #include <search.h>
 #include <signal.h>
@@ -46,6 +45,7 @@
 #define OPT_DIRECT 1000
 #define OPT_TESTDIR 1001
 
+#if 0 /* Not used in uClibc */
 static struct option options[] =
 {
 #ifdef CMDLINE_OPTIONS
@@ -55,6 +55,7 @@ static struct option options[] =
   { "test-dir", required_argument, NULL, OPT_TESTDIR },
   { NULL, 0, NULL, 0 }
 };
+#endif
 
 /* PID of the test itself.  */
 static pid_t pid;
@@ -144,7 +145,9 @@ signal_handler (int sig __attribute__ ((unused)))
   /* Wait for it to terminate.  */
   for (i = 0; i < 5; ++i)
     {
+#ifdef __UCLIBC_HAS_REALTIME__
       struct timespec ts;
+#endif
       killed = waitpid (pid, &status, WNOHANG|WUNTRACED);
       if (killed != 0)
 	break;
@@ -153,9 +156,14 @@ signal_handler (int sig __attribute__ ((unused)))
 	 nanosleep() call return prematurely, all the better.  We
 	 won't restart it since this probably means the child process
 	 finally died.  */
+#ifdef __UCLIBC_HAS_REALTIME__
       ts.tv_sec = 0;
       ts.tv_nsec = 100000000;
       nanosleep (&ts, NULL);
+#else
+	  /* No nanosleep, just sleep 1s instead of 0.1s */
+	  sleep(1);
+#endif
     }
   if (killed != 0 && killed != pid)
     {
@@ -234,7 +242,14 @@ main (int argc, char *argv[])
   setbuf (stdout, NULL);
 #endif
 
+#if 0 /* Not used in uClibc */
   while ((opt = getopt_long (argc, argv, "+", options, NULL)) != -1)
+#else
+# ifndef CMDLINE_OPTIONS
+#  define CMDLINE_OPTIONS ""
+# endif
+  while ((opt = getopt (argc, argv, "+" CMDLINE_OPTIONS)) >= 0)
+#endif
     switch (opt)
       {
       case '?':

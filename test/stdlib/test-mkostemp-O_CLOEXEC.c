@@ -1,3 +1,4 @@
+#define _XOPEN_SOURCE_EXTENDED
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -7,6 +8,10 @@
 #include <fcntl.h>
 #include <sys/wait.h>
 #include <errno.h>
+
+#if !defined __ARCH_USE_MMU__
+# define fork vfork
+#endif
 
 int main(int argc, char *argv[]) {
     int fd, status;
