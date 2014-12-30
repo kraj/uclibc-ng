@@ -62,8 +62,8 @@ config TARGET_bfin
 
 # someone could sync this tree:
 # http://linux-c6x.org/git/?p=uClibc.git;a=summary
-#config TARGET_c6x
-#	bool "c6x"
+config TARGET_c6x
+	bool "c6x"
 
 config TARGET_cris
 	bool "cris"
