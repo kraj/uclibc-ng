@@ -115,6 +115,12 @@ ifeq ($(LDSO_GNU_HASH_SUPPORT),y)
 LDFLAGS += $(CFLAG_-Wl--hash-style=gnu)
 endif
 
+ifneq ($(strip $(UCLIBC_EXTRA_CFLAGS)),"")
+CFLAGS += $(call qstrip,$(UCLIBC_EXTRA_CFLAGS))
+endif
+ifneq ($(strip $(UCLIBC_EXTRA_LDFLAGS)),"")
+LDFLAGS += $(call qstrip,$(UCLIBC_EXTRA_LDFLAGS))
+endif
 
 ifneq ($(findstring -s,$(MAKEFLAGS)),)
 DISP := sil
