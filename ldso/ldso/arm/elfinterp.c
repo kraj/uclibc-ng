@@ -69,7 +69,7 @@ unsigned long _dl_linux_resolver(struct elf_resolve *tpnt, int reloc_entry)
 	got_addr = (char **) instr_addr;
 
 	/* Get the address of the GOT entry */
-	new_addr = _dl_find_hash(symname, &_dl_loaded_modules->symbol_scope,
+	new_addr = (unsigned long)_dl_find_hash(symname, &_dl_loaded_modules->symbol_scope,
 				 tpnt, ELF_RTYPE_CLASS_PLT, NULL);
 	if (unlikely(!new_addr)) {
 		_dl_dprintf(2, "%s: can't resolve symbol '%s'\n",
@@ -203,7 +203,7 @@ _dl_do_reloc (struct elf_resolve *tpnt,struct r_scope_elem *scope,
 	symname = strtab + symtab[symtab_index].st_name;
 
 	if (symtab_index) {
-		symbol_addr = _dl_find_hash(symname, scope, tpnt,
+		symbol_addr = (unsigned long)_dl_find_hash(symname, scope, tpnt,
 						elf_machine_type_class(reloc_type), &sym_ref);
 
 		/*
