@@ -1,0 +1,1 @@
+CFLAGS_bug269-setjmp = -fPIC

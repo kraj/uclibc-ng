@@ -23,5 +23,5 @@ TESTS_DISABLED := tst_strfmon
 
 DODIFF_rint     := 1
 
-EXTRA_CFLAGS    := -D__USE_GNU -fno-builtin
+EXTRA_CFLAGS    := -D__USE_GNU -fno-builtin -fPIC
 

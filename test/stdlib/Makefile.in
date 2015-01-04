@@ -10,3 +10,7 @@ TESTS_DISABLED :=
 ifeq ($(UCLIBC_HAS_PTY),)
 TESTS_DISABLED += ptytest
 endif
+
+CFLAGS_test-canon = -fPIC
+CFLAGS_test-canon2 = -fPIC
+CFLAGS_testatexit = -fPIC

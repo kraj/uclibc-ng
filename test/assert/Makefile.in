@@ -3,3 +3,4 @@
 
 RET_assert     := 134
 WRAPPER_assert := trap ":" ABRT ;
+CFLAGS_assert := -fPIC

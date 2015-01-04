@@ -15,3 +15,6 @@ TESTS_DISABLED += tst-res
 else
 LDFLAGS_tst-res_glibc := -lresolv # assume it's glibc or somebody with that lib
 endif
+
+CFLAGS_bug-if1 = -fPIC
+CFLAGS_tst-sock-nonblock = -fPIC

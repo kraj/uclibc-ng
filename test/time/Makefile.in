@@ -17,5 +17,9 @@ TESTS_DISABLED += tst_wcsftime
 endif
 
 CFLAGS_tst-strptime2 := -std=c99
+CFLAGS_tst-ctime = -fPIC
+CFLAGS_tst-futimens1 = -fPIC
+CFLAGS_tst-timerfd = -fPIC
+
 DODIFF_futimens1 := 1
 DODIFF_tst_wcsftime := 1

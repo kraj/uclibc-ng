@@ -4,7 +4,7 @@
 TESTS_DISABLED :=
 # If LFS is not set, get rid of all *64 tests up front
 ifeq ($(UCLIBC_HAS_LFS),)
-TESTS_DISABLED += tst-preadwrite64 tst-fallocate64
+TESTS_DISABLED += tst-preadwrite64
 endif
 
 # If we don't have LINUX_SPECIFIC, then get rid of tst-fallocate
@@ -32,7 +32,12 @@ OPTS_tstgetopt   := -a -b -cfoobar --required foobar --optional=bazbug --none --
 endif
 
 # for embedded systems 4 GB disk space is not available
-TESTS_DISABLED += tst-posix_fallocate64
+TESTS_DISABLED += tst-posix_fallocate64 tst-fallocate64
+
+CFLAGS_tst-fallocate = -fPIC
+CFLAGS_tst-posix_fallocate = -fPIC
+CFLAGS_tst-preadwrite = -fPIC
+CFLAGS_tst-preadwrite64 = -fPIC
 
 # getconf.c lives in utils/
 # Testsuite cannot currently be built with O= anyway, so hardcode path here
