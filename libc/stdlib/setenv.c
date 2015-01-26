@@ -41,7 +41,7 @@ static char **last_environ;
    to reuse values once generated for a `setenv' call since we can never
    free the strings. [in uclibc, we do not]  */
 static int __add_to_environ(const char *name, const char *value,
- 		int replace)
+		int replace)
 {
 	register char **ep;
 	register size_t size;
@@ -76,7 +76,7 @@ static int __add_to_environ(const char *name, const char *value,
 	/* We allocated this space; we can extend it.  */
 	new_environ = realloc(last_environ, (size + 2) * sizeof(char *));
 	if (new_environ == NULL) {
-		__set_errno(ENOMEM);
+		/* __set_errno(ENOMEM); */
 		goto DONE;
 	}
 	if (__environ != last_environ) {
@@ -97,7 +97,7 @@ static int __add_to_environ(const char *name, const char *value,
 
 		var_val = malloc(namelen + 1 + vallen);
 		if (var_val == NULL) {
-			__set_errno(ENOMEM);
+			/* __set_errno(ENOMEM); */
 			goto DONE;
 		}
 		memcpy(var_val, name, namelen);
@@ -116,6 +116,11 @@ static int __add_to_environ(const char *name, const char *value,
 
 int setenv(const char *name, const char *value, int replace)
 {
+	if (name == NULL || *name == '\0' || strchr (name, '=') != NULL) {
+		__set_errno(EINVAL);
+		return -1;
+	}
+
 	/* NB: setenv("VAR", NULL, 1) inserts "VAR=" string */
 	return __add_to_environ(name, value ? value : "", replace);
 }
