@@ -43,19 +43,6 @@
 # define TEST_DATA_LIMIT (64 << 20) /* Data limit (bytes) to run with.  */
 #endif
 
-#define OPT_DIRECT 1000
-#define OPT_TESTDIR 1001
-
-static struct option options[] =
-{
-#ifdef CMDLINE_OPTIONS
-  CMDLINE_OPTIONS
-#endif
-  { "direct", no_argument, NULL, OPT_DIRECT },
-  { "test-dir", required_argument, NULL, OPT_TESTDIR },
-  { NULL, 0, NULL, 0 }
-};
-
 /* PID of the test itself.  */
 static pid_t pid;
 
@@ -241,15 +228,18 @@ main (int argc, char *argv[])
   setbuf (stdout, NULL);
 #endif
 
-  while ((opt = getopt_long (argc, argv, "+", options, NULL)) != -1)
+# ifndef CMDLINE_OPTIONS
+#  define CMDLINE_OPTIONS ""
+# endif
+  while ((opt = getopt (argc, argv, "+dt:" CMDLINE_OPTIONS)) >= 0)
     switch (opt)
       {
       case '?':
 	exit (1);
-      case OPT_DIRECT:
+      case 'd':
 	direct = 1;
 	break;
-      case OPT_TESTDIR:
+      case 't':
 	test_dir = optarg;
 	break;
 #ifdef CMDLINE_PROCESS
