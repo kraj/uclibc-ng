@@ -193,19 +193,15 @@ do_cleanup (void)
 }
 #endif
 
-#define OPT_COMMAND	10000
-#define OPT_PIDFILE	10001
 #define CMDLINE_OPTIONS \
-  { "command", required_argument, NULL, OPT_COMMAND },	\
-  { "pidfile", required_argument, NULL, OPT_PIDFILE },
+	"c:p:"
 #define CMDLINE_PROCESS \
-  case OPT_COMMAND:	\
+  case 'c':	\
     command = optarg;	\
     break;		\
-  case OPT_PIDFILE:	\
+  case 'p':	\
     pidfile = optarg;	\
     break;
-// #define CLEANUP_HANDLER do_cleanup ()
 #define PREPARE(argc, argv) do_prepare (argc, argv)
 #define TEST_FUNCTION do_test ()
 #define TIMEOUT 5
