@@ -104,8 +104,8 @@ config TARGET_mips
 #config TARGET_nios
 #	bool "nios"
 
-#config TARGET_nios2
-#	bool "nios2"
+config TARGET_nios2
+	bool "nios2"
 
 config TARGET_powerpc
 	bool "powerpc"
