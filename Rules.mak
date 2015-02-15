@@ -297,12 +297,10 @@ ifeq ($(UCLIBC_HAS_SOFT_FLOAT),y)
 # If -msoft-float isn't supported, we want an error anyway.
 # Hmm... might need to revisit this for arm since it has 2 different
 # soft float encodings.
-ifneq ($(TARGET_ARCH),nios)
 ifneq ($(TARGET_ARCH),nios2)
 ifneq ($(TARGET_ARCH),sh)
 ifneq ($(TARGET_ARCH),c6x)
 CPU_CFLAGS-y += -msoft-float
-endif
 endif
 endif
 endif
@@ -412,12 +410,6 @@ ifeq ($(TARGET_ARCH),mips)
 	CPU_CFLAGS-$(CONFIG_MIPS_N64_ABI)+=-mabi=64
 	CPU_CFLAGS-$(CONFIG_MIPS_O32_ABI)+=-mabi=32
 	CPU_CFLAGS-$(CONFIG_MIPS_N32_ABI)+=-mabi=n32
-endif
-
-ifeq ($(TARGET_ARCH),nios)
-	OPTIMIZATION+=-funaligned-struct-hack
-	CPU_LDFLAGS-y+=-Wl,-m32
-	CPU_CFLAGS-y+=-Wl,-m32
 endif
 
 ifeq ($(TARGET_ARCH),sh)
