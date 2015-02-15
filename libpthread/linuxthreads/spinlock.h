@@ -172,7 +172,8 @@ static __inline__ int __pthread_alt_trylock (struct _pthread_fastlock * lock)
 
 /* Operations on pthread_atomic, which is defined in internals.h */
 
-static __inline__ long atomic_increment(struct pthread_atomic *pa)
+static __inline__ long
+pthread_atomic_increment (struct pthread_atomic *pa)
 {
     long oldval;
 
@@ -184,7 +185,8 @@ static __inline__ long atomic_increment(struct pthread_atomic *pa)
 }
 
 
-static __inline__ long atomic_decrement(struct pthread_atomic *pa)
+static __inline__ long
+pthread_atomic_decrement (struct pthread_atomic *pa)
 {
     long oldval;
 
@@ -196,7 +198,7 @@ static __inline__ long atomic_decrement(struct pthread_atomic *pa)
 }
 
 
-static __inline__ void
+static __inline__ __attribute__((always_inline)) void
 __pthread_set_own_extricate_if (pthread_descr self, pthread_extricate_if *peif)
 {
   /* Only store a non-null peif if the thread has cancellation enabled.

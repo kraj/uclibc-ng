@@ -19,19 +19,7 @@
 #ifndef _BITS_LIBC_TSD_H
 #define _BITS_LIBC_TSD_H 1
 
-/* Fast thread-specific data internal to libc.  */
-enum __libc_tsd_key_t { _LIBC_TSD_KEY_MALLOC = 0,
-			_LIBC_TSD_KEY_DL_ERROR,
-			_LIBC_TSD_KEY_RPC_VARS,
-			_LIBC_TSD_KEY_LOCALE,
-			_LIBC_TSD_KEY_CTYPE_B,
-			_LIBC_TSD_KEY_CTYPE_TOLOWER,
-			_LIBC_TSD_KEY_CTYPE_TOUPPER,
-			_LIBC_TSD_KEY_N };
-
-#include <features.h>
-#include <linuxthreads.old/internals.h>
-
+#include <linuxthreads/descr.h>
 #ifdef __UCLIBC_HAS_TLS__
 #include <tls.h>
 

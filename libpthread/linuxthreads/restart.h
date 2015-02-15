@@ -13,8 +13,7 @@
 /* GNU Library General Public License for more details.                 */
 
 #include <signal.h>
-#include <sys/syscall.h>
-#define __ASSUME_REALTIME_SIGNALS defined(__NR_rt_sigaction)
+#include <bits/kernel-features.h>
 
 /* Primitives for controlling thread execution */
 

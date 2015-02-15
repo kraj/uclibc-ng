@@ -6,7 +6,7 @@
 #include <unistd.h>
 #include "proc_service.h"
 #include "thread_db.h"
-#include "internals.h"
+#include "../linuxthreads/descr.h"
 
 
 /* Indices for the symbol names.  */

@@ -723,7 +723,9 @@ ifeq ($(UCLIBC_HAS_THREADS_NATIVE),y)
 	PTNAME := nptl
 	CFLAGS += -DHAVE_FORCED_UNWIND -D_LIBC_REENTRANT
 else
-ifeq ($(UCLIBC_HAS_LINUXTHREADS),y)
+ifeq ($(LINUXTHREADS_OLD),y)
+	PTNAME := linuxthreads.old
+else
 	PTNAME := linuxthreads
 endif
 endif

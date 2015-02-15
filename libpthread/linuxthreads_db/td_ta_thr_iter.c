@@ -18,6 +18,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include "thread_dbP.h"
+#include <linuxthreads/internals.h>
 #include <alloca.h>
 
 static int
@@ -38,7 +39,9 @@ handle_descr (const td_thragent_t *ta, td_thr_iter_f *callback,
 	  memset (&pds, '\0', sizeof (pds));
 
 	  /* Empty thread descriptor the thread library would create.  */
-	  pds.p_self = &pds;
+#if !defined __UCLIBC_HAS_TLS__ || !TLS_DTV_AT_TP
+	  pds.p_header.data.self = &pds;
+#endif
 	  pds.p_nextlive = pds.p_prevlive = &pds;
 	  pds.p_tid = PTHREAD_THREADS_MAX;
 	  /* The init code also sets up p_lock, p_errnop, p_herrnop, and

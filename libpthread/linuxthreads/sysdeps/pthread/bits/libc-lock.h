@@ -1,5 +1,5 @@
 /* libc-internal interface for mutex locks.  LinuxThreads version.
-   Copyright (C) 1996,1997,1998,1999,2000,2001,2002,2003
+   Copyright (C) 1996,1997,1998,1999,2000,2001,2002,2003,2006
    	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -23,13 +23,13 @@
 #include <pthread.h>
 
 #if defined _LIBC && !defined NOT_IN_libc
-#include <linuxthreads.old/internals.h>
+#include <linuxthreads/internals.h>
 #endif
 
 /* Mutex type.  */
 #if defined(_LIBC) || defined(_IO_MTSAFE_IO)
 typedef pthread_mutex_t __libc_lock_t;
-typedef pthread_mutex_t __libc_lock_recursive_t;
+typedef struct { pthread_mutex_t mutex; } __libc_lock_recursive_t;
 # ifdef __USE_UNIX98
 typedef pthread_rwlock_t __libc_rwlock_t;
 # else
@@ -131,39 +131,15 @@ typedef pthread_key_t __libc_key_t;
 #define __libc_rwlock_init(NAME) \
   (__libc_maybe_call (__pthread_rwlock_init, (&(NAME), NULL), 0));
 
-/* Same as last but this time we initialize an adaptive mutex.  */
-#if defined _LIBC && !defined NOT_IN_libc && defined SHARED
-#define __libc_lock_init_adaptive(NAME) \
-  ({									      \
-    (NAME).__m_count = 0;						      \
-    (NAME).__m_owner = NULL;						      \
-    (NAME).__m_kind = PTHREAD_MUTEX_ADAPTIVE_NP;			      \
-    (NAME).__m_lock.__status = 0;					      \
-    (NAME).__m_lock.__spinlock = __LT_SPINLOCK_INIT;			      \
-    0; })
-#else
-#define __libc_lock_init_adaptive(NAME) \
-  do {									      \
-    if (__pthread_mutex_init != NULL)					      \
-      {									      \
-	pthread_mutexattr_t __attr;					      \
-	__pthread_mutexattr_init (&__attr);				      \
-	__pthread_mutexattr_settype (&__attr, PTHREAD_MUTEX_ADAPTIVE_NP);     \
-	__pthread_mutex_init (&(NAME), &__attr);			      \
-	__pthread_mutexattr_destroy (&__attr);				      \
-      }									      \
-  } while (0);
-#endif
-
 /* Same as last but this time we initialize a recursive mutex.  */
 #if defined _LIBC && !defined NOT_IN_libc && defined SHARED
 #define __libc_lock_init_recursive(NAME) \
   ({									      \
-    (NAME).__m_count = 0;						      \
-    (NAME).__m_owner = NULL;					      \
-    (NAME).__m_kind = PTHREAD_MUTEX_RECURSIVE_NP;			      \
-    (NAME).__m_lock.__status = 0;					      \
-    (NAME).__m_lock.__spinlock = __LT_SPINLOCK_INIT;		      \
+    (NAME).mutex.__m_count = 0;						      \
+    (NAME).mutex.__m_owner = NULL;					      \
+    (NAME).mutex.__m_kind = PTHREAD_MUTEX_RECURSIVE_NP;			      \
+    (NAME).mutex.__m_lock.__status = 0;					      \
+    (NAME).mutex.__m_lock.__spinlock = __LT_SPINLOCK_INIT;		      \
     0; })
 #else
 #define __libc_lock_init_recursive(NAME) \
@@ -173,7 +149,7 @@ typedef pthread_key_t __libc_key_t;
 	pthread_mutexattr_t __attr;					      \
 	__pthread_mutexattr_init (&__attr);				      \
 	__pthread_mutexattr_settype (&__attr, PTHREAD_MUTEX_RECURSIVE_NP); \
-	__pthread_mutex_init (&(NAME), &__attr);			      \
+	__pthread_mutex_init (&(NAME).mutex, &__attr);			      \
 	__pthread_mutexattr_destroy (&__attr);				      \
       }									      \
   } while (0);
@@ -226,6 +202,23 @@ typedef pthread_key_t __libc_key_t;
 /* Unlock the recursive named lock variable.  */
 #define __libc_lock_unlock_recursive(NAME) __libc_lock_unlock ((NAME).mutex)
 
+#if defined _LIBC && defined SHARED
+# define __rtld_lock_default_lock_recursive(lock) \
+  ++((pthread_mutex_t *)(lock))->__m_count;
+
+# define __rtld_lock_default_unlock_recursive(lock) \
+  --((pthread_mutex_t *)(lock))->__m_count;
+
+# define __rtld_lock_lock_recursive(NAME) \
+  GL(dl_rtld_lock_recursive) (&(NAME).mutex)
+
+# define __rtld_lock_unlock_recursive(NAME) \
+  GL(dl_rtld_unlock_recursive) (&(NAME).mutex)
+#else
+#define __rtld_lock_lock_recursive(NAME) __libc_lock_lock_recursive (NAME)
+#define __rtld_lock_unlock_recursive(NAME) __libc_lock_unlock_recursive (NAME)
+#endif
+
 /* Define once control variable.  */
 #if PTHREAD_ONCE_INIT == 0
 /* Special case for static variables where we can avoid the initialization
@@ -244,7 +237,7 @@ typedef pthread_key_t __libc_key_t;
       __pthread_once (&(ONCE_CONTROL), (INIT_FUNCTION));		      \
     else if ((ONCE_CONTROL) == PTHREAD_ONCE_INIT) {			      \
       INIT_FUNCTION ();							      \
-      (ONCE_CONTROL) = !PTHREAD_ONCE_INIT;				      \
+      (ONCE_CONTROL) = 2;						      \
     }									      \
   } while (0)
 
@@ -270,7 +263,6 @@ typedef pthread_key_t __libc_key_t;
       _pthread_cleanup_pop_restore (&_buffer, (DOIT));			      \
     }
 
-#if 0
 #define __libc_cleanup_push(fct, arg) \
     { struct _pthread_cleanup_buffer _buffer; 				      \
     __libc_maybe_call (_pthread_cleanup_push, (&_buffer, (fct), (arg)), 0)
@@ -278,7 +270,6 @@ typedef pthread_key_t __libc_key_t;
 #define __libc_cleanup_pop(execute) \
     __libc_maybe_call (_pthread_cleanup_pop, (&_buffer, execute), 0);	      \
     }
-#endif
 
 /* Create thread-specific key.  */
 #define __libc_key_create(KEY, DESTRUCTOR) \
@@ -376,6 +367,7 @@ weak_extern (BP_SYM (__pthread_key_create))
 weak_extern (BP_SYM (__pthread_setspecific))
 weak_extern (BP_SYM (__pthread_getspecific))
 weak_extern (BP_SYM (__pthread_once))
+weak_extern (__pthread_initialize)
 weak_extern (__pthread_atfork)
 weak_extern (BP_SYM (_pthread_cleanup_push))
 weak_extern (BP_SYM (_pthread_cleanup_pop))
@@ -400,6 +392,7 @@ weak_extern (BP_SYM (_pthread_cleanup_pop_restore))
 #  pragma weak __pthread_setspecific
 #  pragma weak __pthread_getspecific
 #  pragma weak __pthread_once
+#  pragma weak __pthread_initialize
 #  pragma weak __pthread_atfork
 #  pragma weak _pthread_cleanup_push_defer
 #  pragma weak _pthread_cleanup_pop_restore

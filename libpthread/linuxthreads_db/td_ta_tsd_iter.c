@@ -18,6 +18,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include "thread_dbP.h"
+#include <linuxthreads/internals.h>
 #include <alloca.h>
 
 td_err_e

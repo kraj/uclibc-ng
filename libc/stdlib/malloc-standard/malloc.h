@@ -27,7 +27,7 @@
 
 
 __UCLIBC_MUTEX_EXTERN(__malloc_lock)
-#if defined __UCLIBC_HAS_THREADS__ && !defined __UCLIBC_HAS_LINUXTHREADS__
+#if defined __UCLIBC_HAS_THREADS__ && !defined __LINUXTHREADS_OLD__
 	attribute_hidden
 #endif
 	;

@@ -25,28 +25,28 @@
 #include "queue.h"
 #include "restart.h"
 
-int pthread_cond_init(pthread_cond_t *cond,
-                      const pthread_condattr_t *cond_attr attribute_unused)
+int __pthread_cond_init(pthread_cond_t *cond,
+                        const pthread_condattr_t *cond_attr)
 {
   __pthread_init_lock(&cond->__c_lock);
   cond->__c_waiting = NULL;
   return 0;
 }
-libpthread_hidden_def(pthread_cond_init)
+strong_alias (__pthread_cond_init, pthread_cond_init)
 
-int pthread_cond_destroy(pthread_cond_t *cond)
+int __pthread_cond_destroy(pthread_cond_t *cond)
 {
   if (cond->__c_waiting != NULL) return EBUSY;
   return 0;
 }
-libpthread_hidden_def(pthread_cond_destroy)
+strong_alias (__pthread_cond_destroy, pthread_cond_destroy)
 
 /* Function called by pthread_cancel to remove the thread from
    waiting on a condition variable queue. */
 
 static int cond_extricate_func(void *obj, pthread_descr th)
 {
-  volatile pthread_descr self = thread_self();
+  __volatile__ pthread_descr self = thread_self();
   pthread_cond_t *cond = obj;
   int did_remove = 0;
 
@@ -57,9 +57,9 @@ static int cond_extricate_func(void *obj, pthread_descr th)
   return did_remove;
 }
 
-int pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex)
+int __pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex)
 {
-  volatile pthread_descr self = thread_self();
+  __volatile__ pthread_descr self = thread_self();
   pthread_extricate_if extr;
   int already_canceled = 0;
   int spurious_wakeup_count;
@@ -98,7 +98,7 @@ int pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex)
     __pthread_do_exit(PTHREAD_CANCELED, CURRENT_STACK_FRAME);
   }
 
-  __pthread_mutex_unlock(mutex);
+  pthread_mutex_unlock(mutex);
 
   spurious_wakeup_count = 0;
   while (1)
@@ -123,7 +123,7 @@ int pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex)
   if (THREAD_GETMEM(self, p_woken_by_cancel)
       && THREAD_GETMEM(self, p_cancelstate) == PTHREAD_CANCEL_ENABLE) {
     THREAD_SETMEM(self, p_woken_by_cancel, 0);
-    __pthread_mutex_lock(mutex);
+    pthread_mutex_lock(mutex);
     __pthread_do_exit(PTHREAD_CANCELED, CURRENT_STACK_FRAME);
   }
 
@@ -131,17 +131,17 @@ int pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex)
   while (spurious_wakeup_count--)
     restart(self);
 
-  __pthread_mutex_lock(mutex);
+  pthread_mutex_lock(mutex);
   return 0;
 }
-libpthread_hidden_def(pthread_cond_wait)
+strong_alias (__pthread_cond_wait, pthread_cond_wait)
 
 static int
 pthread_cond_timedwait_relative(pthread_cond_t *cond,
 				pthread_mutex_t *mutex,
 				const struct timespec * abstime)
 {
-  volatile pthread_descr self = thread_self();
+  __volatile__ pthread_descr self = thread_self();
   int already_canceled = 0;
   pthread_extricate_if extr;
   int spurious_wakeup_count;
@@ -174,7 +174,7 @@ pthread_cond_timedwait_relative(pthread_cond_t *cond,
     __pthread_do_exit(PTHREAD_CANCELED, CURRENT_STACK_FRAME);
   }
 
-  __pthread_mutex_unlock(mutex);
+  pthread_mutex_unlock(mutex);
 
   spurious_wakeup_count = 0;
   while (1)
@@ -191,7 +191,7 @@ pthread_cond_timedwait_relative(pthread_cond_t *cond,
 
 	if (was_on_queue) {
 	  __pthread_set_own_extricate_if(self, 0);
-	  __pthread_mutex_lock(mutex);
+	  pthread_mutex_lock(mutex);
 	  return ETIMEDOUT;
 	}
 
@@ -218,7 +218,7 @@ pthread_cond_timedwait_relative(pthread_cond_t *cond,
   if (THREAD_GETMEM(self, p_woken_by_cancel)
       && THREAD_GETMEM(self, p_cancelstate) == PTHREAD_CANCEL_ENABLE) {
     THREAD_SETMEM(self, p_woken_by_cancel, 0);
-    __pthread_mutex_lock(mutex);
+    pthread_mutex_lock(mutex);
     __pthread_do_exit(PTHREAD_CANCELED, CURRENT_STACK_FRAME);
   }
 
@@ -226,19 +226,19 @@ pthread_cond_timedwait_relative(pthread_cond_t *cond,
   while (spurious_wakeup_count--)
     restart(self);
 
-  __pthread_mutex_lock(mutex);
+  pthread_mutex_lock(mutex);
   return 0;
 }
 
-int pthread_cond_timedwait(pthread_cond_t *cond, pthread_mutex_t *mutex,
-                           const struct timespec * abstime)
+int __pthread_cond_timedwait(pthread_cond_t *cond, pthread_mutex_t *mutex,
+			     const struct timespec * abstime)
 {
   /* Indirect call through pointer! */
   return pthread_cond_timedwait_relative(cond, mutex, abstime);
 }
-libpthread_hidden_def(pthread_cond_timedwait)
+strong_alias (__pthread_cond_timedwait, pthread_cond_timedwait)
 
-int pthread_cond_signal(pthread_cond_t *cond)
+int __pthread_cond_signal(pthread_cond_t *cond)
 {
   pthread_descr th;
 
@@ -252,9 +252,9 @@ int pthread_cond_signal(pthread_cond_t *cond)
   }
   return 0;
 }
-libpthread_hidden_def(pthread_cond_signal)
+strong_alias (__pthread_cond_signal, pthread_cond_signal)
 
-int pthread_cond_broadcast(pthread_cond_t *cond)
+int __pthread_cond_broadcast(pthread_cond_t *cond)
 {
   pthread_descr tosignal, th;
 
@@ -271,27 +271,27 @@ int pthread_cond_broadcast(pthread_cond_t *cond)
   }
   return 0;
 }
-libpthread_hidden_def(pthread_cond_broadcast)
+strong_alias (__pthread_cond_broadcast, pthread_cond_broadcast)
 
-int pthread_condattr_init(pthread_condattr_t *attr attribute_unused)
+int __pthread_condattr_init(pthread_condattr_t *attr)
 {
   return 0;
 }
-libpthread_hidden_def(pthread_condattr_init)
+strong_alias (__pthread_condattr_init, pthread_condattr_init)
 
-int pthread_condattr_destroy(pthread_condattr_t *attr attribute_unused)
+int __pthread_condattr_destroy(pthread_condattr_t *attr)
 {
   return 0;
 }
-libpthread_hidden_def(pthread_condattr_destroy)
+strong_alias (__pthread_condattr_destroy, pthread_condattr_destroy)
 
-int pthread_condattr_getpshared (const pthread_condattr_t *attr attribute_unused, int *pshared)
+int pthread_condattr_getpshared (const pthread_condattr_t *attr, int *pshared)
 {
   *pshared = PTHREAD_PROCESS_PRIVATE;
   return 0;
 }
 
-int pthread_condattr_setpshared (pthread_condattr_t *attr attribute_unused, int pshared)
+int pthread_condattr_setpshared (pthread_condattr_t *attr, int pshared)
 {
   if (pshared != PTHREAD_PROCESS_PRIVATE && pshared != PTHREAD_PROCESS_SHARED)
     return EINVAL;
