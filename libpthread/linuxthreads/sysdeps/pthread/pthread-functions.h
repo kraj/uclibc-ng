@@ -22,7 +22,7 @@
 #include <pthread.h>
 #if 0
 #include <setjmp.h>
-#include <linuxthreads.old/internals.h>
+#include <linuxthreads/internals.h>
 
 struct fork_block;
 #endif

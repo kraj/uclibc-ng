@@ -30,7 +30,7 @@ enum __libc_tsd_key_t { _LIBC_TSD_KEY_MALLOC = 0,
 			_LIBC_TSD_KEY_N };
 
 #include <features.h>
-#include <linuxthreads.old/internals.h>
+#include <linuxthreads/internals.h>
 
 #ifdef __UCLIBC_HAS_TLS__
 #include <tls.h>

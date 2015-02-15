@@ -24,7 +24,7 @@
 #if 0
 vda: here is why:
 headers contain libc_hidden_proto(foo).
-In libpthread/linuxthreads.old/sysdeps/pthread/bits/libc-lock.h
+In libpthread/linuxthreads/sysdeps/pthread/bits/libc-lock.h
 adding libc_hidden_proto(foo) just before weak_extern (__pthread_initialize)
 will not warn:
     /* libc_hidden_proto(foo) */

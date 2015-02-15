@@ -6,8 +6,8 @@
 # Licensed under the LGPL v2.1, see the file COPYING.LIB in this tarball.
 #
 
-libpthread_ARCH_DIR:=$(top_srcdir)libpthread/linuxthreads.old/sysdeps/sh64
-libpthread_ARCH_OUT:=$(top_builddir)libpthread/linuxthreads.old/sysdeps/sh64
+libpthread_ARCH_DIR:=$(top_srcdir)libpthread/linuxthreads/sysdeps/sh64
+libpthread_ARCH_OUT:=$(top_builddir)libpthread/linuxthreads/sysdeps/sh64
 
 libpthread_ARCH_SRC:=$(wildcard $(libpthread_ARCH_DIR)/*.c)
 libpthread_ARCH_OBJ:=$(patsubst $(libpthread_ARCH_DIR)/%.c,$(libpthread_ARCH_OUT)/%.o,$(libpthread_ARCH_SRC))

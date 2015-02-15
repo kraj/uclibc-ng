@@ -6,10 +6,10 @@
 # Licensed under the LGPL v2.1, see the file COPYING.LIB in this tarball.
 #
 
-subdirs += libpthread/linuxthreads.old
+subdirs += libpthread/linuxthreads
 
-CFLAGS-dir_linuxthreads.old := -DNOT_IN_libc -DIS_IN_libpthread
-CFLAGS-libpthread/linuxthreads.old := $(CFLAGS-dir_linuxthreads.old) $(SSP_ALL_CFLAGS)
+CFLAGS-dir_linuxthreads := -DNOT_IN_libc -DIS_IN_libpthread
+CFLAGS-libpthread/linuxthreads := $(CFLAGS-dir_linuxthreads) $(SSP_ALL_CFLAGS)
 
 ifeq ($(PTHREADS_DEBUG_SUPPORT),y)
 LDFLAGS-libpthread.so := $(LDFLAGS_NOSTRIP) -Wl,-z,defs
@@ -25,8 +25,8 @@ END_FILE-libpthread.so := $(SHARED_END_FILES)
 
 libpthread_FULL_NAME := libpthread-$(VERSION).so
 
-libpthread_DIR := $(top_srcdir)libpthread/linuxthreads.old
-libpthread_OUT := $(top_builddir)libpthread/linuxthreads.old
+libpthread_DIR := $(top_srcdir)libpthread/linuxthreads
+libpthread_OUT := $(top_builddir)libpthread/linuxthreads
 
 -include $(libpthread_DIR)/sysdeps/$(TARGET_ARCH)/Makefile.arch
 
@@ -50,8 +50,8 @@ libpthread_OBJ := $(patsubst $(libpthread_DIR)/%.c,$(libpthread_OUT)/%.o,$(libpt
 #
 # Stuff that goes into libc.so, not libpthread.so
 #
-CFLAGS-OMIT-forward.c := $(CFLAGS-dir_linuxthreads.old)
-CFLAGS-OMIT-libc_pthread_init.c := $(CFLAGS-dir_linuxthreads.old)
+CFLAGS-OMIT-forward.c := $(CFLAGS-dir_linuxthreads)
+CFLAGS-OMIT-libc_pthread_init.c := $(CFLAGS-dir_linuxthreads)
 libpthread_libc_CSRC := forward.c libc_pthread_init.c
 libpthread_libc_OBJ  := $(patsubst %.c, $(libpthread_OUT)/%.o,$(libpthread_libc_CSRC))
 libc-static-y += $(libpthread_OUT)/libc_pthread_init.o
@@ -110,10 +110,10 @@ linuxthreads_headers := $(top_builddir)include/pthread.h \
 $(linuxthreads_headers): $(wildcard $(addprefix $(top_builddir)include/config/linuxthreads/,old.h new.h))
 headers-$(UCLIBC_HAS_THREADS) += $(linuxthreads_headers)
 
-objclean-y += CLEAN_libpthread/linuxthreads.old
-headers_clean-y += HEADERCLEAN_libpthread/linuxthreads.old
-HEADERCLEAN_libpthread/linuxthreads.old:
+objclean-y += CLEAN_libpthread/linuxthreads
+headers_clean-y += HEADERCLEAN_libpthread/linuxthreads
+HEADERCLEAN_libpthread/linuxthreads:
 	$(do_rm) $(linuxthreads_headers)
 
-CLEAN_libpthread/linuxthreads.old:
+CLEAN_libpthread/linuxthreads:
 	$(do_rm) $(addprefix $(libpthread_OUT)/*., o os oS a)

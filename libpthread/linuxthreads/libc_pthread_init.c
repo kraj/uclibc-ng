@@ -18,7 +18,7 @@
 
 #include <locale.h>
 #include <string.h>
-#include <linuxthreads.old/sysdeps/pthread/pthread-functions.h>
+#include <linuxthreads/sysdeps/pthread/pthread-functions.h>
 
 
 int __libc_multiple_threads attribute_hidden __attribute__((nocommon));
