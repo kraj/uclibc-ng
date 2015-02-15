@@ -406,12 +406,6 @@ ifeq ($(TARGET_ARCH),mips)
 	CPU_LDFLAGS-y += $(CPU_CFLAGS)
 endif
 
-ifeq ($(TARGET_ARCH),nios)
-	OPTIMIZATION+=-funaligned-struct-hack
-	CPU_LDFLAGS-y+=-Wl,-m32
-	CPU_CFLAGS-y+=-Wl,-m32
-endif
-
 ifeq ($(TARGET_ARCH),sh)
 $(eval $(call check-gcc-var,-mprefergot))
 	OPTIMIZATION += $(CFLAG_-mprefergot)
