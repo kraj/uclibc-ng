@@ -1197,51 +1197,6 @@ UDItype __umulsidi3 (USItype, USItype);
 #define UDIV_TIME 230
 #endif /* sparc64 */
 
-#if defined (__vax__) && W_TYPE_SIZE == 32
-#define add_ssaaaa(sh, sl, ah, al, bh, bl) \
-  __asm__ ("addl2 %5,%1\n\tadwc %3,%0"					\
-	   : "=g" ((USItype) (sh)),					\
-	     "=&g" ((USItype) (sl))					\
-	   : "%0" ((USItype) (ah)),					\
-	     "g" ((USItype) (bh)),					\
-	     "%1" ((USItype) (al)),					\
-	     "g" ((USItype) (bl)))
-#define sub_ddmmss(sh, sl, ah, al, bh, bl) \
-  __asm__ ("subl2 %5,%1\n\tsbwc %3,%0"					\
-	   : "=g" ((USItype) (sh)),					\
-	     "=&g" ((USItype) (sl))					\
-	   : "0" ((USItype) (ah)),					\
-	     "g" ((USItype) (bh)),					\
-	     "1" ((USItype) (al)),					\
-	     "g" ((USItype) (bl)))
-#define umul_ppmm(xh, xl, m0, m1) \
-  do {									\
-    union {								\
-	UDItype __ll;							\
-	struct {USItype __l, __h;} __i;					\
-      } __xx;								\
-    USItype __m0 = (m0), __m1 = (m1);					\
-    __asm__ ("emul %1,%2,$0,%0"						\
-	     : "=r" (__xx.__ll)						\
-	     : "g" (__m0),						\
-	       "g" (__m1));						\
-    (xh) = __xx.__i.__h;						\
-    (xl) = __xx.__i.__l;						\
-    (xh) += ((((SItype) __m0 >> 31) & __m1)				\
-	     + (((SItype) __m1 >> 31) & __m0));				\
-  } while (0)
-#define sdiv_qrnnd(q, r, n1, n0, d) \
-  do {									\
-    union {DItype __ll;							\
-	   struct {SItype __l, __h;} __i;				\
-	  } __xx;							\
-    __xx.__i.__h = n1; __xx.__i.__l = n0;				\
-    __asm__ ("ediv %3,%2,%0,%1"						\
-	     : "=g" (q), "=g" (r)					\
-	     : "g" (__xx.__ll), "g" (d));				\
-  } while (0)
-#endif /* __vax__ */
-
 #if defined (__xtensa__) && W_TYPE_SIZE == 32
 /* This code is not Xtensa-configuration-specific, so rely on the compiler
    to expand builtin functions depending on what configuration features

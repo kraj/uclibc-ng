@@ -40,7 +40,6 @@ choice
 	default TARGET_sh if DESIRED_TARGET_ARCH = "sh"
 	default TARGET_sparc if DESIRED_TARGET_ARCH = "sparc"
 	default TARGET_v850 if DESIRED_TARGET_ARCH = "v850"
-	default TARGET_vax if DESIRED_TARGET_ARCH = "vax"
 	default TARGET_x86_64 if DESIRED_TARGET_ARCH = "x86_64"
 	default TARGET_xtensa if DESIRED_TARGET_ARCH = "xtensa"
 	help
@@ -125,9 +124,6 @@ config TARGET_sparc
 
 #config TARGET_v850
 #	bool "v850 (BROKEN)"
-
-#config TARGET_vax
-#	bool "vax"
 
 config TARGET_x86_64
 	bool "x86_64"
@@ -234,10 +230,6 @@ endif
 
 if TARGET_v850
 source "extra/Configs/Config.v850"
-endif
-
-if TARGET_vax
-source "extra/Configs/Config.vax"
 endif
 
 if TARGET_x86_64
@@ -589,7 +581,6 @@ config UCLIBC_HAS_THREADS_NATIVE
 		   !TARGET_microblaze && \
 		   !TARGET_nios2 && \
 		   !TARGET_or1k && \
-		   !TARGET_vax && \
 		   ARCH_USE_MMU
 	help
 	  If you want to compile uClibc with NPTL support, then answer Y.
