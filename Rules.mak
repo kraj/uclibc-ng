@@ -454,10 +454,6 @@ ifeq ($(TARGET_ARCH),i960)
 	OPTIMIZATION+=-mh -mint32 #-fsigned-char
 endif
 
-ifeq ($(TARGET_ARCH),e1)
-	OPTIMIZATION+=-mgnu-param
-endif
-
 ifeq ($(TARGET_ARCH),cris)
 	CPU_LDFLAGS-$(CONFIG_CRIS)+=-Wl,-mcrislinux
 	CPU_LDFLAGS-$(CONFIG_CRISV32)+=-Wl,-mcrislinux

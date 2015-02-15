@@ -21,7 +21,6 @@ choice
 	default TARGET_avr32 if DESIRED_TARGET_ARCH = "avr32"
 	default TARGET_bfin if DESIRED_TARGET_ARCH = "bfin"
 	default TARGET_cris if DESIRED_TARGET_ARCH = "cris"
-	default TARGET_e1 if DESIRED_TARGET_ARCH = "e1"
 	default TARGET_frv if DESIRED_TARGET_ARCH = "frv"
 	default TARGET_h8300 if DESIRED_TARGET_ARCH = "h8300"
 	default TARGET_hppa if DESIRED_TARGET_ARCH = "hppa"
@@ -66,9 +65,6 @@ config TARGET_c6x
 
 config TARGET_cris
 	bool "cris"
-
-#config TARGET_e1
-#	bool "e1 (BROKEN)"
 
 #config TARGET_frv
 #	bool "frv (BROKEN)"
@@ -150,10 +146,6 @@ endif
 
 if TARGET_cris
 source "extra/Configs/Config.cris"
-endif
-
-if TARGET_e1
-source "extra/Configs/Config.e1"
 endif
 
 if TARGET_frv
