@@ -399,14 +399,6 @@ endif
 
 ifeq ($(TARGET_ARCH),mips)
 	OPTIMIZATION+=-mno-split-addresses
-	ifeq ($(strip $(ARCH_BIG_ENDIAN)),y)
-		CPU_LDFLAGS-$(CONFIG_MIPS_N64_ABI)+=-Wl,-melf64btsmip
-		CPU_LDFLAGS-$(CONFIG_MIPS_O32_ABI)+=-Wl,-melf32btsmip
-	endif
-	ifeq ($(strip $(ARCH_LITTLE_ENDIAN)),y)
-		CPU_LDFLAGS-$(CONFIG_MIPS_N64_ABI)+=-Wl,-melf64ltsmip
-		CPU_LDFLAGS-$(CONFIG_MIPS_O32_ABI)+=-Wl,-melf32ltsmip
-	endif
 	CPU_CFLAGS-$(CONFIG_MIPS_N64_ABI)+=-mabi=64
 	CPU_CFLAGS-$(CONFIG_MIPS_O32_ABI)+=-mabi=32
 	CPU_CFLAGS-$(CONFIG_MIPS_N32_ABI)+=-mabi=n32
