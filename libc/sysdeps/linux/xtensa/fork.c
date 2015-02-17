@@ -20,10 +20,6 @@ pid_t fork(void)
 {
 	return (pid_t) INLINE_SYSCALL(clone, 2, SIGCHLD, 0);
 }
-# ifdef __UCLIBC_HAS_THREADS__
-strong_alias(fork,__libc_fork)
-libc_hidden_weak(fork)
-# else
-libc_hidden_def(fork)
-# endif
+lt_strong_alias(fork)
+lt_libc_hidden(fork)
 #endif

@@ -22,6 +22,8 @@
 #include <lowlevellock.h>
 #include <sys/time.h>
 #include <tls.h>
+#include <tcb-offsets.h>
+
 
 void
 #ifndef IS_IN_libpthread

@@ -16,10 +16,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _LINUX_XTENSA_SYSDEP_H
-#define _LINUX_XTENSA_SYSDEP_H 1
-
-#include <common/sysdep.h>
 #include <sys/syscall.h>
 
 #ifdef __ASSEMBLER__
@@ -27,6 +23,12 @@
 #define ALIGNARG(log2) 1 << log2
 #define ASM_TYPE_DIRECTIVE(name, typearg) .type name, typearg
 #define ASM_SIZE_DIRECTIVE(name) .size name, . - name
+
+#ifdef __STDC__
+#define C_LABEL(name)	name :
+#else
+#define C_LABEL(name)	name/**/:
+#endif
 
 #define	ENTRY(name)							\
   ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME(name);				\
@@ -49,15 +51,6 @@
 
 #undef END
 #define END(name) ASM_SIZE_DIRECTIVE(name)
-
-/* Local label name for asm code. */
-#ifndef L
-# ifdef HAVE_ELF
-#  define L(name)       .L##name
-# else
-#  define L(name)       name
-# endif
-#endif
 
 /* Define a macro for this directive so it can be removed in a few places.  */
 #define LITERAL_POSITION .literal_position
@@ -130,7 +123,19 @@
 #define	PSEUDO_END_ERRVAL(name)						      \
   END (name)
 
-#if defined _LIBC_REENTRANT
+#undef ret_ERRVAL
+#define ret_ERRVAL retw
+
+#if defined RTLD_PRIVATE_ERRNO
+# define SYSCALL_ERROR_HANDLER						      \
+0:	movi	a4, rtld_errno;						      \
+	neg	a2, a2;							      \
+	s32i	a2, a4, 0;						      \
+	movi	a2, -1;							      \
+	j	.Lpseudo_end;
+
+#elif defined _LIBC_REENTRANT
+
 # if defined USE___THREAD
 #  ifndef NOT_IN_libc
 #   define SYSCALL_ERROR_ERRNO __libc_errno
@@ -165,9 +170,3 @@
 #endif /* _LIBC_REENTRANT */
 
 #endif	/* __ASSEMBLER__ */
-
-/* Pointer mangling is not yet supported for Xtensa.  */
-#define PTR_MANGLE(var) (void) (var)
-#define PTR_DEMANGLE(var) (void) (var)
-
-#endif	/* _LINUX_XTENSA_SYSDEP_H */
