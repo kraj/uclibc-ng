@@ -257,6 +257,7 @@ config TARGET_SUBARCH
 	default "i486" if CONFIG_486
 	default "i586" if CONFIG_586
 	default "i686" if CONFIG_686
+	default "arcv2" if CONFIG_ARC_CPU_HS
 	default ""
 
 source "extra/Configs/Config.in.arch"
@@ -421,11 +422,11 @@ config LDSO_RUNPATH
 	  should be safe for most people.
 
 config LDSO_RUNPATH_OF_EXECUTABLE
-	bool "Use executables RPATH/RUNPATH when searching for libraries."
+	bool "Use executables RUNPATH/RPATH when searching for libraries."
 	depends on LDSO_RUNPATH
 	default n
 	help
-	  Use the executables RPATH/RUNPATH to find to find libraries even
+	  Use the executables RUNPATH/RPATH to find to find libraries even
 	  though this behavour is not standard.  Setting this option causes
 	  the uclibc dynamic linker behavour to match the glibc dynamic linker.
 
