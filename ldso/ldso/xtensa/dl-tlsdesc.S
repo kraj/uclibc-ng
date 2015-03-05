@@ -18,6 +18,9 @@
 
 #include <sysdep.h>
 #include <tls.h>
+
+#if defined(USE_TLS) && USE_TLS
+
 #include "tlsdesc.h"
 
 
@@ -94,3 +97,4 @@ _dl_tlsdesc_dynamic:
 	.size	_dl_tlsdesc_dynamic, .-_dl_tlsdesc_dynamic
 
 #endif /* SHARED */
+#endif /* USE_TLS */
