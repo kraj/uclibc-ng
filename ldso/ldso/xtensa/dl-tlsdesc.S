@@ -17,10 +17,10 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include <tls.h>
 
 #if defined(USE_TLS) && USE_TLS
 
+#include <tls.h>
 #include "tlsdesc.h"
 
 
