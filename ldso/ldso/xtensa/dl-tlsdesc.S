@@ -18,11 +18,9 @@
 
 #include <sysdep.h>
 
-#if defined(USE_TLS) && USE_TLS
-
+#if defined __UCLIBC_HAS_TLS__
 #include <tls.h>
 #include "tlsdesc.h"
-
 
 	.text
 	.align 4
@@ -97,4 +95,4 @@ _dl_tlsdesc_dynamic:
 	.size	_dl_tlsdesc_dynamic, .-_dl_tlsdesc_dynamic
 
 #endif /* SHARED */
-#endif /* USE_TLS */
+#endif
