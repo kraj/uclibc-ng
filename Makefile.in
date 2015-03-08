@@ -167,7 +167,7 @@ $(ALL_HEADERS_SYS_ARCH):
 	$(do_ln) $(call rel_srcdir)libc/sysdeps/linux/$(TARGET_ARCH)/sys/$(@F) $@
 endif
 
-$(target-headers-sysdep) $(pregen-headers-y): | $(top_builddir)include/bits $(top_builddir)include/sys
+$(target-headers-sysdep) $(pregen-headers-y): | $(top_builddir)include/bits $(top_builddir)include/sys $(top_builddir)include/bits/sysnum.h 
 
 HEADERCLEAN_common:
 	$(do_rm) $(ALL_HEADERS_COMMON)
