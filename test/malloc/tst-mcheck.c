@@ -53,11 +53,7 @@ main (void)
     merror ("realloc (p, 0) failed.");
 
   p = malloc (0);
-#if !defined(__UCLIBC__) || defined(__MALLOC_GLIBC_COMPAT__)
   if (p == NULL)
-#else
-  if (p != NULL)
-#endif
     merror ("malloc (0) failed.");
 
   p = realloc (p, 0);

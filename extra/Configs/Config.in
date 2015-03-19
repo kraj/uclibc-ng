@@ -572,66 +572,6 @@ config UCLIBC_HAS_LFS
 	  if you are using an older Linux kernel (2.0.x) that lacks large file
 	  support.  Enabling this option will increase the size of uClibc.
 
-choice
-	prompt "Malloc Implementation"
-	default MALLOC if ! ARCH_USE_MMU
-	default MALLOC_STANDARD if ARCH_USE_MMU
-
-config MALLOC
-	bool "malloc"
-	help
-	  "malloc" use mmap for all allocations and so works very well on
-	  MMU-less systems that do not support the brk() system call.   It is
-	  pretty smart about reusing already allocated memory, and minimizing
-	  memory wastage.
-	  This is the default for uClinux MMU-less systems.
-
-config MALLOC_SIMPLE
-	bool "malloc-simple"
-	help
-	  "malloc-simple" is trivially simple and slow as molasses.  It
-	  was written from scratch for uClibc, and is the simplest possible
-	  (and therefore smallest) malloc implementation.
-
-	  This uses only the mmap() system call to allocate and free memory,
-	  and does not use the brk() system call at all, making it a fine
-	  choice for MMU-less systems with very limited memory.  It's 100%
-	  standards compliant, thread safe, very small, and releases freed
-	  memory back to the OS immediately rather than keeping it in the
-	  process's heap for reallocation.  It is also VERY SLOW.
-
-config MALLOC_STANDARD
-	bool "malloc-standard"
-	depends on ARCH_USE_MMU
-	help
-	  "malloc-standard" is derived from the public domain dlmalloc
-	  implementation by Doug Lea.  It is quite fast, and is pretty smart
-	  about reusing already allocated memory, and minimizing memory
-	  wastage.  This uses brk() for small allocations, while using mmap()
-	  for larger allocations.  This is the default malloc implementation
-	  for uClibc.
-
-	  If unsure, answer "malloc-standard".
-
-endchoice
-
-config MALLOC_GLIBC_COMPAT
-	bool "Malloc returns live pointer for malloc(0)"
-	help
-	  The behavior of malloc(0) is listed as implementation-defined by
-	  SuSv3.  Glibc returns a valid pointer to something, while uClibc
-	  normally returns NULL.  I personally feel glibc's behavior is
-	  not particularly safe, and allows buggy applications to hide very
-	  serious problems.
-
-	  When this option is enabled, uClibc will act just like glibc, and
-	  return a live pointer when someone calls malloc(0).  This pointer
-	  provides a malloc'ed area with a size of 1 byte.  This feature is
-	  mostly useful when dealing with applications using autoconf's broken
-	  AC_FUNC_MALLOC macro (which redefines malloc as rpl_malloc if it
-	  does not detect glibc style returning-a-valid-pointer-for-malloc(0)
-	  behavior).  Most people can safely answer N.
-
 config UCLIBC_HAS_OBSTACK
 	bool "Obstack Support (gnu extension)"
 	help
@@ -2357,7 +2297,6 @@ config SUPPORT_LD_DEBUG_EARLY
 
 config UCLIBC_MALLOC_DEBUGGING
 	bool "Build malloc with debugging support"
-	depends on MALLOC || MALLOC_STANDARD
 	select DOASSERTS
 	help
 	  Answer Y here to compile extra debugging support code into malloc.

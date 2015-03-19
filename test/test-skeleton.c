@@ -216,14 +216,6 @@ main (int argc, char *argv[])
   pid_t termpid;
   char *envstr_timeoutfactor;
 
-  /* Make uses of freed and uninitialized memory known.  */
-#ifdef __MALLOC_STANDARD__
-#ifndef M_PERTURB
-# define M_PERTURB -6
-#endif
-  mallopt (M_PERTURB, 42);
-#endif
-
 #ifdef STDOUT_UNBUFFERED
   setbuf (stdout, NULL);
 #endif

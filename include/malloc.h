@@ -130,66 +130,6 @@ libc_hidden_proto(memalign)
 extern __malloc_ptr_t valloc __MALLOC_P ((size_t __size)) __attribute_malloc__;
 #endif
 
-#ifdef __MALLOC_STANDARD__
-
-# ifdef __USE_SVID
-/* SVID2/XPG mallinfo structure */
-struct mallinfo {
-  int arena;    /* total space allocated from system */
-  int ordblks;  /* number of non-inuse chunks */
-  int smblks;   /* unused -- always zero */
-  int hblks;    /* number of mmapped regions */
-  int hblkhd;   /* total space in mmapped regions */
-  int usmblks;  /* unused -- always zero */
-  int fsmblks;  /* unused -- always zero */
-  int uordblks; /* total allocated space */
-  int fordblks; /* total non-inuse space */
-  int keepcost; /* top-most, releasable (via malloc_trim) space */
-};
-
-/* Returns a copy of the updated current mallinfo. */
-extern struct mallinfo mallinfo __MALLOC_P ((void));
-libc_hidden_proto(mallinfo)
-# endif /* __USE_SVID */
-
-# ifdef __USE_GNU
-/* Release all but __pad bytes of freed top-most memory back to the
-   system. Return 1 if successful, else 0. */
-extern int malloc_trim(size_t pad);
-# endif /* __USE_GNU */
-
-#include <stdio.h>
-/* Prints brief summary statistics to the specified file.
- * Writes to stderr if file is NULL. */
-extern void malloc_stats(FILE *file);
-
-/* SVID2/XPG mallopt options */
-#ifndef M_MXFAST
-# define M_MXFAST  1	/* UNUSED in this malloc */
-#endif
-#ifndef M_NLBLKS
-# define M_NLBLKS  2	/* UNUSED in this malloc */
-#endif
-#ifndef M_GRAIN
-# define M_GRAIN   3	/* UNUSED in this malloc */
-#endif
-#ifndef M_KEEP
-# define M_KEEP    4	/* UNUSED in this malloc */
-#endif
-
-/* mallopt options that actually do something */
-#define M_TRIM_THRESHOLD    -1
-#define M_TOP_PAD           -2
-#define M_MMAP_THRESHOLD    -3
-#define M_MMAP_MAX          -4
-#define M_CHECK_ACTION      -5
-#define M_PERTURB           -6
-
-/* General SVID/XPG interface to tunable parameters. */
-extern int mallopt __MALLOC_P ((int __param, int __val));
-
-#endif /* __MALLOC_STANDARD__ */
-
 /* uClibc may use malloc internally in situations where user can not be
  * notified about out-of-memory condition. In this situation uClibc will
  * call __uc_malloc_failed if it is non-NULL, and retry allocation

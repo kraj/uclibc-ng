@@ -37,14 +37,10 @@ static struct handler_list * pthread_atfork_prepare = NULL;
 static struct handler_list * pthread_atfork_parent = NULL;
 static struct handler_list * pthread_atfork_child = NULL;
 
-#ifdef __MALLOC__
 __UCLIBC_MUTEX_EXTERN(__malloc_heap_lock);
 __UCLIBC_MUTEX_EXTERN(__malloc_sbrk_lock);
 #ifdef __UCLIBC_UCLINUX_BROKEN_MUNMAP__
 __UCLIBC_MUTEX_EXTERN(__malloc_mmb_heap_lock);
-#endif
-#elif defined(__MALLOC_STANDARD__) || defined(__MALLOC_SIMPLE__)
-__UCLIBC_MUTEX_EXTERN(__malloc_lock);
 #endif
 
 static void pthread_insert_list(struct handler_list ** list,
@@ -105,42 +101,30 @@ static pid_t __fork(void)
   pthread_call_handlers(prepare);
 
   __pthread_once_fork_prepare();
-#ifdef __MALLOC__
   __pthread_mutex_lock(&__malloc_sbrk_lock);
   __pthread_mutex_lock(&__malloc_heap_lock);
 #ifdef __UCLIBC_UCLINUX_BROKEN_MUNMAP__
   __pthread_mutex_lock(&__malloc_mmb_heap_lock);
 #endif
-#elif defined(__MALLOC_STANDARD__) || defined(__MALLOC_SIMPLE__)
-  __pthread_mutex_lock(&__malloc_lock);
-#endif
 
   pid = __libc_fork();
   if (pid == 0) {
-#if defined(__MALLOC_STANDARD__) || defined(__MALLOC_SIMPLE__)
-    __libc_lock_init_recursive(__malloc_lock);
-#elif defined(__MALLOC__)
 #ifdef __UCLIBC_UCLINUX_BROKEN_MUNMAP__
     __libc_lock_init_adaptive(__malloc_mmb_heap_lock);
 #endif
     __libc_lock_init_adaptive(__malloc_heap_lock);
     __libc_lock_init(__malloc_sbrk_lock);
-#endif
     __libc_lock_init_adaptive(pthread_atfork_lock);
     __pthread_reset_main_thread();
     __fresetlockfiles();
     __pthread_once_fork_child();
     pthread_call_handlers(child);
   } else {
-#if defined(__MALLOC_STANDARD__) || defined(__MALLOC_SIMPLE__)
-    __pthread_mutex_unlock(&__malloc_lock);
-#elif defined(__MALLOC__)
 #ifdef __UCLIBC_UCLINUX_BROKEN_MUNMAP__
     __pthread_mutex_unlock(&__malloc_mmb_heap_lock);
 #endif
     __pthread_mutex_unlock(&__malloc_heap_lock);
     __pthread_mutex_unlock(&__malloc_sbrk_lock);
-#endif
     __pthread_mutex_unlock(&pthread_atfork_lock);
     __pthread_once_fork_parent();
     pthread_call_handlers(parent);

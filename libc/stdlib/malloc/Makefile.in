@@ -27,7 +27,7 @@ STDLIB_MALLOC_OUT := $(top_builddir)libc/stdlib/malloc
 STDLIB_MALLOC_SRC := $(patsubst %.c,$(STDLIB_MALLOC_DIR)/%.c,$(CSRC-y))
 STDLIB_MALLOC_OBJ := $(patsubst %.c,$(STDLIB_MALLOC_OUT)/%.o,$(CSRC-y))
 
-libc-$(MALLOC) += $(STDLIB_MALLOC_OBJ)
+libc-y += $(STDLIB_MALLOC_OBJ)
 
 objclean-y += CLEAN_libc/stdlib/malloc
 
