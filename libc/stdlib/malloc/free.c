@@ -62,37 +62,12 @@ __free_to_heap (void *mem, struct heap_free_area **heap
     {
       unsigned long start = (unsigned long)HEAP_FREE_AREA_START (fa);
       unsigned long end = (unsigned long)HEAP_FREE_AREA_END (fa);
-#ifndef MALLOC_USE_SBRK
 # ifdef __UCLIBC_UCLINUX_BROKEN_MUNMAP__
       struct malloc_mmb *mmb, *prev_mmb;
       unsigned long mmb_start, mmb_end;
 # else /* !__UCLIBC_UCLINUX_BROKEN_MUNMAP__ */
       unsigned long unmap_start, unmap_end;
 # endif /* __UCLIBC_UCLINUX_BROKEN_MUNMAP__ */
-#endif /* !MALLOC_USE_SBRK */
-
-#ifdef MALLOC_USE_SBRK
-      /* Get the sbrk lock so that the two possible calls to sbrk below
-	 are guaranteed to be contiguous.  */
-      __malloc_lock_sbrk ();
-      /* When using sbrk, we only shrink the heap from the end.  It would
-	 be possible to allow _both_ -- shrinking via sbrk when possible,
-	 and otherwise shrinking via munmap, but this results in holes in
-	 memory that prevent the brk from every growing back down; since
-	 we only ever grow the heap via sbrk, this tends to produce a
-	 continuously growing brk (though the actual memory is unmapped),
-	 which could eventually run out of address space.  Note that
-	 `sbrk(0)' shouldn't normally do a system call, so this test is
-	 reasonably cheap.  */
-      if ((void *)end != sbrk (0))
-	{
-	  MALLOC_DEBUG (-1, "not unmapping: 0x%lx - 0x%lx (%ld bytes)",
-			start, end, end - start);
-	  __malloc_unlock_sbrk ();
-	  __heap_unlock (heap_lock);
-	  return;
-	}
-#endif
 
       MALLOC_DEBUG (0, "unmapping: 0x%lx - 0x%lx (%ld bytes)",
 		    start, end, end - start);
@@ -112,17 +87,6 @@ __free_to_heap (void *mem, struct heap_free_area **heap
 	  __heap_free (heap, (void *)start, MALLOC_MIN_SIZE);
 	  start += MALLOC_MIN_SIZE;
 	}
-
-#ifdef MALLOC_USE_SBRK
-
-      /* Release the heap lock; we're still holding the sbrk lock.  */
-      __heap_unlock (heap_lock);
-      /* Lower the brk.  */
-      sbrk (start - end);
-      /* Release the sbrk lock too; now we hold no locks.  */
-      __malloc_unlock_sbrk ();
-
-#else /* !MALLOC_USE_SBRK */
 
 # ifdef __UCLIBC_UCLINUX_BROKEN_MUNMAP__
       /* Using the uClinux broken munmap, we have to only munmap blocks
@@ -258,8 +222,6 @@ __free_to_heap (void *mem, struct heap_free_area **heap
 	munmap ((void *)unmap_start, unmap_end - unmap_start);
 
 # endif /* __UCLIBC_UCLINUX_BROKEN_MUNMAP__ */
-
-#endif /* MALLOC_USE_SBRK */
     }
 
   MALLOC_DEBUG_INDENT (-1);

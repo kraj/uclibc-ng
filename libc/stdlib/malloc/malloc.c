@@ -29,11 +29,6 @@ struct heap_free_area *__malloc_heap = HEAP_INIT_WITH_FA (initial_fa);
 __UCLIBC_MUTEX_INIT(__malloc_heap_lock,PTHREAD_MUTEX_INITIALIZER);
 #endif
 
-#if defined(MALLOC_USE_LOCKING) && defined(MALLOC_USE_SBRK)
-/* A lock protecting our use of sbrk.  */
-__UCLIBC_MUTEX(__malloc_sbrk_lock);
-#endif /* MALLOC_USE_LOCKING && MALLOC_USE_SBRK */
-
 
 #ifdef __UCLIBC_UCLINUX_BROKEN_MUNMAP__
 /* A list of all malloc_mmb structures describing blocks that
@@ -90,35 +85,6 @@ __malloc_from_heap (size_t size, struct heap_free_area **heap
 	   : MALLOC_ROUND_UP_TO_PAGE_SIZE (size));
 
       /* Allocate the new heap block.  */
-#ifdef MALLOC_USE_SBRK
-
-      __malloc_lock_sbrk ();
-
-      /* Use sbrk we can, as it's faster than mmap, and guarantees
-	 contiguous allocation.  */
-      block = sbrk (block_size);
-      if (likely (block != (void *)-1))
-	{
-	  /* Because sbrk can return results of arbitrary
-	     alignment, align the result to a MALLOC_ALIGNMENT boundary.  */
-	  long aligned_block = MALLOC_ROUND_UP ((long)block, MALLOC_ALIGNMENT);
-	  if (block != (void *)aligned_block)
-	    /* Have to adjust.  We should only have to actually do this
-	       the first time (after which we will have aligned the brk
-	       correctly).  */
-	    {
-	      /* Move the brk to reflect the alignment; our next allocation
-		 should start on exactly the right alignment.  */
-	      sbrk (aligned_block - (long)block);
-	      block = (void *)aligned_block;
-	    }
-	}
-
-      __malloc_unlock_sbrk ();
-
-#else /* !MALLOC_USE_SBRK */
-
-      /* Otherwise, use mmap.  */
 #ifdef __ARCH_USE_MMU__
       block = mmap ((void *)0, block_size, PROT_READ | PROT_WRITE,
 		    MAP_PRIVATE | MAP_ANONYMOUS, 0, 0);
@@ -127,11 +93,9 @@ __malloc_from_heap (size_t size, struct heap_free_area **heap
 		    MAP_SHARED | MAP_ANONYMOUS | MAP_UNINITIALIZED, 0, 0);
 #endif
 
-#endif /* MALLOC_USE_SBRK */
-
       if (likely (block != (void *)-1))
 	{
-#if !defined(MALLOC_USE_SBRK) && defined(__UCLIBC_UCLINUX_BROKEN_MUNMAP__)
+#if defined(__UCLIBC_UCLINUX_BROKEN_MUNMAP__)
 	  struct malloc_mmb *mmb, *prev_mmb, *new_mmb;
 #endif
 
@@ -150,7 +114,7 @@ __malloc_from_heap (size_t size, struct heap_free_area **heap
 	  mem = __heap_alloc (heap, &size);
 
 
-#if !defined(MALLOC_USE_SBRK) && defined(__UCLIBC_UCLINUX_BROKEN_MUNMAP__)
+#if defined(__UCLIBC_UCLINUX_BROKEN_MUNMAP__)
 	  /* Insert a record of BLOCK in sorted order into the
 	     __malloc_mmapped_blocks list.  */
 
@@ -174,7 +138,7 @@ __malloc_from_heap (size_t size, struct heap_free_area **heap
 	  MALLOC_MMB_DEBUG (0, "new mmb at 0x%x: 0x%x[%d]",
 			    (unsigned)new_mmb,
 			    (unsigned)new_mmb->mem, block_size);
-#endif /* !MALLOC_USE_SBRK && __UCLIBC_UCLINUX_BROKEN_MUNMAP__ */
+#endif /* __UCLIBC_UCLINUX_BROKEN_MUNMAP__ */
 	  __heap_unlock (heap_lock);
 	}
     }

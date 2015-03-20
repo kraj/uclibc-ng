@@ -38,7 +38,6 @@ static struct handler_list * pthread_atfork_parent = NULL;
 static struct handler_list * pthread_atfork_child = NULL;
 
 __UCLIBC_MUTEX_EXTERN(__malloc_heap_lock);
-__UCLIBC_MUTEX_EXTERN(__malloc_sbrk_lock);
 #ifdef __UCLIBC_UCLINUX_BROKEN_MUNMAP__
 __UCLIBC_MUTEX_EXTERN(__malloc_mmb_heap_lock);
 #endif
@@ -101,7 +100,6 @@ static pid_t __fork(void)
   pthread_call_handlers(prepare);
 
   __pthread_once_fork_prepare();
-  __pthread_mutex_lock(&__malloc_sbrk_lock);
   __pthread_mutex_lock(&__malloc_heap_lock);
 #ifdef __UCLIBC_UCLINUX_BROKEN_MUNMAP__
   __pthread_mutex_lock(&__malloc_mmb_heap_lock);
@@ -113,7 +111,6 @@ static pid_t __fork(void)
     __libc_lock_init_adaptive(__malloc_mmb_heap_lock);
 #endif
     __libc_lock_init_adaptive(__malloc_heap_lock);
-    __libc_lock_init(__malloc_sbrk_lock);
     __libc_lock_init_adaptive(pthread_atfork_lock);
     __pthread_reset_main_thread();
     __fresetlockfiles();
@@ -124,7 +121,6 @@ static pid_t __fork(void)
     __pthread_mutex_unlock(&__malloc_mmb_heap_lock);
 #endif
     __pthread_mutex_unlock(&__malloc_heap_lock);
-    __pthread_mutex_unlock(&__malloc_sbrk_lock);
     __pthread_mutex_unlock(&pthread_atfork_lock);
     __pthread_once_fork_parent();
     pthread_call_handlers(parent);

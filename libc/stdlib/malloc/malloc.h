@@ -42,16 +42,6 @@
    space.  */
 #define MALLOC_REALLOC_MIN_FREE_SIZE  (HEAP_MIN_SIZE + 16)
 
-
-/* For systems with an MMU, use sbrk to map/unmap memory for the malloc
-   heap, instead of mmap/munmap.  This is a tradeoff -- sbrk is faster than
-   mmap/munmap, and guarantees contiguous allocation, but is also less
-   flexible, and causes the heap to only be shrinkable from the end.  */
-#ifdef __ARCH_USE_MMU__
-# define MALLOC_USE_SBRK
-#endif
-
-
 /* The current implementation of munmap in uClinux doesn't work correctly:
    it requires that ever call to munmap exactly match a corresponding call
    to mmap (that is, it doesn't allow you to unmap only part of a
@@ -132,19 +122,6 @@ extern int __malloc_mmb_debug;
 #ifdef __UCLIBC_HAS_THREADS__
 # define MALLOC_USE_LOCKING
 #endif
-
-#ifdef MALLOC_USE_SBRK
-/* This lock is used to serialize uses of the `sbrk' function (in both
-   malloc and free, sbrk may be used several times in succession, and
-   things will break if these multiple calls are interleaved with another
-   thread's use of sbrk!).  */
-__UCLIBC_MUTEX_EXTERN(__malloc_sbrk_lock) attribute_hidden;
-#  define __malloc_lock_sbrk()	__UCLIBC_MUTEX_LOCK_CANCEL_UNSAFE (__malloc_sbrk_lock)
-#  define __malloc_unlock_sbrk() __UCLIBC_MUTEX_UNLOCK_CANCEL_UNSAFE (__malloc_sbrk_lock)
-#else
-# define __malloc_lock_sbrk()	(void)0
-# define __malloc_unlock_sbrk()	(void)0
-#endif /* MALLOC_USE_SBRK */
 
 /* Define MALLOC_DEBUGGING to cause malloc to emit debugging info to stderr
    when the variable __malloc_debug is set to true. */
