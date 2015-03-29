@@ -40,7 +40,7 @@ __BEGIN_DECLS
 /* Make FD be the controlling terminal, stdin, stdout, and stderr;
    then close FD.  Returns 0 on success, nonzero on error.  */
 extern int login_tty (int __fd) __THROW;
-
+libutil_hidden_proto(login_tty)
 
 /* Write the given entry into utmp and wtmp.  */
 extern void login (const struct utmp *__entry) __THROW;

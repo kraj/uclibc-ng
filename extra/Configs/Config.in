@@ -670,6 +670,25 @@ config COMPAT_ATEXIT
 	  Enable this option if you want to update from 0.9.28 to git/0.9.29,
 	  else you will be missing atexit() until you rebuild all apps.
 
+config UCLIBC_HAS_UTMPX
+	bool "utmpx based support for tracking login/logouts to/from the system"
+	help
+	  Answer y to enable support for accessing user accounting database.
+	  It can be used to track all login/logout to the system.
+
+config UCLIBC_HAS_UTMP
+	bool "utmp support (XPG2 compat, SVr4 compat)"
+	depends on UCLIBC_HAS_UTMPX
+	help
+	  Answer y to enable legacy SVID support for accessing
+	  user accounting database:
+		   getutent(), getutid(), getutline(), pututline(),
+		   setutent(), endutent(), utmpname() in utmp.h
+	  It can be used to track all login/logout to the system.
+
+	  If unsure, answer N and use corresponding POSIX functions
+	  from utmpx.h
+
 config UCLIBC_SUSV2_LEGACY
 	bool "Enable SuSv2 LEGACY functions"
 	help
@@ -995,7 +1014,7 @@ config UCLIBC_LINUX_SPECIFIC
 	help
 	  accept4(), bdflush(),
 	  capget(), capset(), eventfd(), fallocate(),
-	  fstatfs(), inotify_*(), ioperm(), iopl(),
+	  fstatfs(), getrandom(), inotify_*(), ioperm(), iopl(),
 	  madvise(), modify_ldt(), pipe2(), personality(),
 	  prctl()/arch_prctl(), pivot_root(), modify_ldt(),
 	  ppoll(), readahead(), reboot(), remap_file_pages(),
@@ -2011,14 +2030,6 @@ config UCLIBC_HAS_GNU_GLOB
 	  SUSv3 compatible glob().
 
 	  Most people will answer N.
-
-config UCLIBC_HAS_UTMPX
-       bool "utmpx based support for tracking login/logouts to/from the system"
-       help
-         Answer y to enable support for accessing user accounting database.
-         It can be used to track all login/logout to the system.
-
-         If unsure, just answer N.
 
 endmenu
 

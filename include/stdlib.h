@@ -38,7 +38,7 @@ __BEGIN_DECLS
 #ifndef __need_malloc_and_calloc
 #define	_STDLIB_H	1
 
-#if defined __USE_XOPEN && !defined _SYS_WAIT_H
+#if (defined __USE_XOPEN || defined __USE_XOPEN2K8) && !defined _SYS_WAIT_H
 /* XPG requires a few symbols from <sys/wait.h> being defined.  */
 # include <bits/waitflags.h>
 # include <bits/waitstatus.h>
@@ -486,11 +486,11 @@ extern int lcong48_r (unsigned short int __param[7],
 __BEGIN_NAMESPACE_STD
 /* Allocate SIZE bytes of memory.  */
 extern void *malloc (size_t __size) __THROW __attribute_malloc__ __wur;
-/* We want the malloc symbols overridable at runtime
- * libc_hidden_proto(malloc) */
+/* We want the malloc symbol overridable at runtime, do not hide it! */
 /* Allocate NMEMB elements of SIZE bytes each, all initialized to 0.  */
 extern void *calloc (size_t __nmemb, size_t __size)
      __THROW __attribute_malloc__ __wur;
+/* We want the calloc symbol overridable at runtime, do not hide it! */
 __END_NAMESPACE_STD
 #endif
 
@@ -503,8 +503,10 @@ __BEGIN_NAMESPACE_STD
    between objects pointed by the old and new pointers.  */
 extern void *realloc (void *__ptr, size_t __size)
      __THROW __wur;
+/* We want the realloc symbol overridable at runtime, do not hide it! */
 /* Free a block allocated by `malloc', `realloc' or `calloc'.  */
 extern void free (void *__ptr) __THROW;
+/* We want the free symbol overridable at runtime, do not hide it! */
 __END_NAMESPACE_STD
 
 #if 0 /*def	__USE_MISC*/
