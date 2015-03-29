@@ -16,31 +16,41 @@
 #include "math.h"
 #include <complex.h>
 
-#define WRAPPER1(func) \
+#if !defined __NO_LONG_DOUBLE_MATH
+# define WRAPPER1(func) \
 long double func##l(long double x) \
 { \
 	return (long double) func((double) x); \
 }
-#define WRAPPER2(func) \
+# define WRAPPER2(func) \
 long double func##l(long double x, long double y) \
 { \
 	return (long double) func((double) x, (double) y); \
 }
-#define int_WRAPPER1(func) \
+# define int_WRAPPER1(func) \
 int func##l(long double x) \
 { \
 	return func((double) x); \
 }
-#define long_WRAPPER1(func) \
+# define long_WRAPPER1(func) \
 long func##l(long double x) \
 { \
 	return func((double) x); \
 }
-#define long_long_WRAPPER1(func) \
+# define long_long_WRAPPER1(func) \
 long long func##l(long double x) \
 { \
 	return func((double) x); \
 }
+
+#ifndef __DO_XSI_MATH__
+# undef L_j0l  /* long double j0l(long double x); */
+# undef L_j1l  /* long double j1l(long double x); */
+# undef L_jnl  /* long double jnl(int n, long double x); */
+# undef L_y0l  /* long double y0l(long double x); */
+# undef L_y1l  /* long double y1l(long double x); */
+# undef L_ynl  /* long double ynl(int n, long double x); */
+#endif
 
 /* Implement the following, as defined by SuSv3 */
 #if 0
@@ -156,6 +166,7 @@ WRAPPER1(cosh)
 
 #ifdef L_cosl
 WRAPPER1(cos)
+libm_hidden_def(cosl)
 #endif
 
 #ifdef L_erfcl
@@ -172,6 +183,7 @@ WRAPPER1(exp2)
 
 #ifdef L_expl
 WRAPPER1(exp)
+libm_hidden_def(expl)
 #endif
 
 #ifdef L_expm1l
@@ -222,10 +234,26 @@ WRAPPER1(gamma)
 
 #ifdef L_hypotl
 WRAPPER2(hypot)
+libm_hidden_def(hypotl)
 #endif
 
 #ifdef L_ilogbl
 int_WRAPPER1(ilogb)
+#endif
+
+#ifdef L_j0l
+	WRAPPER1(j0)
+#endif
+
+#ifdef L_j1l
+	WRAPPER1(j1)
+#endif
+
+#ifdef L_jnl
+long double jnl(int n, long double x)
+{
+	return (long double) jn(n, (double)x);
+}
 #endif
 
 #ifdef L_ldexpl
@@ -291,12 +319,18 @@ WRAPPER1(nearbyint)
 
 #ifdef L_nextafterl
 WRAPPER2(nextafter)
+libm_hidden_def(nextafterl)
 #endif
 
-/* Disabled in Makefile.in */
-#if 0 /* def L_nexttowardl */
-WRAPPER2(nexttoward)
-libm_hidden_def(nexttowardl)
+#ifdef L_nexttowardl
+# if 0 /* TODO */
+strong_alias(nextafterl, nexttowardl)
+# else
+long double nexttowardl(long double x, long double y)
+{
+	return nextafterl(x, y);
+}
+#endif
 #endif
 
 #ifdef L_powl
@@ -344,6 +378,7 @@ WRAPPER1(sinh)
 
 #ifdef L_sinl
 WRAPPER1(sin)
+libm_hidden_def(sinl)
 #endif
 
 #ifdef L_sqrtl
@@ -369,6 +404,22 @@ WRAPPER1(trunc)
 #ifdef L_significandl
 WRAPPER1(significand)
 #endif
+
+#ifdef L_y0l
+WRAPPER1(y0)
+#endif
+
+#ifdef L_y1l
+WRAPPER1(y1)
+#endif
+
+#ifdef L_ynl
+long double ynl(int n, long double x)
+{
+	return (long double) yn(n, (double)x);
+}
+#endif
+
 
 #if defined __DO_C99_MATH__ && !defined __NO_LONG_DOUBLE_MATH
 
@@ -397,4 +448,6 @@ int_WRAPPER1(__isinf)
 libm_hidden_def(__isinfl)
 # endif
 
-#endif
+#endif /* __DO_C99_MATH__ */
+
+#endif /* __NO_LONG_DOUBLE_MATH */

@@ -18,14 +18,14 @@
 
 #include <errno.h>
 #include <string.h>
-#include <utmp.h>
 #include <sys/time.h>
+#include "internal/utmp.h"
 
 int
 logout (const char *line)
 {
-  struct utmp tmp;
-  struct utmp *ut;
+  struct UT tmp;
+  struct UT *ut;
   int result = 0;
 
   /* if (utmpname (_PATH_UTMP) == -1) return 0; - why?
@@ -50,7 +50,7 @@ logout (const char *line)
       memset (ut->ut_host, 0, sizeof ut->ut_host);
 #endif
 #if _HAVE_UT_TV - 0
-# if !defined __WORDSIZE_COMPAT32 || __WORDSIZE_COMPAT32 == 0
+# if !defined __WORDSIZE_TIME64_COMPAT32
       gettimeofday (&ut->ut_tv, NULL);
 # else
       {
