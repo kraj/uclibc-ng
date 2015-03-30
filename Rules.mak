@@ -415,12 +415,6 @@ else
 endif
 endif
 
-ifeq ($(TARGET_ARCH),sh64)
-	CPU_CFLAGS-$(ARCH_LITTLE_ENDIAN):=-ml
-	CPU_CFLAGS-$(ARCH_BIG_ENDIAN):=-mb
-	CPU_CFLAGS-$(CONFIG_SH5)+=-m5-32media
-endif
-
 ifeq ($(TARGET_ARCH),h8300)
 	SYMBOL_PREFIX=_
 	CPU_LDFLAGS-$(CONFIG_H8300H)+= -Wl,-ms8300h

@@ -34,7 +34,6 @@ choice
 	default TARGET_nios2 if DESIRED_TARGET_ARCH = "nios2"
 	default TARGET_powerpc if DESIRED_TARGET_ARCH = "powerpc"
 	default TARGET_sh if DESIRED_TARGET_ARCH = "sh"
-	default TARGET_sh64 if DESIRED_TARGET_ARCH = "sh64"
 	default TARGET_sparc if DESIRED_TARGET_ARCH = "sparc"
 	default TARGET_v850 if DESIRED_TARGET_ARCH = "v850"
 	default TARGET_x86_64 if DESIRED_TARGET_ARCH = "x86_64"
@@ -103,9 +102,6 @@ config TARGET_powerpc
 
 config TARGET_sh
 	bool "superh"
-
-config TARGET_sh64
-	bool "sh64"
 
 config TARGET_sparc
 	bool "sparc"
@@ -194,10 +190,6 @@ endif
 
 if TARGET_sh
 source "extra/Configs/Config.sh"
-endif
-
-if TARGET_sh64
-source "extra/Configs/Config.sh64"
 endif
 
 if TARGET_sparc
