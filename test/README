@@ -24,7 +24,6 @@ The following make variables may help you in testing:
  - TEST_INSTALLED_UCLIBC - Test installed libraries
                            under /lib and /usr/lib.
  - TIMEOUTFACTOR=nn - increase test timeout nn times.
-                  At least REGEX_OLD + regex/tst-regex2 needs it increased.
 
 So, to just run the uClibc tests, try this:
 make check UCLIBC_ONLY=1
