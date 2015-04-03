@@ -45,3 +45,4 @@ CFLAGS_bug-glob2 = -fPIC
 CFLAGS_opendir-tst1 = -fPIC
 CFLAGS_tst-inotify = -fPIC
 CFLAGS_tst-utmp = -fPIC
+CFLAGS_tst-utmpx = -fPIC
