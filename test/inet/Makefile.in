@@ -18,3 +18,4 @@ endif
 
 CFLAGS_bug-if1 = -fPIC
 CFLAGS_tst-sock-nonblock = -fPIC
+CFLAGS_tst-ifaddrs = -fPIC
