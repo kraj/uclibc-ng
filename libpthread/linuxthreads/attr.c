@@ -219,6 +219,7 @@ int __pthread_attr_getstackaddr(const pthread_attr_t *attr, void **stackaddr)
   return 0;
 }
 weak_alias (__pthread_attr_getstackaddr, pthread_attr_getstackaddr)
+
 #endif
 
 int __pthread_attr_setstacksize(pthread_attr_t *attr, size_t stacksize)
