@@ -5,4 +5,4 @@ RET_hello := 42
 RET_tiny  := 42
 
 # missing internal headers, disable these
-GLIBC_TESTS_DISABLED := tst-atomic_glibc tst-atomic-long_glibc
+TESTS_DISABLED := tst-atomic tst-atomic-long

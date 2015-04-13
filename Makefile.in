@@ -13,7 +13,7 @@ sub_headers := headers
 
 ifeq ($(HAVE_DOT_CONFIG),y)
 
-all: pregen libs
+all: pregen libs startfiles
 libs: pregen
 
 # In this section, we need .config
@@ -57,8 +57,9 @@ ifeq ($(HAVE_DOT_CONFIG),y)
 $(top_builddir)include/bits/uClibc_config.h: $(conf) $(KCONFIG_CONFIG) $(top_srcdir)extra/scripts/conf-header.sh | $(top_builddir)include/bits
 	@$(disp_gen)
 	$(Q)$< -s $(Kconfig)
-	$(Q)$(top_srcdir)extra/scripts/conf-header.sh $(KCONFIG_CONFIG) > $@
+	$(Q)$(top_srcdir)extra/scripts/conf-header.sh $(KCONFIG_CONFIG) > $@.tmp
 	$(Q)$(MAKE) headers-y
+	$(Q)mv $@.tmp $@
 
 # The above doesn't work for threads, though. Just using check-symlinks for now.
 # XXX: FIXME: this is ugly
@@ -183,7 +184,10 @@ headers-y += $(target-headers-sysdep)
 
 headers: $(top_builddir)include/bits/uClibc_config.h | subdirs
 subdirs: $(addprefix $(top_builddir),$(subdirs))
-pregen-headers: $(top_builddir)include/bits/sysnum.h $(pregen-headers-y)
+
+$(pregen-headers-y): $(headers_dep)
+
+pregen-headers: $(pregen-headers-y)
 pregen: headers pregen-headers
 	$(Q)$(if $(UCLIBC_HAS_LOCALE),$(MAKE) -C extra/locale locale_headers)
 
@@ -214,8 +218,6 @@ install: install_runtime install_dev
 
 
 RUNTIME_PREFIX_LIB_FROM_DEVEL_PREFIX_LIB=$(shell $(top_srcdir)extra/scripts/relative_path.sh $(DEVEL_PREFIX)$(MULTILIB_DIR) $(RUNTIME_PREFIX)$(MULTILIB_DIR))
-
-startfiles: $(crt-y)
 
 $(top_builddir)extra/scripts/unifdef: |$(top_builddir)extra/scripts
 $(top_builddir)extra/scripts/unifdef: $(top_srcdir)extra/scripts/unifdef.c
