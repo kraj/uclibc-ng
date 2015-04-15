@@ -252,6 +252,7 @@ ARFLAGS:=cr
 
 # Note: The check for -nostdlib has to be before all calls to check_ld
 $(eval $(call check-gcc-var,-nostdlib))
+$(eval $(call check-gcc-var,-nostartfiles))
 # deliberately not named CFLAG-fuse-ld since unchecked and from user
 LDFLAG-fuse-ld := $(filter -fuse-ld=%,$(call qstrip,$(UCLIBC_EXTRA_CFLAGS)))
 # failed to merge target specific data of file /dev/null
@@ -663,14 +664,18 @@ LDFLAGS_NOSTRIP += $(CFLAG_-Wl--hash-style=gnu)
 endif
 endif
 
-LDFLAGS:=$(LDFLAGS_NOSTRIP) -Wl,-z,defs
 ifeq ($(DODEBUG),y)
 CFLAGS += -O0 -g3 -DDEBUG
 else
 CFLAGS += $(OPTIMIZATION)
 CFLAGS += $(OPTIMIZATION-$(GCC_MAJOR_VER))
 CFLAGS += $(OPTIMIZATION-$(GCC_MAJOR_VER).$(GCC_MINOR_VER))
+$(eval $(call check-ld-var,-O2))
+LDFLAGS_NOSTRIP += $(CFLAG_-Wl-O2)
 endif
+
+LDFLAGS:=$(LDFLAGS_NOSTRIP) -Wl,-z,defs
+
 ifeq ($(DOSTRIP),y)
 LDFLAGS += -Wl,-s
 else
@@ -784,8 +789,12 @@ endif
 ASFLAGS += $(ASFLAG_--noexecstack)
 
 LIBGCC_CFLAGS ?= $(CFLAGS) $(CPU_CFLAGS-y)
-$(eval $(call cache-output-var,LIBGCC,$(CC) $(LIBGCC_CFLAGS) -print-libgcc-file-name))
-LIBGCC_DIR:=$(dir $(LIBGCC))
+$(eval $(call cache-output-var,LIBGCC_A,$(CC) $(LIBGCC_CFLAGS) -print-libgcc-file-name))
+$(eval $(call cache-output-var,LIBGCC_EH,$(CC) $(LIBGCC_CFLAGS) -print-file-name=libgcc_eh.a))
+# with -O0 we (e.g. lockf) might end up with references to
+# _Unwind_Resume, so pull in gcc_eh in this case..
+LIBGCC_DIR := $(dir $(LIBGCC_A))
+LIBGCC := $(LIBGCC_A) $(if $(DODEBUG),$(LIBGCC_EH))
 
 # moved from libpthread/linuxthreads
 ifeq ($(UCLIBC_CTOR_DTOR),y)
