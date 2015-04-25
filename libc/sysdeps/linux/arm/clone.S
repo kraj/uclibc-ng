@@ -128,11 +128,8 @@ __clone:
 	beq	1f
 	pop	{r4, r7}
 	blt	__error
-#if defined(__USE_BX__)
-	bxne	lr
-#else
-	movne	pc, lr
-#endif
+	IT(t, ne)
+	BXC(ne, lr)
 
 	cfi_startproc
 .fnend
