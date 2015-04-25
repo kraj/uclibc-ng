@@ -118,7 +118,6 @@ __BEGIN_DECLS
 #  define _Mfloat_		float
 # endif
 # define _Mdouble_		_Mfloat_
-# define _Mdouble_is_float_
 # ifdef __STDC__
 #  define __MATH_PRECNAME(name,r) name##f##r
 # else
@@ -127,7 +126,6 @@ __BEGIN_DECLS
 # define _Mdouble_BEGIN_NAMESPACE __BEGIN_NAMESPACE_C99
 # define _Mdouble_END_NAMESPACE   __END_NAMESPACE_C99
 # include <bits/mathcalls.h>
-# undef _Mdouble_is_float_
 # undef	_Mdouble_
 # undef _Mdouble_BEGIN_NAMESPACE
 # undef _Mdouble_END_NAMESPACE

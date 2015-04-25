@@ -291,9 +291,7 @@ __END_NAMESPACE_C99
 #ifdef __USE_ISOC99
 __BEGIN_NAMESPACE_C99
 /* True gamma function.  */
-# ifndef _Mdouble_is_float_
 __MATHCALLI (tgamma,, (_Mdouble_))
-# endif
 __END_NAMESPACE_C99
 #endif
 
@@ -324,9 +322,7 @@ __MATHCALLX (nextafter,, (_Mdouble_ __x, _Mdouble_ __y), (__const__))
 libm_hidden_proto(nextafterl)
 # endif
 # if defined __USE_ISOC99 && !defined __LDBL_COMPAT
-#  ifndef _Mdouble_is_float_
 __MATHCALLX (nexttoward,, (_Mdouble_ __x, long double __y), (__const__))
-#  endif
 # endif
 
 /* Return the remainder of integer divison X / Y with infinite precision.  */
@@ -343,15 +339,11 @@ __MATHDECLI (int,ilogb,, (_Mdouble_ __x))
 
 #ifdef __USE_ISOC99
 /* Return X times (2 to the Nth power).  */
-# ifndef _Mdouble_is_float_
 __MATHCALLI (scalbln,, (_Mdouble_ __x, long int __n))
-# endif
 
 /* Round X to integral value in floating-point format using current
    rounding direction, but do not raise inexact exception.  */
-# ifndef _Mdouble_is_float_
 __MATHCALLI (nearbyint,, (_Mdouble_ __x))
-# endif
 
 /* Round X to nearest integral value, rounding halfway cases away from
    zero.  */
@@ -364,9 +356,7 @@ __MATHCALLX (trunc,, (_Mdouble_ __x), (__const__))
 /* Compute remainder of X and Y and put in *QUO a value with sign of x/y
    and magnitude congruent `mod 2^n' to the magnitude of the integral
    quotient x/y, with n >= 3.  */
-# ifndef _Mdouble_is_float_
 __MATHCALLI (remquo,, (_Mdouble_ __x, _Mdouble_ __y, int *__quo))
-# endif
 
 
 /* Conversion functions.  */
@@ -383,19 +373,13 @@ __MATHDECLI (long long int,llround,, (_Mdouble_ __x))
 
 
 /* Return positive difference between X and Y.  */
-# ifndef _Mdouble_is_float_
 __MATHCALLI (fdim,, (_Mdouble_ __x, _Mdouble_ __y))
-# endif
 
 /* Return maximum numeric value from X and Y.  */
-# ifndef _Mdouble_is_float_
 __MATHCALLI (fmax,, (_Mdouble_ __x, _Mdouble_ __y))
-# endif
 
 /* Return minimum numeric value from X and Y.  */
-# ifndef _Mdouble_is_float_
 __MATHCALLI (fmin,, (_Mdouble_ __x, _Mdouble_ __y))
-# endif
 
 
 /* Classify given number.  */
@@ -406,9 +390,7 @@ __MATHDECL_PRIV (int, signbit,, (_Mdouble_ __value), (__const__))
 
 
 /* Multiply-add function computed as a ternary operation.  */
-# ifndef _Mdouble_is_float_
 __MATHCALLI (fma,, (_Mdouble_ __x, _Mdouble_ __y, _Mdouble_ __z))
-# endif
 #endif /* Use ISO C99.  */
 
 #if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_ISOC99
