@@ -47,6 +47,10 @@ test check all: run
 
 run: subdirs_run
 
+gen:
+	-rm -f $(top_builddir)/test/uclibcng-testrunner.in
+	$(MAKE) run UCLIBCNG_GENERATE_TESTRUNNER=1
+
 compile: $(top_builddir)$(LOCAL_INSTALL_PATH) subdirs_compile
 
 $(top_builddir)$(LOCAL_INSTALL_PATH):
@@ -68,6 +72,7 @@ $(patsubst %, _dir_%, $(DIRS)) : dummy
 
 $(patsubst %, _dirrun_%, $(DIRS)) : dummy
 	$(Q)$(MAKE) -C $(patsubst _dirrun_%, %, $@) run \
+		UCLIBCNG_TEST_SUBDIR=$(strip $(patsubst _dirrun_%, %, $@)) \
 		KCONFIG_CONFIG=$(KCONFIG_CONFIG)
 
 $(patsubst %, _dircompile_%, $(DIRS)) : dummy
