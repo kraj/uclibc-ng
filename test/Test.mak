@@ -4,6 +4,8 @@
 #
 # Licensed under the LGPL v2.1, see the file COPYING.LIB in this tarball.
 
+shellescape='$(subst ','\'',$(1))'
+
 ifeq ($(TESTS),)
 TESTS := $(patsubst %.c,%,$(wildcard *.c))
 endif
@@ -76,7 +78,7 @@ define exec_test
 		test -z "$$expected_ret" && export expected_ret=0 ; \
 	if ! test $$ret -eq $$expected_ret ; then \
 		echo "ret == $$ret ; expected_ret == $$expected_ret" ; \
-		echo "The output of failed test is:"; \
+		echo "The output of the failed test is:"; \
 		cat "$(binary_name).out"; \
 		exit 1 ; \
 	fi
@@ -89,10 +91,20 @@ run: $(RUN_TARGETS)
 $(addsuffix .exe,$(U_TARGETS)): SIMULATOR:=$(SIMULATOR_uclibc)
 $(addsuffix .exe,$(G_TARGETS)): SIMULATOR:=$(SIMULATOR_glibc)
 $(RUN_TARGETS):
+ifeq (1,$(UCLIBCNG_GENERATE_TESTRUNNER))
+	expected_ret="$(RET_$(tst_src_name))"; echo \
+	    "$${expected_ret:-0}" \
+	    $(call shellescape,$(tst_src_name)) \
+	    $(call shellescape,$(binary_name)) \
+	    $(call shellescape,$(UCLIBCNG_TEST_SUBDIR)) \
+	    $(call shellescape,$(WRAPPER) $(WRAPPER_$(tst_src_name)) ./$(binary_name) $(OPTS) $(OPTS_$(tst_src_name))) \
+	    >>$(top_builddir)/test/uclibcng-testrunner.in
+else
 	$(exec_test)
 	$(diff_test)
 ifeq ($(UCLIBC_ONLY),)
 	$(uclibc_glibc_diff_test)
+endif
 endif
 
 compile: $(COMPILE_TARGETS)
