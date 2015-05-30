@@ -37,7 +37,7 @@ DODIFF_tst-statvfs := 1
 OPTS_bug-glob1   := $(PWD)
 OPTS_tst-fnmatch := < tst-fnmatch.input
 
-MNTENTS = $(shell mount | while read dev on mp rest; do echo $$mp; done)
+MNTENTS = / /sys /proc /dev
 OPTS_tst-statfs := $(MNTENTS)
 OPTS_tst-statvfs := $(MNTENTS)
 
