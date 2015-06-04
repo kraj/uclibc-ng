@@ -4,5 +4,9 @@
 RET_hello := 42
 RET_tiny  := 42
 
-# missing internal headers, disable these
-TESTS_DISABLED := tst-atomic tst-atomic-long
+atomic_headers := -I$(top_srcdir)libc/sysdeps/linux/$(TARGET_ARCH) \
+	-I$(top_srcdir)libc/sysdeps/linux \
+	-I$(top_builddir)include
+
+CFLAGS_tst-atomic = $(atomic_headers) -fPIC
+CFLAGS_tst-atomic-long = $(atomic_headers) -fPIC

@@ -165,7 +165,8 @@ libpthread.depend := $(top_builddir)lib/libpthread.so
 endif
 interp := $(top_builddir)lib/interp.os
 ldso := $(top_builddir)lib/$(UCLIBC_LDSO)
-headers_dep := $(top_builddir)include/bits/sysnum.h
+headers_dep := $(top_builddir)include/bits/sysnum.h \
+	$(top_builddir)include/bits/uClibc_config.h
 sub_headers := $(headers_dep)
 
 #LIBS :=$(interp) -L$(top_builddir)lib -lc
@@ -251,6 +252,7 @@ ARFLAGS:=cr
 
 # Note: The check for -nostdlib has to be before all calls to check_ld
 $(eval $(call check-gcc-var,-nostdlib))
+$(eval $(call check-gcc-var,-nostartfiles))
 # deliberately not named CFLAG-fuse-ld since unchecked and from user
 LDFLAG-fuse-ld := $(filter -fuse-ld=%,$(call qstrip,$(UCLIBC_EXTRA_CFLAGS)))
 # failed to merge target specific data of file /dev/null
@@ -291,6 +293,8 @@ CPU_CFLAGS-y := -funsigned-char -fno-builtin
 
 $(eval $(call check-gcc-var,-fno-asm))
 CPU_CFLAGS-y += $(CFLAG_-fno-asm)
+$(eval $(call check-gcc-var,-fmerge-all-constants))
+CPU_CFLAGS-y += $(CFLAG_-fmerge-all-constants)
 
 LDADD_LIBFLOAT=
 ifeq ($(UCLIBC_HAS_SOFT_FLOAT),y)
@@ -416,9 +420,8 @@ endif
 endif
 
 ifeq ($(TARGET_ARCH),h8300)
-	SYMBOL_PREFIX=_
-	CPU_LDFLAGS-$(CONFIG_H8300H)+= -Wl,-ms8300h
-	CPU_LDFLAGS-$(CONFIG_H8S)   += -Wl,-ms8300s
+	CPU_LDFLAGS-$(CONFIG_H8300H)+= -Wl,-mh8300h_linux
+	CPU_LDFLAGS-$(CONFIG_H8S)   += -Wl,-mh8300s_linux
 	CPU_CFLAGS-$(CONFIG_H8300H) += -mh -mint32
 	CPU_CFLAGS-$(CONFIG_H8S)    += -ms -mint32
 endif
@@ -647,14 +650,18 @@ LDFLAGS_NOSTRIP += $(CFLAG_-Wl--hash-style=gnu)
 endif
 endif
 
-LDFLAGS:=$(LDFLAGS_NOSTRIP) -Wl,-z,defs
 ifeq ($(DODEBUG),y)
 CFLAGS += -O0 -g3 -DDEBUG
 else
 CFLAGS += $(OPTIMIZATION)
 CFLAGS += $(OPTIMIZATION-$(GCC_MAJOR_VER))
 CFLAGS += $(OPTIMIZATION-$(GCC_MAJOR_VER).$(GCC_MINOR_VER))
+$(eval $(call check-ld-var,-O2))
+LDFLAGS_NOSTRIP += $(CFLAG_-Wl-O2)
 endif
+
+LDFLAGS:=$(LDFLAGS_NOSTRIP) -Wl,-z,defs
+
 ifeq ($(DOSTRIP),y)
 LDFLAGS += -Wl,-s
 else
