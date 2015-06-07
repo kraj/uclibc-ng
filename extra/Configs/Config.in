@@ -516,6 +516,7 @@ config UCLIBC_HAS_THREADS_NATIVE
 		   !TARGET_bfin && \
 		   !TARGET_c6x && \
 		   !TARGET_cris && \
+		   !TARGET_h8300 && \
 		   !TARGET_hppa && \
 		   !TARGET_ia64 && \
 		   !TARGET_m68k && \
