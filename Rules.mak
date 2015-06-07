@@ -302,7 +302,9 @@ ifneq ($(TARGET_ARCH),bfin)
 ifneq ($(TARGET_ARCH),nios2)
 ifneq ($(TARGET_ARCH),sh)
 ifneq ($(TARGET_ARCH),c6x)
+ifneq ($(TARGET_ARCH),h8300)
 CPU_CFLAGS-y += -msoft-float
+endif
 endif
 endif
 endif
