@@ -4,6 +4,16 @@
 RET_hello := 42
 RET_tiny  := 42
 
+GLIBC_TESTS_DISABLED := tst-atomic_glibc tst-atomic-long_glibc
+
+ifeq ($(TARGET_ARCH),mips)
+TESTS_DISABLED += tst-atomic tst-atomic-long
+endif
+
+ifeq ($(TARGET_ARCH),sparc)
+TESTS_DISABLED += tst-atomic tst-atomic-long
+endif
+
 atomic_headers := -I$(top_srcdir)libc/sysdeps/linux/$(TARGET_ARCH) \
 	-I$(top_srcdir)libc/sysdeps/linux \
 	-I$(top_builddir)include
