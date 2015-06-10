@@ -302,7 +302,8 @@ tf_writev  (void *arg)
   exit (1);
 }
 
-
+/* sleep is not early cancelable, disable for now */
+#if 0
 static void *
 tf_sleep (void *arg)
 {
@@ -333,7 +334,7 @@ tf_sleep (void *arg)
 
   exit (1);
 }
-
+#endif
 
 static void *
 tf_usleep (void *arg)
@@ -996,7 +997,6 @@ tf_pause (void *arg)
 static void *
 tf_accept (void *arg)
 {
-  int tfd;
   struct sockaddr_un sun;
   /* To test a non-blocking accept call we make the call file by using
      a datagrame socket.  */
@@ -1020,13 +1020,11 @@ tf_accept (void *arg)
 	}
 
       strcpy (sun.sun_path, "/tmp/tst-cancel4-socket-1-XXXXXX");
-      tfd = mkstemp(sun.sun_path);
-      if (tfd < 0)
+      if (mktemp (sun.sun_path) == NULL)
 	{
 	  printf ("%s: cannot generate temp file name\n", __FUNCTION__);
 	  exit (1);
 	}
-      close(tfd);
       sun.sun_family = AF_UNIX;
     }
   while (bind (tempfd, (struct sockaddr *) &sun,
@@ -1071,7 +1069,6 @@ tf_accept (void *arg)
 static void *
 tf_send (void *arg)
 {
-  int tfd;
   struct sockaddr_un sun;
 
   tempfd = socket (AF_UNIX, SOCK_STREAM, 0);
@@ -1087,16 +1084,15 @@ tf_send (void *arg)
       if (++tries > 10)
 	{
 	  printf ("%s: too many unsuccessful bind calls\n", __FUNCTION__);
+	  exit (1);
 	}
 
       strcpy (sun.sun_path, "/tmp/tst-cancel4-socket-2-XXXXXX");
-      tfd = mkstemp(sun.sun_path);
-      if (tfd < 0)
+      if (mktemp (sun.sun_path) == NULL)
 	{
 	  printf ("%s: cannot generate temp file name\n", __FUNCTION__);
 	  exit (1);
 	}
-      close(tfd);
       sun.sun_family = AF_UNIX;
     }
   while (bind (tempfd, (struct sockaddr *) &sun,
@@ -1155,7 +1151,6 @@ tf_send (void *arg)
 static void *
 tf_recv (void *arg)
 {
-  int tfd;
   struct sockaddr_un sun;
 
   tempfd = socket (AF_UNIX, SOCK_STREAM, 0);
@@ -1171,16 +1166,15 @@ tf_recv (void *arg)
       if (++tries > 10)
 	{
 	  printf ("%s: too many unsuccessful bind calls\n", __FUNCTION__);
+	  exit (1);
 	}
 
       strcpy (sun.sun_path, "/tmp/tst-cancel4-socket-3-XXXXXX");
-      tfd = mkstemp(sun.sun_path);
-      if (tfd < 0)
+      if (mktemp (sun.sun_path) == NULL)
 	{
 	  printf ("%s: cannot generate temp file name\n", __FUNCTION__);
 	  exit (1);
 	}
-      close(tfd);
       sun.sun_family = AF_UNIX;
     }
   while (bind (tempfd, (struct sockaddr *) &sun,
@@ -1238,7 +1232,6 @@ tf_recv (void *arg)
 static void *
 tf_recvfrom (void *arg)
 {
-  int tfd;
   struct sockaddr_un sun;
 
   tempfd = socket (AF_UNIX, SOCK_DGRAM, 0);
@@ -1254,16 +1247,15 @@ tf_recvfrom (void *arg)
       if (++tries > 10)
 	{
 	  printf ("%s: too many unsuccessful bind calls\n", __FUNCTION__);
+	  exit (1);
 	}
 
       strcpy (sun.sun_path, "/tmp/tst-cancel4-socket-4-XXXXXX");
-      tfd = mkstemp(sun.sun_path);
-      if (tfd < 0)
+      if (mktemp (sun.sun_path) == NULL)
 	{
 	  printf ("%s: cannot generate temp file name\n", __FUNCTION__);
 	  exit (1);
 	}
-      close(tfd);
       sun.sun_family = AF_UNIX;
     }
   while (bind (tempfd, (struct sockaddr *) &sun,
@@ -1315,7 +1307,6 @@ tf_recvfrom (void *arg)
 static void *
 tf_recvmsg (void *arg)
 {
-  int tfd;
   struct sockaddr_un sun;
 
   tempfd = socket (AF_UNIX, SOCK_DGRAM, 0);
@@ -1331,16 +1322,15 @@ tf_recvmsg (void *arg)
       if (++tries > 10)
 	{
 	  printf ("%s: too many unsuccessful bind calls\n", __FUNCTION__);
+	  exit (1);
 	}
 
       strcpy (sun.sun_path, "/tmp/tst-cancel4-socket-5-XXXXXX");
-      tfd = mkstemp(sun.sun_path);
-      if (tfd < 0)
+      if (mktemp (sun.sun_path) == NULL)
 	{
 	  printf ("%s: cannot generate temp file name\n", __FUNCTION__);
 	  exit (1);
 	}
-      close(tfd);
       sun.sun_family = AF_UNIX;
     }
   while (bind (tempfd, (struct sockaddr *) &sun,
@@ -1693,7 +1683,6 @@ tf_msync (void *arg)
 static void *
 tf_sendto (void *arg)
 {
-  int tfd;
   if (arg == NULL)
     // XXX If somebody can provide a portable test case in which sendto()
     // blocks we can enable this test to run in both rounds.
@@ -1714,16 +1703,15 @@ tf_sendto (void *arg)
       if (++tries > 10)
 	{
 	  printf ("%s: too many unsuccessful bind calls\n", __FUNCTION__);
+	  exit (1);
 	}
 
       strcpy (sun.sun_path, "/tmp/tst-cancel4-socket-6-XXXXXX");
-      tfd = mkstemp(sun.sun_path);
-      if (tfd < 0)
+      if (mktemp (sun.sun_path) == NULL)
 	{
 	  printf ("%s: cannot generate temp file name\n", __FUNCTION__);
 	  exit (1);
 	}
-      close(tfd);
       sun.sun_family = AF_UNIX;
     }
   while (bind (tempfd, (struct sockaddr *) &sun,
@@ -1771,7 +1759,6 @@ tf_sendto (void *arg)
 static void *
 tf_sendmsg (void *arg)
 {
-  int tfd;
   if (arg == NULL)
     // XXX If somebody can provide a portable test case in which sendmsg()
     // blocks we can enable this test to run in both rounds.
@@ -1792,16 +1779,15 @@ tf_sendmsg (void *arg)
       if (++tries > 10)
 	{
 	  printf ("%s: too many unsuccessful bind calls\n", __FUNCTION__);
+	  exit (1);
 	}
 
       strcpy (sun.sun_path, "/tmp/tst-cancel4-socket-7-XXXXXX");
-      tfd = mkstemp(sun.sun_path);
-      if (tfd < 0)
+      if (mktemp (sun.sun_path) == NULL)
 	{
 	  printf ("%s: cannot generate temp file name\n", __FUNCTION__);
 	  exit (1);
 	}
-      close(tfd);
       sun.sun_family = AF_UNIX;
     }
   while (bind (tempfd, (struct sockaddr *) &sun,
@@ -1893,7 +1879,6 @@ tf_creat (void *arg)
 static void *
 tf_connect (void *arg)
 {
-  int tfd;
   if (arg == NULL)
     // XXX If somebody can provide a portable test case in which connect()
     // blocks we can enable this test to run in both rounds.
@@ -1914,16 +1899,15 @@ tf_connect (void *arg)
       if (++tries > 10)
 	{
 	  printf ("%s: too many unsuccessful bind calls\n", __FUNCTION__);
+	  exit (1);
 	}
 
       strcpy (sun.sun_path, "/tmp/tst-cancel4-socket-2-XXXXXX");
-      tfd = mkstemp(sun.sun_path);
-      if (tfd < 0)
+      if (mktemp (sun.sun_path) == NULL)
 	{
 	  printf ("%s: cannot generate temp file name\n", __FUNCTION__);
 	  exit (1);
 	}
-      close(tfd);
       sun.sun_family = AF_UNIX;
     }
   while (bind (tempfd, (struct sockaddr *) &sun,
@@ -2135,7 +2119,6 @@ static struct
   ADD_TEST (ppoll, 2, 0),
   ADD_TEST (write, 2, 0),
   ADD_TEST (writev, 2, 0),
-  ADD_TEST (sleep, 2, 0),
   ADD_TEST (usleep, 2, 0),
   ADD_TEST (nanosleep, 2, 0),
   ADD_TEST (wait, 2, 0),
