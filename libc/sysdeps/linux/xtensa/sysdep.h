@@ -72,7 +72,9 @@
 #define JUMPTARGET(name) name
 #endif
 
+#ifndef FRAMESIZE
 #define FRAMESIZE 16
+#endif
 #define CALL_MCOUNT		/* Do nothing.  */
 
 
