@@ -132,6 +132,9 @@
 #define	PSEUDO_END_ERRVAL(name)						      \
   END (name)
 
+#undef	ret_ERRVAL
+#define ret_ERRVAL retw
+
 #if defined _LIBC_REENTRANT
 # if defined USE___THREAD
 #  ifndef NOT_IN_libc
