@@ -24,7 +24,15 @@
 #endif
 
 #if !defined NOT_IN_libc || defined IS_IN_libpthread || defined IS_IN_librt
-// FIXME: ENTRY includes an entry instruction, here we'd want entry sp, 48!
+
+/* CENABLE/CDISABLE in PSEUDO below use call8, stack frame size must be
+ * at least 32.
+ */
+#if FRAMESIZE < 32
+#undef FRAMESIZE
+#define FRAMESIZE 32
+#endif
+
 # undef PSEUDO
 # define PSEUDO(name, syscall_name, args)				      \
   .text;								      \
