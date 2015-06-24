@@ -226,6 +226,7 @@ config TARGET_SUBARCH
 	default "i586" if CONFIG_586
 	default "i686" if CONFIG_686
 	default "arcv2" if CONFIG_ARC_CPU_HS
+	default "mips64" if CONFIG_MIPS_N64_ABI
 	default ""
 
 source "extra/Configs/Config.in.arch"
