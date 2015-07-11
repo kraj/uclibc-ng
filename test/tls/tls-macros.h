@@ -900,9 +900,9 @@ register void *__gp __asm__("$29");
 
 #define TLS_LD(x)							\
   ({ int *__l;								\
-     __asm__ ("movi  a8, " #x "@TLSFUNC\n\t"				\
-	  "movi a10, " #x "@TLSARG\n\t"					\
-	  "callx8.tls a8, " #x "@TLSCALL\n\t"				\
+     __asm__ ("movi  a8, _TLS_MODULE_BASE_@TLSFUNC\n\t"			\
+	  "movi a10, _TLS_MODULE_BASE_@TLSARG\n\t"			\
+	  "callx8.tls a8, _TLS_MODULE_BASE_@TLSCALL\n\t"		\
 	  "movi %0, " #x "@TPOFF\n\t"					\
 	  "add %0, %0, a10\n\t"						\
 	  : "=r" (__l)							\

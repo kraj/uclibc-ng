@@ -183,11 +183,12 @@ menuconfig-clean-y: HEADERCLEAN_config
 headers-y += $(target-headers-sysdep)
 
 headers: $(top_builddir)include/bits/uClibc_config.h | subdirs
+	$(Q)$(if $(UCLIBC_HAS_LOCALE),$(MAKE) -C extra/locale locale_headers)
+
 subdirs: $(addprefix $(top_builddir),$(subdirs))
 
 $(pregen-headers-y): $(headers_dep)
 pregen: headers $(pregen-headers-y) $(headers_dep)
-	$(Q)$(if $(UCLIBC_HAS_LOCALE),$(MAKE) -C extra/locale locale_headers)
 
 $(top_builddir)include/bits/sysnum.h: $(top_srcdir)extra/scripts/gen_bits_syscall_h.sh | $(top_builddir)include/bits
 	@$(disp_gen)
