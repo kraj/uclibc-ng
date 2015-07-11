@@ -92,8 +92,8 @@ config TARGET_i386
 config TARGET_m68k
 	bool "m68k"
 
-#config TARGET_metag
-#	bool "metag"
+config TARGET_metag
+	bool "metag"
 
 config TARGET_microblaze
 	bool "microblaze"
