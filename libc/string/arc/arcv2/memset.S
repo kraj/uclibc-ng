@@ -52,6 +52,7 @@ ENTRY(memset)
 	lpnz	@.Lset64bytes
 	;; LOOP START
 	PREWRITE(r3, 64)	;Prefetch the next write location
+#ifdef __LL64__
 	std.ab	r4, [r3, 8]
 	std.ab	r4, [r3, 8]
 	std.ab	r4, [r3, 8]
@@ -60,16 +61,45 @@ ENTRY(memset)
 	std.ab	r4, [r3, 8]
 	std.ab	r4, [r3, 8]
 	std.ab	r4, [r3, 8]
+#else
+	st.ab	r4, [r3, 4]
+	st.ab	r4, [r3, 4]
+	st.ab	r4, [r3, 4]
+	st.ab	r4, [r3, 4]
+	st.ab	r4, [r3, 4]
+	st.ab	r4, [r3, 4]
+	st.ab	r4, [r3, 4]
+	st.ab	r4, [r3, 4]
+	st.ab	r4, [r3, 4]
+	st.ab	r4, [r3, 4]
+	st.ab	r4, [r3, 4]
+	st.ab	r4, [r3, 4]
+	st.ab	r4, [r3, 4]
+	st.ab	r4, [r3, 4]
+	st.ab	r4, [r3, 4]
+	st.ab	r4, [r3, 4]
+#endif
 .Lset64bytes:
 
 	lsr.f	lp_count, r2, 5 ;Last remaining  max 124 bytes
 	lpnz	.Lset32bytes
 	;; LOOP START
 	prefetchw [r3, 32]	;Prefetch the next write location
+#ifdef __LL64__
 	std.ab	r4, [r3, 8]
 	std.ab	r4, [r3, 8]
 	std.ab	r4, [r3, 8]
 	std.ab	r4, [r3, 8]
+#else
+	st.ab	r4, [r3, 4]
+	st.ab	r4, [r3, 4]
+	st.ab	r4, [r3, 4]
+	st.ab	r4, [r3, 4]
+	st.ab	r4, [r3, 4]
+	st.ab	r4, [r3, 4]
+	st.ab	r4, [r3, 4]
+	st.ab	r4, [r3, 4]
+#endif
 .Lset32bytes:
 
 	and.f	lp_count, r2, 0x1F ;Last remaining 31 bytes
