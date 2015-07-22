@@ -75,6 +75,9 @@
 	.globl	__lll_lock_wait_private
 	.type	__lll_lock_wait_private,@function
 	.hidden	__lll_lock_wait_private
+#ifndef IS_IN_libpthread
+	.weak   __lll_lock_wait_private
+#endif
 	.align	16
 __lll_lock_wait_private:
 	cfi_startproc
@@ -317,6 +320,9 @@ __lll_timedlock_wait:
 	.globl	__lll_unlock_wake_private
 	.type	__lll_unlock_wake_private,@function
 	.hidden	__lll_unlock_wake_private
+#ifndef IS_IN_libpthread
+	.weak	__lll_unlock_wake_private
+#endif
 	.align	16
 __lll_unlock_wake_private:
 	cfi_startproc
