@@ -3,7 +3,7 @@
 # see extra/config/Kconfig-language.txt
 #
 
-mainmenu "uClibc $VERSION C Library Configuration"
+mainmenu "uClibc-ng $VERSION C Library Configuration"
 
 config DESIRED_TARGET_ARCH
 	string
