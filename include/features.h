@@ -393,7 +393,7 @@ uClibc was built without large file support enabled.
    these macros to test for features in specific releases.  */
 /* Don't do it, if you want to keep uClibc happy.  */
 #define	__GLIBC__	2
-#define	__GLIBC_MINOR__	2
+#define	__GLIBC_MINOR__	10
 #endif
 
 #define __GLIBC_PREREQ(maj, min) \
