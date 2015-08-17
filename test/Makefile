@@ -42,6 +42,9 @@ endif
 ifeq ($(HAS_NO_THREADS),y)
 	DIRS := $(filter-out pthread,$(DIRS))
 endif
+ifneq ($(UCLIBC_HAS_ARGP),y)
+	DIRS := $(filter-out argp,$(DIRS))
+endif
 
 test check all: run
 
