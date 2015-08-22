@@ -74,6 +74,8 @@ $(ldso): $(ldso:.$(ABI_VERSION)=)
 $(ldso:.$(ABI_VERSION)=): | $(top_builddir)lib
 $(ldso:.$(ABI_VERSION)=): $($(UCLIBC_LDSO_NAME)_OUT)/$(UCLIBC_LDSO_NAME)_so.a
 	$(call link.so,$(ldso_FULL_NAME),$(ABI_VERSION))
+	# link for backward compatibility
+	(cd $(top_builddir)lib; ln -sf $(UCLIBC_LDSO_NAME).so.$(ABI_VERSION) $(UCLIBC_LDSO_NAME).so.0 )
 
 $($(UCLIBC_LDSO_NAME)_OUT)/$(UCLIBC_LDSO_NAME)_so.a: $(ldso-y)
 	$(Q)$(RM) $@
