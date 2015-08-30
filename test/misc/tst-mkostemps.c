@@ -33,7 +33,7 @@ main (int argc, char *argv[])
   struct stat sb_f2;
 
   /* mkstemp test */
-  sprintf(name, "%s-uClibc-test.XXXXXX", __FILE__);
+  sprintf(name, "/tmp/%s-uClibc-test.XXXXXX", __FILE__);
 
   fd = mkstemp(name);
 
@@ -49,7 +49,7 @@ main (int argc, char *argv[])
   unlink (name);
 
   /* mkstemps test */
-  sprintf(name_suffix, "%s-uClibc-test.XXXXXX.txt", __FILE__);
+  sprintf(name_suffix, "/tmp/%s-uClibc-test.XXXXXX.txt", __FILE__);
 
   fd = mkstemps(name_suffix, 4);
 
@@ -65,7 +65,7 @@ main (int argc, char *argv[])
   unlink (name_suffix);
 
   /* mkostemp test */
-  sprintf(name, "%s-uClibc-test.XXXXXX", __FILE__);
+  sprintf(name, "/tmp/%s-uClibc-test.XXXXXX", __FILE__);
 
   fd = mkostemp(name, flags);
 
@@ -82,14 +82,14 @@ main (int argc, char *argv[])
   unlink (name);
 
   /* mkostemps test */
-  sprintf(name_suffix, "%s-uClibc-test.XXXXXX.txt", __FILE__);
+  sprintf(name_suffix, "/tmp/%s-uClibc-test.XXXXXX.txt", __FILE__);
 
   fd = mkostemps(name_suffix, 4, flags);
 
   fstat(fd, &sb_f1);
   assert ((sb_f1.st_mode & S_IFMT) == S_IFREG)
 
-  stat(name, &sb_f2);
+  stat(name_suffix, &sb_f2);
   assert ((sb_f2.st_mode & S_IFMT) == S_IFREG)
 
   assert (sb_f1.st_ino == sb_f2.st_ino)
@@ -99,14 +99,14 @@ main (int argc, char *argv[])
   unlink (name_suffix);
 
   /* suffixlen = 0 */
-  sprintf(name_suffix, "%s-uClibc-test.XXXXXX", __FILE__);
+  sprintf(name_suffix, "/tmp/%s-uClibc-test.XXXXXX", __FILE__);
 
   fd = mkostemps(name_suffix, 0, flags);
 
   fstat(fd, &sb_f1);
   assert ((sb_f1.st_mode & S_IFMT) == S_IFREG)
 
-  stat(name, &sb_f2);
+  stat(name_suffix, &sb_f2);
   assert ((sb_f2.st_mode & S_IFMT) == S_IFREG)
 
   assert (sb_f1.st_ino == sb_f2.st_ino)
@@ -126,7 +126,7 @@ main (int argc, char *argv[])
   assert(errno == EINVAL);
 
   /* suffixlen < 0 */
-  sprintf(name_suffix, "%s-uClibc-test.XXXXXX.txt", __FILE__);
+  sprintf(name_suffix, "/tmp/%s-uClibc-test.XXXXXX.txt", __FILE__);
 
   fd = mkostemps(name_suffix, -1, flags);
 
@@ -134,7 +134,7 @@ main (int argc, char *argv[])
   assert(errno == EINVAL);
 
   /* Missing one X */
-  sprintf(name_suffix, "%s-uClibc-test.XXXXX.txt", __FILE__);
+  sprintf(name_suffix, "/tmp/%s-uClibc-test.XXXXX.txt", __FILE__);
 
   fd = mkostemps(name_suffix, 4, flags);
 
@@ -142,7 +142,7 @@ main (int argc, char *argv[])
   assert(errno == EINVAL);
 
   /* wrong suffixlen */
-  sprintf(name_suffix, "%s-uClibc-test.XXXXXX.txt", __FILE__);
+  sprintf(name_suffix, "/tmp/%s-uClibc-test.XXXXXX.txt", __FILE__);
 
   fd = mkostemps(name_suffix, 2, flags);
 
