@@ -12,6 +12,7 @@
 #include <fcntl.h>
 #include <bits/kernel-features.h>
 #include <stdint.h>
+#include <errno.h>
 
 #if defined __NR_fallocate
 extern __typeof(fallocate) __libc_fallocate attribute_hidden;
@@ -34,9 +35,11 @@ int attribute_hidden __libc_fallocate(int fd, int mode, __off_t offset, __off_t 
 # else
 # error your machine is neither 32 bit or 64 bit ... it must be magical
 # endif
-	if (unlikely(INTERNAL_SYSCALL_ERROR_P (ret, err)))
-		return INTERNAL_SYSCALL_ERRNO (ret, err);
-	return 0;
+	if (unlikely(INTERNAL_SYSCALL_ERROR_P (ret, err))) {
+		__set_errno(INTERNAL_SYSCALL_ERRNO (ret, err));
+		ret = -1;
+	}
+	return ret;
 }
 
 # if defined __UCLIBC_LINUX_SPECIFIC__ && defined __USE_GNU
