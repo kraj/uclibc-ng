@@ -533,6 +533,7 @@ config LINUXTHREADS_OLD
 	# linuxthreads and linuxthreads.old need nanosleep()
 	select UCLIBC_HAS_REALTIME
 	depends on !TARGET_arc && \
+		   !TARGET_arm && \
 		   !TARGET_i386 && \
 		   !TARGET_metag && \
 		   !TARGET_mips && \
@@ -540,7 +541,8 @@ config LINUXTHREADS_OLD
 		   !TARGET_sh && \
 		   !TARGET_sparc && \
 		   !TARGET_x86_64 && \
-		   !TARGET_xtensa
+		   !TARGET_xtensa || \
+		   !ARCH_USE_MMU
 	help
 	  There are two versions of linuxthreads.  The older (stable) version
 	  has been in uClibc for quite a long time but hasn't seen too many
@@ -559,7 +561,8 @@ config LINUXTHREADS_NEW
 		   !TARGET_sh && \
 		   !TARGET_sparc && \
 		   !TARGET_x86_64 && \
-		   !TARGET_xtensa
+		   !TARGET_xtensa || \
+		   !ARCH_USE_MMU
 	help
 	  The new version has not been tested much, and lacks ports for arches
 	  which glibc does not support (like bfin/frv/etc...), but is based on
@@ -585,7 +588,8 @@ config UCLIBC_HAS_THREADS_NATIVE
 		   !TARGET_microblaze && \
 		   !TARGET_nios2 && \
 		   !TARGET_or1k && \
-		   !TARGET_vax
+		   !TARGET_vax && \
+		   ARCH_USE_MMU
 	help
 	  If you want to compile uClibc with NPTL support, then answer Y.
 
