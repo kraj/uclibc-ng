@@ -46,6 +46,4 @@
          __v; }))
 #endif
 
-#endif
-
 #include <bits/byteswap-common.h>
