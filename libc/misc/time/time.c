@@ -1033,10 +1033,6 @@ static wchar_t* fmt_to_wc_1(const char *src)
 
 #define MAX_PUSH 4
 
-#ifdef __UCLIBC_MJN3_ONLY__
-#warning TODO: Check multibyte format string validity.
-#endif
-
 size_t __XL_NPP(strftime)(CHAR_T *__restrict s, size_t maxsize,
 					  const CHAR_T *__restrict format,
 					  const struct tm *__restrict timeptr   __LOCALE_PARAM )
@@ -1869,11 +1865,6 @@ static const char *getnumber(register const char *e, int *pn)
 	return (n == 3) ? NULL : e;
 #endif /* __BCC__ */
 }
-
-
-#ifdef __UCLIBC_MJN3_ONLY__
-#warning CONSIDER: Should we preserve errno from open/read/close errors re TZ file?
-#endif
 
 #ifdef __UCLIBC_HAS_TZ_FILE__
 

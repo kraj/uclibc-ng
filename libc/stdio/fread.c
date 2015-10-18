@@ -61,10 +61,6 @@ size_t fread_unlocked(void * __restrict ptr, size_t size, size_t nmemb,
 				__STDIO_FLUSH_LBF_STREAMS;
 			}
 #endif
-
-#ifdef __UCLIBC_MJN3_ONLY__
-#warning CONSIDER: should we refill and read from the buffer sometimes?
-#endif
 			while ((avail = __stdio_READ(stream, buffer, todo)) > 0) {
 				buffer += avail;
 				if (!(todo -= avail)) {
