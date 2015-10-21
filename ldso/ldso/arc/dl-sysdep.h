@@ -127,12 +127,6 @@ static __always_inline Elf32_Addr elf_machine_dynamic(void)
 
 	__asm__("ld %0,[pcl,_DYNAMIC@gotpc]\n\t" : "=r" (dyn));
 	return dyn;
-
-/*
- * Another way would have been to simply return GP, which due to some
- * PIC reference would be automatically setup by gcc in caller
- *	register Elf32_Addr *got __asm__ ("gp"); return *got;
- */
 }
 
 /* Return the run-time load address of the shared object.  */
