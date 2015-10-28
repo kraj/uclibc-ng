@@ -1,5 +1,5 @@
-#ifndef _BITS_KERNEL_TYPES_H
-#define _BITS_KERNEL_TYPES_H
+#ifndef __ASM_GENERIC_POSIX_TYPES_H
+#define __ASM_GENERIC_POSIX_TYPES_H
 
 /* Sigh.  We need to carefully wrap this one...  No guarantees
  * that the asm/posix_types.h kernel header is working.  Many
@@ -56,4 +56,4 @@ typedef struct {
 } __kernel_fsid_t;
 #define __kernel_fsid_t __kernel_fsid_t
 
-#endif /* _BITS_KERNEL_TYPES_H */
+#endif /* __ASM_GENERIC_POSIX_TYPES_H */
