@@ -269,6 +269,7 @@ config TARGET_SUBARCH
 	default "e500" if CONFIG_E500
 	default "classic" if CONFIG_CLASSIC
 	default "sh4" if CONFIG_SH4
+	default "sh4" if CONFIG_SH4A
 	default "" if CONFIG_386
 	default "i486" if CONFIG_486
 	default "i586" if CONFIG_586

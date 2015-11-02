@@ -422,9 +422,11 @@ $(eval $(call check-gcc-var,-mprefergot))
 ifeq ($(UCLIBC_HAS_FPU),y)
 	CPU_CFLAGS-$(CONFIG_SH2A)+=-m2a
 	CPU_CFLAGS-$(CONFIG_SH4)+=-m4
+	CPU_CFLAGS-$(CONFIG_SH4A)+=-m4a
 else
 	CPU_CFLAGS-$(CONFIG_SH2A)+=-m2a-nofpu
 	CPU_CFLAGS-$(CONFIG_SH4)+=-m4-nofpu
+	CPU_CFLAGS-$(CONFIG_SH4A)+=-m4a-nofpu
 endif
 endif
 
