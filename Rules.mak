@@ -426,8 +426,6 @@ endif
 endif
 
 ifeq ($(TARGET_ARCH),h8300)
-	CPU_LDFLAGS-$(CONFIG_H8300H)+= -Wl,-mh8300h_linux
-	CPU_LDFLAGS-$(CONFIG_H8S)   += -Wl,-mh8300s_linux
 	CPU_CFLAGS-$(CONFIG_H8300H) += -mh -mint32
 	CPU_CFLAGS-$(CONFIG_H8S)    += -ms -mint32
 endif
