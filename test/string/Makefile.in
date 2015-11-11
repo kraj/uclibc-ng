@@ -2,3 +2,7 @@
 # Licensed under the LGPL v2.1, see the file COPYING.LIB in this tarball.
 
 EXTRA_CFLAGS := -fno-builtin
+
+ifeq ($(TARGET_ARCH),h8300)
+TESTS_DISABLED += stratcliff
+endif
