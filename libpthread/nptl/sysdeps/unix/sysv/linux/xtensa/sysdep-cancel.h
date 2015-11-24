@@ -25,6 +25,7 @@
 
 #if !defined NOT_IN_libc || defined IS_IN_libpthread || defined IS_IN_librt
 
+#ifdef __ASSEMBLER__
 #if defined(__XTENSA_WINDOWED_ABI__)
 /* CENABLE/CDISABLE in PSEUDO below use call8, stack frame size must be
  * at least 32.
@@ -116,6 +117,7 @@
 			callx0  a0
 #else
 #error Unsupported Xtensa ABI
+#endif
 #endif
 
 # ifdef IS_IN_libpthread
