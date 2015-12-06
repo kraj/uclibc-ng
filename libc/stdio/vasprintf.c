@@ -33,6 +33,8 @@ int vasprintf(char **__restrict buf, const char * __restrict format,
 		if (rv < 0) {
 			free(*buf);
 			*buf = NULL;
+		} else {
+			*buf = realloc(*buf, rv + 1);
 		}
 	}
 
