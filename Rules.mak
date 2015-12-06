@@ -327,6 +327,9 @@ PICFLAG-$(UCLIBC_FORMAT_DSBT_ELF)  := -mdsbt -fpic
 PICFLAG := $(PICFLAG-y)
 PIEFLAG_NAME:=-fPIE
 
+$(eval $(call check-gcc-var,-fdata-sections))
+$(eval $(call check-gcc-var,-ffunction-sections))
+
 # Some nice CPU specific optimizations
 ifeq ($(TARGET_ARCH),i386)
 $(eval $(call check-gcc-var,-fomit-frame-pointer))
@@ -629,9 +632,6 @@ LDFLAGS_NOSTRIP:=$(LDFLAG-fuse-ld) $(CPU_LDFLAGS-y) -shared \
 # binutils-2.16.1 warns about ignored sections, 2.16.91.0.3 and newer are ok
 #$(eval $(call check-ld-var,--gc-sections))
 #LDFLAGS_NOSTRIP += $(LDFLAG_--gc-sections)
-
-$(eval $(call check-gcc-var,-fdata-sections))
-$(eval $(call check-gcc-var,-ffunction-sections))
 
 ifeq ($(UCLIBC_BUILD_RELRO),y)
 LDFLAGS_NOSTRIP+=-Wl,-z,relro
