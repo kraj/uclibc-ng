@@ -515,7 +515,6 @@ config LINUXTHREADS_OLD
 		   !TARGET_metag && \
 		   !TARGET_mips && \
 		   !TARGET_powerpc && \
-		   !TARGET_sh && \
 		   !TARGET_sparc && \
 		   !TARGET_x86_64 && \
 		   !TARGET_xtensa || \
