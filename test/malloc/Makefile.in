@@ -11,4 +11,8 @@ ifneq ($(UCLIBC_HAS_OBSTACK),y)
 TESTS_DISABLED += tst-obstack
 endif
 
+ifneq ($(MALLOC_STANDARD),y)
+TESTS_DISABLED += tst-asprintf
+endif
+
 CFLAGS_tst-mallocfork = -fPIC
