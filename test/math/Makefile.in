@@ -28,7 +28,7 @@ endif
 EXTRA_CFLAGS    := -fno-builtin
 EXTRA_LDFLAGS   := -lm
 
-PERL := /usr/bin/perl
+PERL := perl
 
 MDEPS := $(wildcard test-*.c)
 $(MDEPS): libm-test.c
