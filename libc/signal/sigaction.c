@@ -25,6 +25,11 @@
 int
 __libc_sigaction(int sig, const struct sigaction *act, struct sigaction *oact)
 {
+	if (unlikely (sig == SIGCANCEL || sig == SIGSETXID)) {
+		__set_errno (EINVAL);
+		return -1;
+	}
+
 	/* NB: kernel (as of 2.6.25) will return EINVAL
 	 * if sizeof(act->sa_mask) does not match kernel's sizeof(sigset_t).
 	 * Try to catch this problem at uclibc build time:  */
@@ -47,6 +52,11 @@ __libc_sigaction(int sig, const struct sigaction *act, struct sigaction *oact)
 {
 	int result;
 	struct old_kernel_sigaction kact, koact;
+
+	if (unlikely (sig == SIGCANCEL || sig == SIGSETXID)) {
+		__set_errno (EINVAL);
+		return -1;
+	}
 
 	if (act) {
 		kact.k_sa_handler = act->sa_handler;
