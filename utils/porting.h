@@ -41,6 +41,16 @@
 #include "dl-defs.h"
 #endif
 
+/* __WORDSIZE ist used for __ELF_NATIVE_CLASS, which is used for ElfW().
+  We want to provide the wordsize of the target, not of the host, when
+   compiling readelf.host
+ */
+#include <link.h>
+#ifdef ARCH_NATIVE_BIT
+#undef __WORDSIZE
+#define __WORDSIZE ARCH_NATIVE_BIT
+#endif
+
 #ifdef DMALLOC
 #include <dmalloc.h>
 #endif

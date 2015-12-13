@@ -174,10 +174,10 @@ static __inline__ uint64_t byteswap64_to_host(uint64_t value)
 	}
 }
 
-#if ELFCLASSM == ELFCLASS32
-# define byteswap_to_host(x) byteswap32_to_host(x)
-#else
+#if __WORDSIZE == 64
 # define byteswap_to_host(x) byteswap64_to_host(x)
+#else
+# define byteswap_to_host(x) byteswap32_to_host(x)
 #endif
 
 static ElfW(Shdr) *elf_find_section_type(uint32_t key, ElfW(Ehdr) *ehdr)
@@ -239,7 +239,8 @@ static char *elf_find_rpath(ElfW(Ehdr) *ehdr, ElfW(Dyn) *dynamic)
 static int check_elf_header(ElfW(Ehdr) *const ehdr)
 {
 	if (!ehdr || *(uint32_t*)ehdr != ELFMAG_U32
-	 || ehdr->e_ident[EI_CLASS] != ELFCLASSM
+	 /* Use __WORDSIZE, not ELFCLASSM which depends on the host */
+	 || ehdr->e_ident[EI_CLASS] != (__WORDSIZE >> 5)
 	 || ehdr->e_ident[EI_VERSION] != EV_CURRENT
 	) {
 		return 1;
@@ -506,6 +507,8 @@ static int add_library(ElfW(Ehdr) *ehdr, ElfW(Dyn) *dynamic, int is_setuid, char
 	for (cur = lib_list; cur; cur = cur->next) {
 		/* Check if this library is already in the list */
 		tmp1 = tmp2 = cur->name;
+		if (!cur->name)
+			continue;
 		while (*tmp1) {
 			if (*tmp1 == '/')
 				tmp2 = tmp1 + 1;
@@ -583,6 +586,8 @@ static struct library *find_elf_interpreter(ElfW(Ehdr) *ehdr)
 		}
 		for (cur = lib_list; cur; cur = cur->next) {
 			/* Check if this library is already in the list */
+			if (!tmp1 || !cur->name)
+				return NULL;
 			if (strcmp(cur->name, tmp1) == 0) {
 				/*printf("find_elf_interpreter is replacing '%s' (already in list)\n", cur->name); */
 				newlib = cur;
