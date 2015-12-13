@@ -91,7 +91,9 @@ ifeq ($(DODEBUG),y)
 	HOST_CFLAGS   += -g
 	LDFLAGS       += -Wl,-g
 	HOST_LDFLAGS  += -Wl,-g
-else
+endif
+
+ifeq ($(DOSTRIP),y)
 	LDFLAGS       += -Wl,-s
 	HOST_LDFLAGS  += -Wl,-s
 endif
