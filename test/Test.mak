@@ -45,6 +45,9 @@ U_TARGETS += $(TESTS_DISABLED)
 G_TARGETS += $(addsuffix _glibc,$(TESTS_DISABLED)) $(GLIBC_TESTS_DISABLED)
 TARGETS += $(SHELL_TESTS)
 CFLAGS += $(CFLAGS_$(notdir $(CURDIR)))
+ifeq (1,$(UCLIBCNG_GENERATE_TESTRUNNER))
+UCLIBCNG_TEST_SUBDIR ?= $(patsubst $(realpath $(TESTDIR))/%,%,$(CURDIR))
+endif
 
 define binary_name
 $(patsubst %.exe,%,$@)
@@ -92,6 +95,7 @@ $(addsuffix .exe,$(U_TARGETS)): SIMULATOR:=$(SIMULATOR_uclibc)
 $(addsuffix .exe,$(G_TARGETS)): SIMULATOR:=$(SIMULATOR_glibc)
 $(RUN_TARGETS):
 ifeq (1,$(UCLIBCNG_GENERATE_TESTRUNNER))
+	$(Q)\
 	expected_ret="$(RET_$(tst_src_name))"; echo \
 	    "$${expected_ret:-0}" \
 	    $(call shellescape,$(tst_src_name)) \
