@@ -37,6 +37,7 @@ __asm__(""
 #if _MIPS_SIM == _MIPS_SIM_ABI32
     "	subu	$29, 16\n"
 #endif
+# if !defined __mips_isa_rev || __mips_isa_rev < 6
 #if _MIPS_SIM == _MIPS_SIM_ABI64
     "	dla	$8, .coff\n"
 #else	/* O32 || N32 */
@@ -44,6 +45,10 @@ __asm__(""
 #endif	/* O32 || N32 */
     "	bltzal	$8, .coff\n"
     ".coff:\n"
+# else
+    ".coff:\n"
+    "   lapc $31, .coff\n"
+# endif
 #if _MIPS_SIM == _MIPS_SIM_ABI64
     "	dsubu	$8, $31, $8\n"
     "	dla	$25, _dl_start\n"
