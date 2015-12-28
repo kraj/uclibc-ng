@@ -432,10 +432,6 @@ ifeq ($(TARGET_ARCH),h8300)
 	CPU_CFLAGS-$(CONFIG_H8S)    += -ms -mint32
 endif
 
-ifeq ($(TARGET_ARCH),i960)
-	OPTIMIZATION+=-mh -mint32 #-fsigned-char
-endif
-
 ifeq ($(TARGET_ARCH),cris)
 	CPU_LDFLAGS-$(CONFIG_CRIS)+=-Wl,-mcrislinux
 	CPU_LDFLAGS-$(CONFIG_CRISV32)+=-Wl,-mcrislinux
@@ -491,14 +487,6 @@ ifeq ($(strip $(TARGET_ARCH)),avr32)
        CPU_CFLAGS-$(CONFIG_AVR32_AP7)  += -march=ap
        CPU_CFLAGS-$(CONFIG_LINKRELAX)  += -mrelax
        CPU_LDFLAGS-$(CONFIG_LINKRELAX) += --relax
-endif
-
-ifeq ($(TARGET_ARCH),i960)
-      SYMBOL_PREFIX=_
-endif
-
-ifeq ($(TARGET_ARCH),v850)
-      SYMBOL_PREFIX=_
 endif
 
 ifeq ($(TARGET_ARCH),c6x)
