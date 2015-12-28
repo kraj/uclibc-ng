@@ -397,25 +397,6 @@ UDItype __umulsidi3 (USItype, USItype);
 #define UDIV_TIME 40
 #endif /* x86_64 */
 
-#if defined (__i960__) && W_TYPE_SIZE == 32
-#define umul_ppmm(w1, w0, u, v) \
-  ({union {UDItype __ll;						\
-	   struct {USItype __l, __h;} __i;				\
-	  } __xx;							\
-  __asm__ ("emul	%2,%1,%0"					\
-	   : "=d" (__xx.__ll)						\
-	   : "%dI" ((USItype) (u)),					\
-	     "dI" ((USItype) (v)));					\
-  (w1) = __xx.__i.__h; (w0) = __xx.__i.__l;})
-#define __umulsidi3(u, v) \
-  ({UDItype __w;							\
-    __asm__ ("emul	%2,%1,%0"					\
-	     : "=d" (__w)						\
-	     : "%dI" ((USItype) (u)),					\
-	       "dI" ((USItype) (v)));					\
-    __w; })
-#endif /* __i960__ */
-
 #if defined (__M32R__) && W_TYPE_SIZE == 32
 #define add_ssaaaa(sh, sl, ah, al, bh, bl) \
   /* The cmp clears the condition bit.  */ \

@@ -25,7 +25,6 @@ choice
 	default TARGET_h8300 if DESIRED_TARGET_ARCH = "h8300"
 	default TARGET_hppa if DESIRED_TARGET_ARCH = "hppa"
 	default TARGET_i386 if DESIRED_TARGET_ARCH = "i386"
-	default TARGET_i960 if DESIRED_TARGET_ARCH = "i960"
 	default TARGET_ia64 if DESIRED_TARGET_ARCH = "ia64"
 	default TARGET_lm32 if DESIRED_TARGET_ARCH = "lm32"
 	default TARGET_m68k if DESIRED_TARGET_ARCH = "m68k"
@@ -37,7 +36,6 @@ choice
 	default TARGET_powerpc if DESIRED_TARGET_ARCH = "powerpc"
 	default TARGET_sh if DESIRED_TARGET_ARCH = "sh"
 	default TARGET_sparc if DESIRED_TARGET_ARCH = "sparc"
-	default TARGET_v850 if DESIRED_TARGET_ARCH = "v850"
 	default TARGET_x86_64 if DESIRED_TARGET_ARCH = "x86_64"
 	default TARGET_xtensa if DESIRED_TARGET_ARCH = "xtensa"
 	help
@@ -78,9 +76,6 @@ config TARGET_hppa
 config TARGET_i386
 	bool "i386"
 
-config TARGET_i960
-	bool "i960"
-
 config TARGET_ia64
 	bool "ia64"
 
@@ -113,9 +108,6 @@ config TARGET_sh
 
 config TARGET_sparc
 	bool "sparc"
-
-config TARGET_v850
-	bool "v850"
 
 config TARGET_x86_64
 	bool "x86_64"
@@ -164,10 +156,6 @@ if TARGET_i386
 source "extra/Configs/Config.i386"
 endif
 
-if TARGET_i960
-source "extra/Configs/Config.i960"
-endif
-
 if TARGET_ia64
 source "extra/Configs/Config.ia64"
 endif
@@ -210,10 +198,6 @@ endif
 
 if TARGET_sparc
 source "extra/Configs/Config.sparc"
-endif
-
-if TARGET_v850
-source "extra/Configs/Config.v850"
 endif
 
 if TARGET_x86_64
