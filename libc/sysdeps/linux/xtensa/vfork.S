@@ -59,11 +59,13 @@ HIDDEN_ENTRY (__vfork)
 	movi	a0, .Ljumptable
 	extui	a2, a3, 30, 2		# call-size: call4/8/12 = 1/2/3
 	addx4	a0, a2, a0		# find return address in jumptable
-	slli	a2, a2, 30
 	l32i	a0, a0, 0
-
-	xor	a3, a3, a2		# remove call-size from return address
-	or	a0, a0, a2		# create temporary return address
+					# exchange top 2 bits of a0 and a3:
+	xor	a2, a0, a3
+	extui	a2, a2, 30, 2
+	slli	a2, a2, 30
+	xor	a0, a0, a2
+	xor	a3, a3, a2
 	retw
 
 	/* a7: return address */
