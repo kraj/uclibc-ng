@@ -56,7 +56,7 @@ done:
 	jmp	@er2
 
 vfork_args:
-	.long	0x80004100	/* CLONE_VFORK | CLONE_VM | SIGCHLD */
+	.long	0x00004111	/* CLONE_VFORK | CLONE_VM | SIGCHLD */
 	.long	0
 	.long	0
 	.long	0
