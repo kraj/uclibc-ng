@@ -1,1 +1,6 @@
+# triggers gcc ICE with gcc 5.3.0
+ifeq ($(TARGET_lm32),y)
+TESTS_DISABLED := testregex
+endif
+
 CFLAGS_tst-regex2 = -fPIC
