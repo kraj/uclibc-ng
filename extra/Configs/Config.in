@@ -1042,8 +1042,9 @@ config UCLIBC_LINUX_SPECIFIC
 	  sched_getaffinity(), sched_setaffinity(), sendfile(),
 	  setfsgid(), setfsuid(), setresgid(), setresuid(),
 	  splice(), vmsplice(), tee(), signalfd(), statfs(),
-	  swapoff(), swapon(), sync_file_range(), _sysctl(),
-	  sysinfo(), timerfd_*(), vhangup(), umount(), umount2()
+	  swapoff(), swapon(), sync_file_range(), syncfs(),
+	  _sysctl(), sysinfo(), timerfd_*(), vhangup(), umount(),
+	  umount2()
 
 config UCLIBC_HAS_GNU_ERROR
 	bool "Support GNU extensions for error-reporting"
