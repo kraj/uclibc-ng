@@ -42,7 +42,8 @@ TESTS := tst-align tst-align2 tst-atfork1 tst-attr1 tst-attr2 tst-attr3	\
 	tst-oddstacklimit tst-oncex3 tst-oncex4 tst-rwlock2a  \
 	tst-basic7 tst-signal7 tst-vfork1x tst-vfork2x tst-sem10 tst-sem11 \
 	tst-sem12 tst-typesizes tst-initializers1-c89 tst-initializers1-c99 \
-	tst-initializers1-gnu89 tst-initializers1-gnu99
+	tst-initializers1-gnu89 tst-initializers1-gnu99 \
+	tst-atfork2
 
 #
 # These are for the RT library and POSIX timers.
@@ -151,6 +152,8 @@ CFLAGS_tst-initializers1-gnu99 = $(CFLAGS-tst-initializers1) -std=gnu99
 
 EXTRA_LDFLAGS = $(if $(findstring -lpthread,$(LDFLAGS_$@)),,-lpthread)
 
+LDFLAGS_tst-atfork2 := -ldl
+LDFLAGS_libatfork.so := -shared -static-libgcc -lpthread
 LDFLAGS_tst-cleanup4 := tst-cleanup4aux.o
 LDFLAGS_tst-cleanupx4 := tst-cleanup4aux.o
 LDFLAGS_tst-clock2 := -lrt
@@ -206,6 +209,9 @@ tst-tls5: tst-tls5mod.so
 
 tst-cleanupx4 : tst-cleanup4aux.o
 tst-fini1: tst-fini1mod.so
+
+tst-atfork2: libatfork.so
+tst-atfork2_glibc: libatfork.so.glibc
 
 OPTS_tst-cancel7 = -c ./tst-cancel7
 OPTS_tst-mqueue7 = -- ./tst-mqueue7
