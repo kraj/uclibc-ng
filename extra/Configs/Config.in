@@ -1555,17 +1555,6 @@ config UCLIBC_BUILD_MINIMAL_LOCALE
 	  If you do not need all locales that are available on your
 	  host-box, then set this to 'Y'.
 
-config UCLIBC_PREGENERATED_LOCALE_DATA
-	bool "Use Pre-generated Locale Data"
-	depends on UCLIBC_HAS_LOCALE && !TARGET_metag
-	help
-	  Use pre-built locale data.
-
-	  Note that these pregenerated locales are sensitive to your
-	  target architecture (endianess, bitcount).
-
-	  Saying N here is highly recommended.
-
 endchoice
 
 config UCLIBC_BUILD_MINIMAL_LOCALES
@@ -1579,19 +1568,6 @@ config UCLIBC_BUILD_MINIMAL_LOCALES
 	      en_US en_GB de_AT
 	  default:
 	      en_US
-
-config UCLIBC_DOWNLOAD_PREGENERATED_LOCALE_DATA
-	bool "Automagically Download the Pre-generated Locale Data (if necessary)"
-	depends on UCLIBC_PREGENERATED_LOCALE_DATA
-	help
-	  If you would like the build process to use 'wget' to automatically
-	  download the pregenerated locale data, enable this option.  Otherwise
-	  you will need to obtain the locale data yourself from:
-		http://www.uclibc.org/downloads/uClibc-locale-*.tgz
-	  and place the uClibc-locale-*.tgz tarball in the extra/locale/
-	  directory.
-
-	  Note that the use of pregenerated locale data is discouraged.
 
 config UCLIBC_HAS_XLOCALE
 	bool "Extended Locale Support (experimental/incomplete)"
