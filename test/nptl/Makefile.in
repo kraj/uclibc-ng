@@ -40,7 +40,7 @@ TESTS := tst-align tst-align2 tst-atfork1 tst-attr1 tst-attr2 tst-attr3	\
 	tst-cleanupx2 tst-cleanupx3 tst-cleanupx4 tst-cond22 tst-cond23 \
 	tst-getpid1 tst-getpid2 tst-getpid3 tst-join6 tst-tsd6 \
 	tst-oddstacklimit tst-oncex3 tst-oncex4 tst-rwlock2a  \
-	tst-basic7 tst-signal7 tst-vfork1x tst-vfork2x tst-sem10 tst-sem11 \
+	tst-basic7 tst-vfork1x tst-vfork2x tst-sem10 tst-sem11 \
 	tst-sem12 tst-typesizes tst-initializers1-c89 tst-initializers1-c99 \
 	tst-initializers1-gnu89 tst-initializers1-gnu99 \
 	tst-atfork2
