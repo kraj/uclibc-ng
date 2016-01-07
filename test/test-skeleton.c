@@ -17,6 +17,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <assert.h>
 #include <errno.h>
 #include <getopt.h>
 #include <malloc.h>
@@ -53,7 +54,7 @@ static const char *test_dir;
 struct temp_name_list
 {
   struct qelem q;
-  const char *name;
+  char *name;
 } *temp_name_list;
 
 /* Add temporary files in list.  */
@@ -63,14 +64,17 @@ add_temp_file (const char *name)
 {
   struct temp_name_list *newp
     = (struct temp_name_list *) calloc (sizeof (*newp), 1);
-  if (newp != NULL)
+  char *newname = strdup (name);
+  if (newp != NULL && newname != NULL)
     {
-      newp->name = name;
+      newp->name = newname;
       if (temp_name_list == NULL)
 	temp_name_list = (struct temp_name_list *) &newp->q;
       else
 	insque (newp, temp_name_list);
     }
+  else
+    free (newp);
 }
 
 /* Delete all temporary files.  */
@@ -80,11 +84,19 @@ delete_temp_files (void)
   while (temp_name_list != NULL)
     {
       remove (temp_name_list->name);
-      temp_name_list = (struct temp_name_list *) temp_name_list->q.q_forw;
+      free (temp_name_list->name);
+
+      struct temp_name_list *next
+	= (struct temp_name_list *) temp_name_list->q.q_forw;
+      free (temp_name_list);
+      temp_name_list = next;
     }
 }
 
-/* Create a temporary file.  */
+/* Create a temporary file.  Return the opened file descriptor on
+   success, or -1 on failure.  Write the file name to *FILENAME if
+   FILENAME is not NULL.  In this case, the caller is expected to free
+   *FILENAME.  */
 static int
 __attribute__ ((unused))
 create_temp_file (const char *base, char **filename)
@@ -112,6 +124,8 @@ create_temp_file (const char *base, char **filename)
   add_temp_file (fname);
   if (filename != NULL)
     *filename = fname;
+  else
+    free (fname);
 
   return _fd;
 }
@@ -125,7 +139,10 @@ signal_handler (int sig __attribute__ ((unused)))
   int status;
   int i;
 
-  /* Send signal.  */
+  assert (pid > 1);
+  /* Kill the whole process group.  */
+  kill (-pid, SIGKILL);
+  /* In case setpgid failed in the child, kill it individually too.  */
   kill (pid, SIGKILL);
 
   /* Wait for it to terminate.  */
@@ -337,7 +354,8 @@ main (int argc, char *argv[])
 
       /* We put the test process in its own pgrp so that if it bogusly
 	 generates any job control signals, they won't hit the whole build.  */
-      setpgid (0, 0);
+      if (setpgid (0, 0) != 0)
+	printf ("Failed to set the process group ID: %m\n");
 
       /* Execute the test function and exit with the return value.   */
       exit (TEST_FUNCTION);
