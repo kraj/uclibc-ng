@@ -783,8 +783,11 @@ $(eval $(call cache-output-var,LIBGCC_A,$(CC) $(LIBGCC_CFLAGS) -print-libgcc-fil
 $(eval $(call cache-output-var,LIBGCC_EH,$(CC) $(LIBGCC_CFLAGS) -print-file-name=libgcc_eh.a))
 # with -O0 we (e.g. lockf) might end up with references to
 # _Unwind_Resume, so pull in gcc_eh in this case..
+# with a --disable-shared toolchain, libgcc_eh.a and libgcc.a are combined
+# in libgcc.a, so check if the printed file exist, before adding to the commandline
+LIBGCC_EH_FILE := $(shell if [ -f $(LIBGCC_EH) ]; then echo $(LIBGCC_EH); fi)
 LIBGCC_DIR := $(dir $(LIBGCC_A))
-LIBGCC := $(LIBGCC_A) $(if $(DODEBUG),$(LIBGCC_EH))
+LIBGCC := $(LIBGCC_A) $(if $(DODEBUG),$(LIBGCC_EH_FILE))
 
 # moved from libpthread/linuxthreads
 ifeq ($(UCLIBC_CTOR_DTOR),y)
