@@ -669,11 +669,12 @@ int __decode_dotted(const unsigned char *packet,
 	bool measure = 1;
 	unsigned total = 0;
 	unsigned used = 0;
+	unsigned maxiter = 256;
 
 	if (!packet)
 		return -1;
 
-	while (1) {
+	while (--maxiter) {
 		if (offset >= packet_len)
 			return -1;
 		b = packet[offset++];
@@ -710,6 +711,8 @@ int __decode_dotted(const unsigned char *packet,
 		else
 			dest[used++] = '\0';
 	}
+	if (!maxiter)
+		return -1;
 
 	/* The null byte must be counted too */
 	if (measure)
