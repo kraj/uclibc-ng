@@ -5,7 +5,7 @@
 export UCLIBC_ONLY := 1
 
 TESTS := dltest dltest2 dlstatic test1 test2 test3 dlundef dlafk dladdr \
-	testscope nodelete
+	testscope nodelete tst-origin
 
 ifneq ($(HAVE_SHARED),y)
 TESTS_DISABLED := test3
@@ -25,9 +25,18 @@ LDFLAGS_test2    := -ldl
 LDFLAGS_test3    := -ldl ./libtest1.so ./libtest2.so -Wl,-rpath,.
 LDFLAGS_dladdr   := -ldl
 LDFLAGS_testscope:= -ldl
+LDFLAGS_tst-origin:= -ldl -Wl,-rpath,\$$ORIGIN/testlib
 
 DEBUG_LIBS := X
 WRAPPER := env $(DEBUG_LIBS)=all LD_LIBRARY_PATH="$$PWD:.:$(LD_LIBRARY_PATH)"
+
+testlib:
+	@mkdir $@
+
+testlib/libtest31.so: libtest3.so | testlib
+	@cp $^ $@
+
+EXTRA_DIRS := testlib
 
 # Build libC.so without -mprefergot compilation flag to force a
 # R_SH_JMP_SLOT relocation instead of R_SH_GLOB_DAT for _libC_fini. This is
@@ -53,6 +62,7 @@ LDFLAGS_libafk.so := ./libafk-temp.so -Wl,-rpath,.
 test1: libtest1.so
 test2: libtest1.so libtest2.so
 test3: libtest1.so libtest2.so
+tst-origin: testlib/libtest31.so
 libtest1.so: libtest2.so
 libB.so: libC.so
 libA.so: libB.so
