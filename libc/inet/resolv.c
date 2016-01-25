@@ -674,6 +674,7 @@ int __decode_dotted(const unsigned char *packet,
 	if (!packet)
 		return -1;
 
+	dest[0] = '\0';
 	while (--maxiter) {
 		if (offset >= packet_len)
 			return -1;
