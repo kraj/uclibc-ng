@@ -21,6 +21,10 @@ TESTS := tst_iswalnum tst_iswalpha tst_iswcntrl          \
 # NOTE: For now disabled tst_strfmon to avoid build failure.
 TESTS_DISABLED := tst_strfmon
 
+ifneq ($(UCLIBC_HAS_FLOATS),y)
+TESTS_DISABLED += tst_swscanf tst_wcstod
+endif
+
 DODIFF_rint     := 1
 
 EXTRA_CFLAGS    := -D__USE_GNU -fno-builtin -fPIC

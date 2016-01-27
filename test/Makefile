@@ -21,6 +21,9 @@ endif
 ifneq ($(UCLIBC_HAS_THREADS)$(ARCH_USE_MMU),yy)
 	DIRS := $(filter-out pthread,$(DIRS))
 endif
+ifneq ($(UCLIBC_HAS_FLOATS),y)
+	DIRS := $(filter-out math,$(DIRS))
+endif
 ifneq ($(UCLIBC_HAS_FULL_RPC),y)
 	DIRS := $(filter-out rpc,$(DIRS))
 endif
