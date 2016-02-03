@@ -23,7 +23,7 @@
 # define PREFETCH_STORE_HINT PREFETCH_HINT_PREPAREFORSTORE
 #elif _LIBC
 # include <sysdep.h>
-# include <regdef.h>
+# include <sys/regdef.h>
 # include <sys/asm.h>
 # define PREFETCH_LOAD_HINT PREFETCH_HINT_LOAD_STREAMED
 # define PREFETCH_STORE_HINT PREFETCH_HINT_PREPAREFORSTORE
@@ -33,7 +33,7 @@
 # define PREFETCH_LOAD_HINT PREFETCH_HINT_LOAD_STREAMED
 # define PREFETCH_STORE_HINT PREFETCH_HINT_PREPAREFORSTORE
 #else
-# include <regdef.h>
+# include <sys/regdef.h>
 # include <sys/asm.h>
 #endif
 
