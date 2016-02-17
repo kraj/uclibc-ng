@@ -79,6 +79,16 @@ Test "log10 (e) == log10(e)":
 float: 1
 ifloat: 1
 
+# tgamma
+Test "tgamma (-0.5) == -2 sqrt (pi)":
+double: 1
+idouble: 1
+Test "tgamma (0.7) == 1.29805533264755778568117117915281162":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+
 # Maximal error of functions:
 Function: "cos":
 double: 2
@@ -125,5 +135,11 @@ ifloat: 1
 Function: "tan":
 double: 1
 idouble: 1
+
+Function: "tgamma":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
 
 # end of automatic generation
