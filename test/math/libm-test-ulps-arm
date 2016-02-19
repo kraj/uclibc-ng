@@ -3968,6 +3968,9 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+Test "tgamma (-0.5) == -2 sqrt (pi)":
+double: 1
+idouble: 1
 Test "tgamma (-0x0.fffffffffffff8p0)":
 double: 1
 idouble: 1
@@ -4151,6 +4154,11 @@ Test "tgamma (0.5)":
 float: 1
 ifloat: 1
 Test "tgamma (0.7)":
+double: 1
+float: 1
+idouble: 1
+ifloat: 1
+Test "tgamma (0.7) == 1.29805533264755778568117117915281162":
 double: 1
 float: 1
 idouble: 1
