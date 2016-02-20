@@ -1,6 +1,11 @@
 # Begin of automatic generation
 
 # atan2
+Test "atan2 (-0.00756827042671106339, -.001792735857538728036) == -1.80338464113663849327153994379639112":
+float: 6
+ifloat: 6
+ildouble: 1
+ldouble: 1
 Test "atan2 (-0.75, -1.0) == -2.49809154479650885165983415456218025":
 float: 3
 ifloat: 3
@@ -14,11 +19,6 @@ ldouble: 1
 Test "atan2 (1.390625, 0.9296875) == 0.981498387184244311516296577615519772":
 float: 1
 ifloat: 1
-ildouble: 1
-ldouble: 1
-Test "atan2 (-0.00756827042671106339, -.001792735857538728036) == -1.80338464113663849327153994379639112":
-float: 6
-ifloat: 6
 ildouble: 1
 ldouble: 1
 
@@ -337,8 +337,8 @@ double: 2
 float: 3
 idouble: 2
 ifloat: 3
-ildouble: 10
-ldouble: 10
+ildouble: 1
+ldouble: 1
 Test "Real part of: cpow (2 + 0 i, 10 + 0 i) == 1024.0 + 0.0 i":
 ildouble: 2
 ldouble: 2
@@ -431,6 +431,9 @@ double: 1
 idouble: 1
 
 # erf
+Test "erf (0.75) == 0.711155633653515131598937834591410777":
+double: 1
+idouble: 1
 Test "erf (1.25) == 0.922900128256458230136523481197281140":
 double: 1
 idouble: 1
@@ -443,6 +446,11 @@ Test "erfc (27.0) == 0.523704892378925568501606768284954709e-318":
 ildouble: 1
 ldouble: 1
 Test "erfc (4.125) == 0.542340079956506600531223408575531062e-8":
+double: 1
+idouble: 1
+
+# exp
+Test "exp (1) == e":
 double: 1
 idouble: 1
 
@@ -1112,8 +1120,8 @@ double: 2
 float: 4
 idouble: 2
 ifloat: 4
-ildouble: 10
-ldouble: 10
+ildouble: 1
+ldouble: 1
 
 Function: Imaginary part of "cpow":
 double: 2
@@ -1189,6 +1197,10 @@ idouble: 1
 ildouble: 1
 ldouble: 1
 
+Function: "exp":
+double: 1
+idouble: 1
+
 Function: "exp10":
 double: 6
 float: 2
@@ -1249,11 +1261,15 @@ ifloat: 2
 ildouble: 1
 ldouble: 1
 
+Function: "log":
+float: 1
+ifloat: 1
+
 Function: "log10":
 double: 1
-float: 2
+float: 1
 idouble: 1
-ifloat: 2
+ifloat: 1
 ildouble: 1
 ldouble: 1
 
