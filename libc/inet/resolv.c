@@ -974,7 +974,7 @@ void __open_nameservers(void)
 	if (!__res_sync) {
 		/* Reread /etc/resolv.conf if it was modified.  */
 		struct stat sb;
-		if (stat("/etc/resolv.conf", &sb) != 0)
+		if (stat(_PATH_RESCONF, &sb) != 0)
 			sb.st_mtime = 0;
 		if (resolv_conf_mtime != (uint32_t)sb.st_mtime) {
 			resolv_conf_mtime = sb.st_mtime;
@@ -988,7 +988,7 @@ void __open_nameservers(void)
 	__resolv_timeout = RES_TIMEOUT;
 	__resolv_attempts = RES_DFLRETRY;
 
-	fp = fopen("/etc/resolv.conf", "r");
+	fp = fopen(_PATH_RESCONF, "r");
 #ifdef FALLBACK_TO_CONFIG_RESOLVCONF
 	if (!fp) {
 		/* If we do not have a pre-populated /etc/resolv.conf then
