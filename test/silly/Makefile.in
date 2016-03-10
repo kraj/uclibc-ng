@@ -4,6 +4,10 @@
 RET_hello := 42
 RET_tiny  := 42
 
+ifeq ($(TARGET_ARCH),ia64)
+TESTS_DISABLED += tst-atomic tst-atomic-long
+endif
+
 ifeq ($(TARGET_ARCH),mips)
 TESTS_DISABLED += tst-atomic tst-atomic-long
 endif
