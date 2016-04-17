@@ -27,5 +27,4 @@ endif
 
 DODIFF_rint     := 1
 
-EXTRA_CFLAGS    := -D__USE_GNU -fno-builtin -fPIC
-
+EXTRA_CFLAGS    := -D__USE_GNU -fno-builtin

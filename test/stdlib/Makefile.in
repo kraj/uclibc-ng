@@ -13,7 +13,3 @@ endif
 ifeq ($(UCLIBC_HAS_ARC4RANDOM),)
 TESTS_DISABLED += testarc4random
 endif
-
-CFLAGS_test-canon = -fPIC
-CFLAGS_test-canon2 = -fPIC
-CFLAGS_testatexit = -fPIC

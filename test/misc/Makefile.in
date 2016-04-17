@@ -40,9 +40,3 @@ OPTS_tst-fnmatch := < tst-fnmatch.input
 MNTENTS = / /sys /proc /dev
 OPTS_tst-statfs := $(MNTENTS)
 OPTS_tst-statvfs := $(MNTENTS)
-
-CFLAGS_bug-glob2 = -fPIC
-CFLAGS_opendir-tst1 = -fPIC
-CFLAGS_tst-inotify = -fPIC
-CFLAGS_tst-utmp = -fPIC
-CFLAGS_tst-utmpx = -fPIC

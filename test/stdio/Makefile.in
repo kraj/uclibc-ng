@@ -6,5 +6,3 @@ DODIFF_64bit := 1
 ifeq ($(UCLIBC_HAS_GLIBC_CUSTOM_STREAMS),)
 TESTS_DISABLED += tst-fmemopen
 endif
-
-CFLAGS_tst-fmemopen = -fPIC

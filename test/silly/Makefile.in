@@ -20,5 +20,5 @@ atomic_headers := -I$(top_srcdir)libc/sysdeps/linux/$(TARGET_ARCH) \
 	-I$(top_srcdir)libc/sysdeps/linux \
 	-I$(top_builddir)include
 
-CFLAGS_tst-atomic = $(atomic_headers) -fPIC
-CFLAGS_tst-atomic-long = $(atomic_headers) -fPIC
+CFLAGS_tst-atomic = $(atomic_headers)
+CFLAGS_tst-atomic-long = $(atomic_headers)

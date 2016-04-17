@@ -2,5 +2,3 @@
 ifeq ($(TARGET_lm32),y)
 TESTS_DISABLED := testregex
 endif
-
-CFLAGS_tst-regex2 = -fPIC
