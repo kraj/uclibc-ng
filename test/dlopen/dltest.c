@@ -31,7 +31,7 @@ int main(int argc, char **argv)
 	    ret = EXIT_FAILURE;
 	    printf("dltest: values should NOT be equal  Weak values resolved incorrectly!\n");
 	} else {
-	    printf("dltest: weak symbols resoved correctly.\n");
+	    printf("dltest: weak symbols resolved correctly.\n");
 	}
 
 	dlclose(handle);
