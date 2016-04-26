@@ -1,5 +1,7 @@
-# Copyright (C) 2016 Rene Nielsen <rene.nielsen@microsemi.com>
-# Licensed under the LGPL v2.1, see the file COPYING.LIB in this tarball.
+/*
+ * Copyright (C) 2016 Rene Nielsen <rene.nielsen@microsemi.com>
+ * Licensed under the LGPL v2.1, see the file COPYING.LIB in this tarball.
+ */
 
 #include <string.h>
 #include <stdio.h>
