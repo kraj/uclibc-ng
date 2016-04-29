@@ -30,7 +30,7 @@ endif
 ifneq ($(UCLIBC_HAS_REGEX),y)
 	DIRS := $(filter-out regex,$(DIRS))
 endif
-ifneq ($(UCLIBC_HAS_THREADS_NATIVE),y)
+ifneq ($(HAVE_SHARED)$(UCLIBC_HAS_THREADS_NATIVE),yy)
 	DIRS := $(filter-out tls nptl,$(DIRS))
 endif
 ifneq ($(UCLIBC_HAS_WCHAR),y)
