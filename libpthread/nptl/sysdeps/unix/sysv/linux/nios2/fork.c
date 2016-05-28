@@ -1,6 +1,6 @@
-/* Define the machine-dependent type `jmp_buf'.  Nios II version.
-   Copyright (C) 1992-2016 Free Software Foundation, Inc.
+/* Copyright (C) 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Phil Blundell <pb@nexus.co.uk>, 2005
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -13,19 +13,18 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library.  If not, see
+   License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _BITS_SETJMP_H
-#define _BITS_SETJMP_H	1
+#include <sched.h>
+#include <signal.h>
+#include <sysdep.h>
+#include <tls.h>
 
-#if !defined _SETJMP_H && !defined _PTHREAD_H
-# error "Never include <bits/setjmp.h> directly; use <setjmp.h> instead."
-#endif
 
-/* Saves r16-r22 (callee-saved, including GOT pointer), fp (frame pointer),
-   ra (return address), and sp (stack pointer).  */
+#define ARCH_FORK()							\
+  INLINE_SYSCALL (clone, 5,						\
+		  CLONE_CHILD_SETTID | CLONE_CHILD_CLEARTID | SIGCHLD,	\
+		  NULL, NULL, NULL, &THREAD_SELF->tid)
 
-typedef int __jmp_buf[10];
-
-#endif	/* bits/setjmp.h */
+#include "../fork.c"

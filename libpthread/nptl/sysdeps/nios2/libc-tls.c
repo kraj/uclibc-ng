@@ -1,5 +1,5 @@
-/* Define the machine-dependent type `jmp_buf'.  Nios II version.
-   Copyright (C) 1992-2016 Free Software Foundation, Inc.
+/* Thread-local storage handling in the ELF dynamic linker.  Nios II version.
+   Copyright (C) 2005-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,16 +16,17 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _BITS_SETJMP_H
-#define _BITS_SETJMP_H	1
+#include <sysdeps/generic/libc-tls.c>
+#include <dl-tls.h>
 
-#if !defined _SETJMP_H && !defined _PTHREAD_H
-# error "Never include <bits/setjmp.h> directly; use <setjmp.h> instead."
-#endif
+/* On Nios II, linker optimizations are not required, so __tls_get_addr
+   can be called even in statically linked binaries.  In this case module
+   must be always 1 and PT_TLS segment exist in the binary, otherwise it
+   would not link.  */
 
-/* Saves r16-r22 (callee-saved, including GOT pointer), fp (frame pointer),
-   ra (return address), and sp (stack pointer).  */
-
-typedef int __jmp_buf[10];
-
-#endif	/* bits/setjmp.h */
+void *
+__tls_get_addr (tls_index *ti)
+{
+  dtv_t *dtv = THREAD_DTV ();
+  return (char *) dtv[1].pointer.val + GET_ADDR_OFFSET;
+}

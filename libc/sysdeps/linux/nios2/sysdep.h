@@ -1,4 +1,4 @@
-/* longjmp for Nios II.
+/* Assembler macros for Nios II.
    Copyright (C) 2015-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -13,27 +13,22 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library.  If not, see
+   License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sysdep.h>
-#include <jmpbuf-offsets.h>
+#include <common/sysdep.h>
 
-ENTRY (__longjmp)
-    mov     r2,  r5
+#ifdef	__ASSEMBLER__
 
-    ldw	    r16, (JB_R16*4)(r4)
-    ldw	    r17, (JB_R17*4)(r4)
-    ldw	    r18, (JB_R18*4)(r4)
-    ldw	    r19, (JB_R19*4)(r4)
-    ldw	    r20, (JB_R20*4)(r4)
-    ldw     r21, (JB_R21*4)(r4)
-    ldw	    r22, (JB_R22*4)(r4)
-    ldw	    fp,  (JB_FP*4)(r4)
-    ldw	    ra,  (JB_RA*4)(r4)
-    ldw	    sp,  (JB_SP*4)(r4)
-  
-    ret
+#define ASM_SIZE_DIRECTIVE(name) .size name,.-name
 
-END (__longjmp)
-libc_hidden_def(__longjmp)
+#define ENTRY(name)						 \
+  .globl C_SYMBOL_NAME(name);					 \
+  .type C_SYMBOL_NAME(name),%function;				 \
+  C_LABEL(name)
+
+#undef  END
+#define END(name)				\
+  ASM_SIZE_DIRECTIVE(name)
+
+#endif	/* __ASSEMBLER__ */

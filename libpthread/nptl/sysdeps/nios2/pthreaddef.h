@@ -1,5 +1,5 @@
-/* Define the machine-dependent type `jmp_buf'.  Nios II version.
-   Copyright (C) 1992-2016 Free Software Foundation, Inc.
+/* pthread machine parameter definitions, Nios II version.
+   Copyright (C) 2002-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,16 +16,21 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _BITS_SETJMP_H
-#define _BITS_SETJMP_H	1
+/* Default stack size.  */
+#define ARCH_STACK_DEFAULT_SIZE	(2 * 1024 * 1024)
 
-#if !defined _SETJMP_H && !defined _PTHREAD_H
-# error "Never include <bits/setjmp.h> directly; use <setjmp.h> instead."
-#endif
+/* Required stack pointer alignment at beginning.  */
+#define STACK_ALIGN		4
 
-/* Saves r16-r22 (callee-saved, including GOT pointer), fp (frame pointer),
-   ra (return address), and sp (stack pointer).  */
+/* Minimal stack size after allocating thread descriptor and guard size.  */
+#define MINIMAL_REST_STACK	2048
 
-typedef int __jmp_buf[10];
+/* Alignment requirement for TCB.  */
+#define TCB_ALIGNMENT		4
 
-#endif	/* bits/setjmp.h */
+/* Location of current stack frame.  */
+#define CURRENT_STACK_FRAME	__builtin_frame_address (0)
+
+/* XXX Until we have a better place keep the definitions here.  */
+#define __exit_thread_inline(val) \
+  INLINE_SYSCALL (exit, 1, (val))
