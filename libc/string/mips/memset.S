@@ -37,7 +37,7 @@
    prefetching.  */
 
 #if (__mips == 4) || (__mips == 5) || (__mips == 32) || (__mips == 64)
-# ifndef DISABLE_PREFETCH
+# ifdef __UCLIBC_USE_MIPS_PREFETCH__
 #  define USE_PREFETCH
 # endif
 #endif

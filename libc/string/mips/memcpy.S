@@ -39,7 +39,7 @@
 
 #if (_MIPS_ISA == _MIPS_ISA_MIPS4) || (_MIPS_ISA == _MIPS_ISA_MIPS5) || \
     (_MIPS_ISA == _MIPS_ISA_MIPS32) || (_MIPS_ISA == _MIPS_ISA_MIPS64)
-# ifndef DISABLE_PREFETCH
+# ifdef __UCLIBC_USE_MIPS_PREFETCH__
 #  define USE_PREFETCH
 # endif
 #endif
