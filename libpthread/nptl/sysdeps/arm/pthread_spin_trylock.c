@@ -1,4 +1,5 @@
-/* Copyright (C) 2005 Free Software Foundation, Inc.
+/* pthread_spin_trylock -- trylock a spin lock.  Generic version.
+   Copyright (C) 2012-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,19 +16,12 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define _ERRNO_H 1
-#include <bits/errno.h>
+#include <errno.h>
+#include <atomic.h>
+#include "pthreadP.h"
 
-#include <sysdep.h>
-
-	.text
-	.align	4
-
-ENTRY (pthread_spin_trylock)
-	mov	r1, #1
-	swp	r2, r1, [r0]
-	teq	r2, #0
-	moveq	r0, #0
-	movne	r0, #EBUSY
-	PSEUDO_RET_NOERRNO
-END (pthread_spin_trylock)
+int
+pthread_spin_trylock (pthread_spinlock_t *lock)
+{
+  return atomic_exchange_acq (lock, 1) ? EBUSY : 0;
+}
