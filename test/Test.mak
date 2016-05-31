@@ -116,7 +116,7 @@ compile: $(COMPILE_TARGETS)
 G_TARGET_SRCS := $(addsuffix .c,$(G_TARGETS))
 U_TARGET_SRCS := $(addsuffix .c,$(U_TARGETS))
 
-MAKE_SRCS := Makefile $(TESTDIR)Makefile $(TESTDIR)Rules.mak $(TESTDIR)Test.mak
+MAKE_SRCS := $(wildcard Makefile.in) $(TESTDIR)Makefile $(TESTDIR)Rules.mak $(TESTDIR)Test.mak
 
 $(U_TARGETS): $(U_TARGET_SRCS) $(MAKE_SRCS)
 	$(showlink)
