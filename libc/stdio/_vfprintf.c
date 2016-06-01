@@ -130,14 +130,6 @@
 
 /**********************************************************************/
 
-#ifdef __UCLIBC_MJN3_ONLY__
-# ifdef L_register_printf_function
-/* emit only once */
-#  warning WISHLIST: Make MAX_USER_SPEC configurable?
-#  warning WISHLIST: Make MAX_ARGS_PER_SPEC configurable?
-# endif
-#endif
-
 #ifdef __UCLIBC_HAS_GLIBC_CUSTOM_PRINTF__
 # define MAX_USER_SPEC       10
 # define MAX_ARGS_PER_SPEC    5
@@ -460,9 +452,6 @@ int attribute_hidden _ppfs_init(register ppfs_t *ppfs, const char *fmt0)
 	--ppfs->maxposarg;			/* set to -1 */
 #endif
 	ppfs->fmtpos = fmt0;
-#ifdef __UCLIBC_MJN3_ONLY__
-# warning TODO: Make checking of the format string in C locale an option.
-#endif
 #ifdef __UCLIBC_HAS_LOCALE__
 	/* To support old programs, don't check mb validity if in C locale. */
 	if (__UCLIBC_CURLOCALE->encoding != __ctype_encoding_7_bit) {
@@ -878,11 +867,6 @@ int attribute_hidden _ppfs_parsespec(ppfs_t *ppfs)
 		} else {
 			if (maxposarg > 0) {
 # ifdef __UCLIBC_HAS_PRINTF_M_SPEC__
-#  ifdef __UCLIBC_MJN3_ONLY__
-#   warning TODO: Support prec and width for %m when positional args used
-				/* Actually, positional arg processing will fail in general
-				 * for specifiers that don't require an arg. */
-#  endif
 				if (*fmt == 'm') {
 					goto PREC_WIDTH;
 				}
@@ -1414,9 +1398,6 @@ static int _do_one_spec(FILE * __restrict stream,
 	int numfill = 0;			/* TODO: fix */
 	int prefix_num = PREFIX_NONE;
 	char padchar = ' ';
-#ifdef __UCLIBC_MJN3_ONLY__
-#warning TODO: Determine appropriate buf size.
-#endif
 	/* TODO: buf needs to be big enough for any possible error return strings
 	 * and also for any locale-grouped long long integer strings generated.
 	 * This should be large enough for any of the current archs/locales, but
@@ -1468,11 +1449,6 @@ static int _do_one_spec(FILE * __restrict stream,
 		if (ppfs->conv_num <= CONV_i) {	/* pointer or (un)signed int */
 			alphacase = __UIM_LOWER;
 
-#ifdef __UCLIBC_MJN3_ONLY__
-#ifdef L__vfprintf_internal
-#warning CONSIDER: Should we ignore these flags if stub locale?  What about custom specs?
-#endif
-#endif
 			base = spec_base[(int)(ppfs->conv_num - CONV_p)];
 			if (base == 10) {
 				if (PRINT_INFO_FLAG_VAL(&(ppfs->info),group)) {
@@ -1497,11 +1473,6 @@ static int _do_one_spec(FILE * __restrict stream,
 			if (ppfs->info.prec < 0) { /* Ignore '0' flag if prec specified. */
 				padchar = ppfs->info.pad;
 			}
-#ifdef __UCLIBC_MJN3_ONLY__
-#ifdef L__vfprintf_internal
-#warning CONSIDER: If using outdigits and/or grouping, how should we interpret precision?
-#endif
-#endif
 			s = _uintmaxtostr(buf + sizeof(buf) - 1,
 							  (uintmax_t)
 							  _load_inttype(ppfs->conv_num == CONV_p ? PA_FLAG_LONG : *argtype & __PA_INTMASK,
@@ -1654,9 +1625,6 @@ static int _do_one_spec(FILE * __restrict stream,
 		} else if (ppfs->conv_num <= CONV_s) {	/* char or string */
 
 			if (ppfs->conv_num == CONV_s) { /* string */
-#ifdef __UCLIBC_MJN3_ONLY__
-#warning TODO: Fix %s for _vfwprintf_internal... output upto illegal sequence?
-#endif
 				s = *((char **) (*argptr));
 				if (s) {
 #ifdef __UCLIBC_HAS_PRINTF_M_SPEC__
@@ -1722,11 +1690,6 @@ static int _do_one_spec(FILE * __restrict stream,
 			return -1;
 		}
 
-#ifdef __UCLIBC_MJN3_ONLY__
-#ifdef L__vfprintf_internal
-#warning CONSIDER: If using outdigits and/or grouping, how should we pad?
-#endif
-#endif
 		{
 			size_t t;
 
