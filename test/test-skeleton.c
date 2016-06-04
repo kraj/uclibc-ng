@@ -336,22 +336,6 @@ main (int argc, char *argv[])
       setrlimit (RLIMIT_CORE, &core_limit);
 #endif
 
-#ifdef RLIMIT_DATA
-      /* Try to avoid eating all memory if a test leaks.  */
-      if (getrlimit (RLIMIT_DATA, &data_limit) == 0)
-	{
-	  if (TEST_DATA_LIMIT == RLIM_INFINITY)
-	    data_limit.rlim_cur = data_limit.rlim_max;
-	  else if (data_limit.rlim_cur > (rlim_t) TEST_DATA_LIMIT)
-	    data_limit.rlim_cur = MIN ((rlim_t) TEST_DATA_LIMIT,
-				       data_limit.rlim_max);
-	  if (setrlimit (RLIMIT_DATA, &data_limit) < 0)
-	    perror ("setrlimit: RLIMIT_DATA");
-	}
-      else
-	perror ("getrlimit: RLIMIT_DATA");
-#endif
-
       /* We put the test process in its own pgrp so that if it bogusly
 	 generates any job control signals, they won't hit the whole build.  */
       if (setpgid (0, 0) != 0)
