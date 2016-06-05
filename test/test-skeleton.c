@@ -325,9 +325,6 @@ main (int argc, char *argv[])
   if (pid == 0)
     {
       /* This is the child.  */
-#ifdef RLIMIT_DATA
-      struct rlimit data_limit;
-#endif
 #ifdef RLIMIT_CORE
       /* Try to avoid dumping core.  */
       struct rlimit core_limit;

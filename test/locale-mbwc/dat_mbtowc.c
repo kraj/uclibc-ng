@@ -135,7 +135,7 @@ TST_MBTOWC tst_mbtowc_loc [] = {
 	  {
 	    { 0, 1, "\xfc\xe4\xf6",	MB_LEN_MAX },
 	    { 0, 1, "\177",	   	MB_LEN_MAX },
-	    { 0, 0, (char)NULL, 	MB_LEN_MAX },
+	    { 0, 0, NULL, 	MB_LEN_MAX },
 	  }
 	},
 	{
@@ -221,7 +221,7 @@ TST_MBTOWC tst_mbtowc_loc [] = {
 	  {
 	    { 0, 1, "ABC",	    MB_LEN_MAX },
 	    { 0, 1, "\177",	    MB_LEN_MAX },
-	    { 0, 0, (char)NULL, MB_LEN_MAX },
+	    { 0, 0, NULL,           MB_LEN_MAX },
 	  }
 	},
 	{
@@ -322,7 +322,7 @@ TST_MBTOWC tst_mbtowc_loc [] = {
 	  {
 	    { 0, 1, "\244\242A",      MB_LEN_MAX },
 	    { 0, 1, "\177\244\242",   MB_LEN_MAX },
-	    { 0, 0, (char)NULL, MB_LEN_MAX },
+	    { 0, 0, NULL,             MB_LEN_MAX },
 	  }
 	},
 	{
@@ -423,7 +423,7 @@ TST_MBTOWC tst_mbtowc_loc [] = {
 	  {
 	    { 0, 1, "\343\201\202A",      MB_LEN_MAX },
 	    { 0, 1, "\177\343\201\202",   MB_LEN_MAX },
-	    { 0, 0, (char)NULL, MB_LEN_MAX },
+	    { 0, 0, NULL,                 MB_LEN_MAX },
 	  }
 	},
 	{

@@ -9,7 +9,7 @@ extern void _dlinfo(void);
 
 int main(int argc, char **argv) {
 	void *h1, *h2;
-	int (*mydltest)(const char *s);
+	int __attribute__((unused))(*mydltest)(const char *s);
 	char *error;
 
 	h1 = dlopen ("libtest31.so", RTLD_LAZY);
