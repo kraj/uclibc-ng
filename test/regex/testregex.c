@@ -2115,7 +2115,7 @@ old_main(int unused_param_argc, char** argv)
 		if (fp != stdin)
 			fclose(fp);
 	}
-	return 0;
+	return state.errors;
 }
 
 int main(int argc, char **argv)
