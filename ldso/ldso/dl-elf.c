@@ -546,6 +546,7 @@ struct elf_resolve *_dl_load_elf_shared_library(unsigned int rflags,
 		if (tpnt->st_dev == st.st_dev && tpnt->st_ino == st.st_ino) {
 			/* Already loaded */
 			tpnt->usage_count++;
+			tpnt->init_flag |= DL_OPENED2;
 			_dl_close(infile);
 			return tpnt;
 		}
