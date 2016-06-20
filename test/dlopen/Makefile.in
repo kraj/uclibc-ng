@@ -5,7 +5,7 @@
 export UCLIBC_ONLY := 1
 
 TESTS := dltest dltest2 dlstatic test1 test2 test3 dlundef dlafk dladdr \
-	testscope nodelete tst-origin
+	testscope nodelete nodelete1 tst-origin
 
 ifneq ($(HAVE_SHARED),y)
 TESTS_DISABLED := test3
@@ -80,3 +80,5 @@ LDFLAGS_nodelete := -rdynamic -ldl
 LDFLAGS_nodelmod1.so := -Wl,-z,nodelete
 LDFLAGS_nodelmod3.so := ./nodelmod4.so
 LDFLAGS_nodelmod4.so := -Wl,-z,nodelete
+nodelete1: nodelmod1.so nodelmod2.so
+LDFLAGS_nodelete1 := -rdynamic -ldl
