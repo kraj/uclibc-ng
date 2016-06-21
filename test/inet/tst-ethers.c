@@ -6,6 +6,8 @@
 /* This test requires /etc/ethers to exist
  * and to have host "teeth". For example:
  * 00:11:22:33:44:55 teeth
+ * You should create /etc/ethers file with
+ * host "teeth" manually, if it doesn't exist.
  */
 
 int main(void)
@@ -15,8 +17,10 @@ int main(void)
 	int i;
 	int res = ether_hostton("teeth", &addr);
 
-	if (res)
+	if (res) {
+		printf("Either /etc/ethers is missing or it has incorrect contents\n");
 		return 1;
+	}
 
 	for (i = 0; i < 6; i++) {
 		printf("%02x", addr.ether_addr_octet[i]);

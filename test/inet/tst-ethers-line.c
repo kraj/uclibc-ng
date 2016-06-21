@@ -14,7 +14,8 @@
 #define ETHER_LINE_LEN 256
 
 /* This test requires /etc/ethers to exist
- * and to have nonzero length
+ * and to have nonzero length. You should create it manually,
+ * if it doesn't exist.
  */
 
 int main(void)
@@ -26,7 +27,7 @@ int main(void)
 	struct stat statb;
 
 	if ((fd = open(ETHER_FILE_NAME, O_RDONLY)) == -1) {
-		perror ("Cannot open file");
+		perror ("Cannot open file /etc/ethers");
 		exit(1);
 	}
 
