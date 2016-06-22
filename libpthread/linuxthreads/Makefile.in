@@ -69,6 +69,8 @@ lib-so-$(UCLIBC_HAS_THREADS) += $(top_builddir)lib/libpthread.so
 
 $(top_builddir)lib/libpthread.so: $(libpthread_OUT)/libpthread_so.a $(libc.depend)
 	$(call link.so,$(libpthread_FULL_NAME),$(ABI_VERSION))
+	# link for backward compatibility
+	$(call link.so,$(libpthread_FULL_NAME),0)
 
 ifeq ($(PTHREADS_DEBUG_SUPPORT),y)
 $(libpthread_OUT)/libpthread_so.a: STRIP_FLAGS:=$(STRIP_FLAGS:-x=-X --strip-debug)
