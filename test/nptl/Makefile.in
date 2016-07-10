@@ -31,7 +31,7 @@ TESTS := tst-align tst-align2 tst-atfork1 tst-attr1 tst-attr2 tst-attr3	\
 	tst-signal5 tst-signal6 tst-spin1 tst-spin2 tst-spin3		\
 	tst-stack1 tst-stack2 tst-stdio1 tst-stdio2 tst-sysconf		\
 	tst-tls1 tst-tls2 tst-tls3 tst-tls4 tst-tls5 tst-tsd1 tst-tsd2	\
-	tst-tsd3 tst-tsd4 tst-tsd5 tst-umask1 \
+	tst-tsd3 tst-tsd4 tst-tsd5 tst-umask1 tst-cond-deadlock \
 	tst-align3 tst-cancel4 tst-cancel5 tst-cancel18 tst-cancel23 \
 	tst-cancel25 tst-cancelx2 tst-cancelx3 tst-cancelx4 tst-cancelx6 \
 	tst-cancelx7 tst-cancelx8 tst-cancelx9 tst-cancelx10 tst-cancelx11 \
