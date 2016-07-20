@@ -29,19 +29,14 @@ __vfork:
 	addi	r4, r3, 125		/* minimum err value */
 	blti	r4, 1f			/* is r3 < -125? */
 	bri	2f			/* normal return */
-1:	sub 	r3, r3, r0		/* r3 = -r3 */
-#ifdef __PIC__
-	mfs	r3,rpc
-	addik	r3,r3,_GLOBAL_OFFSET_TABLE_+8
-	lwi	r3,r3,C_SYMBOL_NAME(errno)@GOT
-	sw	r3, r0, r3
-#else
-	swi	r3, r0, C_SYMBOL_NAME(errno);
-#endif
-					/* state restore etc */
+
+1:      rsubk   r3,r3,r0
+        rtsd    r15,8
+        addik   r3,r0,-1        /* delay slot.  */
+
 2:	rtsd	r15, 8			/* error return */
 	nop
        .size   __vfork, .-__vfork
 
-weak_alias(__vfork,vfork)
+weak_alias(__vfork, vfork)
 libc_hidden_def(vfork)
