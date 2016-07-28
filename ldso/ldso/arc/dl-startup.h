@@ -64,10 +64,11 @@ __asm__(
 
 /*
  * Dynamic loader bootstrapping:
- * Since we don't modify text at runtime, these can only be data relos
- * (so safe to assume that they are word aligned).
- * And also they HAVE to be RELATIVE relos only
- * @RELP is the relo entry being processed
+ * The only relocations that should be found are either R_ARC_RELATIVE for
+ * data relocations (.got, etc) or R_ARC_JMP_SLOT for code relocations
+ * (.plt).  It is safe to assume that all of these relocations are word
+ * aligned.
+ * @RELP is the reloc entry being processed
  * @REL is the pointer to the address we are relocating.
  * @SYMBOL is the symbol involved in the relocation
  * @LOAD is the load address.
@@ -78,6 +79,8 @@ do {									\
 	int type = ELF32_R_TYPE((RELP)->r_info);			\
 	if (likely(type == R_ARC_RELATIVE))				\
 		*REL += (unsigned long) LOAD;				\
+	else if (type == R_ARC_JMP_SLOT)                                \
+		*REL = SYMBOL;						\
 	else								\
 		_dl_exit(1);						\
 }while(0)
