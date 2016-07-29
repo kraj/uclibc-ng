@@ -69,8 +69,8 @@ ENTRY(clone)
 .Lnext_clone_quirk:
 #ifdef RESET_PID
 	mov_s	r2, CLONE_THREAD_N_VM
-	and_s	r2, r2, r12
-	brne	r2, r12, .Lgo_thread
+	and_s	r12, r12, r2
+	breq	r2, r12, .Lgo_thread
 
 	mov	r8, __NR_getpid
 	ARC_TRAP_INSN		; r0 has PID
