@@ -42,9 +42,9 @@ __start:
 	mov_s	r5, r0		; rltd_fini
 	add_s	r2, sp, 4	; argv
 #ifdef L_Scrt1
-	add	r0, pcl, @main@pcl
-	add	r3, pcl, @_init@pcl
-	add	r4, pcl, @_fini@pcl
+	ld	r0, [pcl, @main@gotpc]
+	ld	r3, [pcl, @_init@gotpc]
+	ld	r4, [pcl, @_fini@gotpc]
 #else
 	mov_s	r0, main
 	mov_s	r3, _init
