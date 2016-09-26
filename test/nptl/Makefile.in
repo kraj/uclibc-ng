@@ -152,8 +152,8 @@ CFLAGS_tst-initializers1-gnu99 = $(CFLAGS-tst-initializers1) -std=gnu99
 
 EXTRA_LDFLAGS = $(if $(findstring -lpthread,$(LDFLAGS_$@)),,-lpthread)
 
-LDFLAGS_tst-atfork2 := -ldl
-LDFLAGS_libatfork.so := -shared -static-libgcc -lpthread
+LDFLAGS_tst-atfork2 := -ldl -rdynamic
+LDFLAGS_tst-atfork2mod.so := -shared -static-libgcc -lpthread
 LDFLAGS_tst-cleanup4 := tst-cleanup4aux.o
 LDFLAGS_tst-cleanupx4 := tst-cleanup4aux.o
 LDFLAGS_tst-clock2 := -lrt
@@ -210,8 +210,8 @@ tst-tls5: tst-tls5mod.so
 tst-cleanupx4 : tst-cleanup4aux.o
 tst-fini1: tst-fini1mod.so
 
-tst-atfork2: libatfork.so
-tst-atfork2_glibc: libatfork.so.glibc
+tst-atfork2: tst-atfork2mod.so
+tst-atfork2_glibc: tst-atfork2mod.so.glibc
 
 OPTS_tst-cancel7 = -c ./tst-cancel7
 OPTS_tst-mqueue7 = -- ./tst-mqueue7
