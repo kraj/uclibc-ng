@@ -116,6 +116,17 @@ LDFLAGS_tst-tls17 := -ldl -Wl,-rpath-link=.
 LDFLAGS_tst-tls18 := -ldl -Wl,-rpath-link=.
 LDFLAGS_tst-tls-at-ctor := tst-tlsmod-at-ctor.so
 
+tst-tlsmod3.so: tst-tlsmod2.so
+tst-tlsmod4.so: tst-tlsmod3.so
+tst-tlsmod6.so: tst-tlsmod5.so
+tst-tlsmod8.so: tst-tlsmod7.so
+tst-tlsmod9.so: tst-tlsmod8.so
+tst-tlsmod10.so: tst-tlsmod9.so
+tst-tlsmod12.so: tst-tlsmod11.so
+tst-tlsmod13a.so: tst-tlsmod13.so
+tst-tlsmod14b.so: tst-tlsmod14a.so
+tst-tlsmod16b.so: tst-tlsmod16a.so
+
 tst-tls3: tst-tlsmod1.so tst-tlsmod4.so
 tst-tls4: tst-tlsmod2.so
 tst-tls5: tst-tlsmod2.so
