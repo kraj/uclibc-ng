@@ -21,60 +21,55 @@
 #include <stdlib.h>
 #include <unwind.h>
 #include <libgcc_s.h>
+#include <unwind-resume.h>
 
 #define __libc_dlopen(x)        dlopen(x, (RTLD_LOCAL | RTLD_LAZY))
 #define __libc_dlsym            dlsym
 #define __libc_dlclose          dlclose
 
-static void (*libgcc_s_resume) (struct _Unwind_Exception *exc);
-static _Unwind_Reason_Code (*libgcc_s_personality)
-  (int, _Unwind_Action, _Unwind_Exception_Class, struct _Unwind_Exception *,
-   struct _Unwind_Context *);
+void (*__libgcc_s_resume) (struct _Unwind_Exception *exc)
+  attribute_hidden __attribute__ ((noreturn));
+
+static _Unwind_Reason_Code (*libgcc_s_personality) PERSONALITY_PROTO;
 
 extern
 void abort(void);
 
-static void
-init (void)
+void attribute_hidden __attribute__ ((cold))
+__libgcc_s_init(void)
 {
   void *resume, *personality;
   void *handle;
-  resume = personality = NULL;
-  handle = dlopen (LIBGCC_S_SO, (RTLD_LOCAL | RTLD_LAZY));
+
+  handle = __libc_dlopen (LIBGCC_S_SO);
 
   if (handle == NULL
-      || (resume = dlsym (handle, "_Unwind_Resume")) == NULL
-      || (personality = dlsym (handle, "__gcc_personality_v0")) == NULL)
+      || (resume = __libc_dlsym (handle, "_Unwind_Resume")) == NULL
+      || (personality = __libc_dlsym (handle, "__gcc_personality_v0")) == NULL)
   {
-    printf (LIBGCC_S_SO " must be installed for pthread_cancel to work\n");
+    fprintf (stderr,
+	     LIBGCC_S_SO " must be installed for pthread_cancel to work\n");
     abort();
   }
 
-  libgcc_s_resume = resume;
+  __libgcc_s_resume = resume;
   libgcc_s_personality = personality;
 }
 
-void
+#if !HAVE_ARCH_UNWIND_RESUME
+void attribute_hidden
 _Unwind_Resume (struct _Unwind_Exception *exc)
 {
   if (__builtin_expect (libgcc_s_resume == NULL, 0))
-    init ();
-  libgcc_s_resume (exc);
+    __libgcc_s_init ();
+  __libgcc_s_resume (exc);
 }
+#endif
 
-_Unwind_Reason_Code
-__gcc_personality_v0 (int version, _Unwind_Action actions,
-		      _Unwind_Exception_Class exception_class,
-                      struct _Unwind_Exception *ue_header,
-                      struct _Unwind_Context *context);
-_Unwind_Reason_Code
-__gcc_personality_v0 (int version, _Unwind_Action actions,
-		      _Unwind_Exception_Class exception_class,
-                      struct _Unwind_Exception *ue_header,
-                      struct _Unwind_Context *context)
+_Unwind_Reason_Code attribute_hidden
+__gcc_personality_v0 PERSONALITY_PROTO
 {
   if (__builtin_expect (libgcc_s_personality == NULL, 0))
-    init ();
-  return libgcc_s_personality (version, actions, exception_class,
-			       ue_header, context);
+    __libgcc_s_init ();
+  return libgcc_s_personality PERSONALITY_ARGS;
 }
