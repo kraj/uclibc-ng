@@ -99,9 +99,9 @@
 #define UNDOCARGS_7			pop  r6`	UNDOCARGS_6
 
 #  define SINGLE_THREAD_P 			\
-    THREAD_SELF r1   `				\
-    ld	   r2, [r1, MULTIPLE_THREADS_OFFSET]`	\
-    cmp    r2, 0
+    THREAD_SELF r9   `				\
+    ld	   r10, [r9, MULTIPLE_THREADS_OFFSET]`	\
+    cmp    r10, 0
 
 /*    ld	   r2, [r1, -TLS_PRE_TCB_SIZE + MULTIPLE_THREADS_OFFSET] */
 #else	/* !__ASSEMBLER__ */
