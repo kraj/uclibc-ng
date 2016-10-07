@@ -38,6 +38,7 @@
       mov   r0, r9     /* prep mask for disable_asynccancel */  `	\
       CDISABLE	`	\
       pop  r0           /* get syscall ret value back */  ` \
+      pop  blink	/* UNDOCARGS above left blink on stack */ `	\
       cmp  r0, -1024	`	\
       jls  [blink]					`	\
       b  __syscall_error@plt				`	\
@@ -75,7 +76,9 @@
 .endm
 
 #define DOCARGS_0	push blink
-#define UNDOCARGS_0	pop  blink
+
+/* don't pop blink at this point */
+#define UNDOCARGS_0	ld   blink, [sp]
 
 #define DOCARGS_1	DOCARGS_0`	push r0
 #define UNDOCARGS_1			pop  r0`	UNDOCARGS_0
