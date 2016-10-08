@@ -44,7 +44,6 @@ endif
 
 libc-a-y += $(libnsl-a-y)
 libc-a-y += $(libresolv-a-y)
-libc-a-$(HAVE_SHARED) += $(libdl-a-y)
 libc-a-y += $(libm-a-y)
 libc-a-$(UCLIBC_HAS_LIBUTIL) += $(libutil-a-y)
 libc-a-$(UCLIBC_HAS_CRYPT) += $(libcrypt-a-y)
