@@ -500,16 +500,7 @@ config UCLIBC_HAS_LINUXTHREADS
 	bool "Linuxthreads"
 	# linuxthreads need nanosleep()
 	select UCLIBC_HAS_REALTIME
-	depends on !TARGET_arc && \
-		   !TARGET_arm && \
-		   !TARGET_i386 && \
-		   !TARGET_metag && \
-		   !TARGET_mips && \
-		   !TARGET_powerpc && \
-		   !TARGET_sparc && \
-		   !TARGET_x86_64 && \
-		   !TARGET_xtensa || \
-		   !ARCH_USE_MMU
+	depends on !TARGET_metag
 	help
 	  If you want to compile uClibc with Linuxthreads support, then answer Y.
 
