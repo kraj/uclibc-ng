@@ -6,3 +6,5 @@ TESTS_DISABLED += cancellation-points
 EXTRA_LDFLAGS := -lpthread
 
 LDFLAGS_cancellation-points := -lrt
+
+CFLAGS_tst-c99 := -std=c99
