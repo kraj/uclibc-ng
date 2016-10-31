@@ -16,29 +16,11 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sysdep.h>
-#define _ERRNO_H	1
-#include <bits/errno.h>
+/* Type used for the representation of TLS information in the GOT.  */
+typedef struct
+{
+  unsigned long int ti_module;
+  unsigned long int ti_offset;
+} tls_index;
 
-/* Clone the calling process, but without copying the whole address space.
-   The calling process is suspended until the new process exits or is
-   replaced by a call to `execve'.  Return -1 for errors, 0 to the new process,
-   and the process ID of the new process to the old process.  */
-
-ENTRY(__vfork)
-
-	DO_CALL (vfork, 0)
-	addik	r12,r0,-4095
-	cmpu	r12,r12,r3
-	bgei	r12,1f
-	rtsd	r15,8
-	nop
-
-1:      rsubk   r3,r3,r0
-        rtsd    r15,8
-        addik   r3,r0,-1        /* delay slot.  */
-
-END(__vfork)
-
-weak_alias(__vfork, vfork)
-libc_hidden_def(vfork)
+extern void *__tls_get_addr (tls_index *ti);

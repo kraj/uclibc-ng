@@ -23,6 +23,10 @@
 #define _ERRNO_H	1
 #include <bits/errno.h>
 
+#if defined __UCLIBC_HAS_THREADS__ && !defined __UCLIBC_HAS_LINUXTHREADS__
+#include <sysdep-cancel.h>
+#endif
+
 /* int clone (int (*fn)(void *arg), void *child_stack, int flags, void *arg,
               pid_t *ptid, struct user_desc *tls, pid_t *ctid);
 
@@ -39,8 +43,8 @@
         .text
 ENTRY (__clone)
 	addik	r3,r0,-EINVAL
-	beqi	r5,1f	; // Invalid func
-	beqi	r6,1f	; // Invalid stack
+	beqi	r5,SYSCALL_ERROR_LABEL	; // Invalid func
+	beqi	r6,SYSCALL_ERROR_LABEL	; // Invalid stack
 	addik	r6,r6,-8
 	swi	r5,r6,0			; // Push fn onto child's stack
 	swi	r8,r6,4			; // Push arg for child
@@ -53,7 +57,7 @@ ENTRY (__clone)
 	addk	r0,r0,r0
 	addik	r4,r0,-4095
 	cmpu	r4,r4,r3
-	bgei	r4,1f
+	bgei	r4,SYSCALL_ERROR_LABEL
 	beqi	r3,L(thread_start)
 	rtsd	r15,8
 	nop
@@ -67,12 +71,7 @@ L(thread_start):
 	addik	r12,r0,SYS_ify(exit)
 	brki	r14,8
 	nop
-
-1:      rsubk   r3,r3,r0
-        rtsd    r15,8
-        addik   r3,r0,-1        /* delay slot.  */
-
-END(__clone)
+PSEUDO_END(__clone)
 
 libc_hidden_def (__clone)
 weak_alias (__clone,clone)

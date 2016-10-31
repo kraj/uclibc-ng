@@ -1,4 +1,4 @@
-/* Copyright (C) 2005-2016 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2016 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.
 
@@ -16,29 +16,25 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sysdep.h>
-#define _ERRNO_H	1
-#include <bits/errno.h>
+#include <stdlib.h>
+#include <string.h>
 
-/* Clone the calling process, but without copying the whole address space.
-   The calling process is suspended until the new process exits or is
-   replaced by a call to `execve'.  Return -1 for errors, 0 to the new process,
-   and the process ID of the new process to the old process.  */
+/* Default stack size.  */
+#define ARCH_STACK_DEFAULT_SIZE  (2 * 1024 * 1024)
 
-ENTRY(__vfork)
+/* Required stack pointer alignment at beginning.  */
+#define STACK_ALIGN         16
 
-	DO_CALL (vfork, 0)
-	addik	r12,r0,-4095
-	cmpu	r12,r12,r3
-	bgei	r12,1f
-	rtsd	r15,8
-	nop
+/* Minimal stack size after allocating thread descriptor and guard size.  */
+#define MINIMAL_REST_STACK  2048
 
-1:      rsubk   r3,r3,r0
-        rtsd    r15,8
-        addik   r3,r0,-1        /* delay slot.  */
+/* Alignment requirement for TCB.  */
+#define TCB_ALIGNMENT       16
 
-END(__vfork)
+/* Location of current stack frame.  */
+#define CURRENT_STACK_FRAME __builtin_frame_address (0)
 
-weak_alias(__vfork, vfork)
-libc_hidden_def(vfork)
+/* XXX Until we have a better place keep the definitions here.  */
+
+#define __exit_thread_inline(val) \
+INLINE_SYSCALL (exit, 1, (val))
