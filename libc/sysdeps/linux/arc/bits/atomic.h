@@ -58,3 +58,27 @@ void __arc_link_error (void);
 
 #define __arch_compare_and_exchange_val_64_acq(mem, newval, oldval) \
   ({ __arc_link_error (); oldval; })
+
+/* Store NEWVALUE in *MEM and return the old value.
+   Atomic EX is present in all configurations
+ */
+
+#define __arch_exchange_32_acq(mem, newval)				\
+  ({									\
+	__typeof__(*(mem)) val = newval;				\
+									\
+	__asm__ __volatile__(						\
+	"ex %0, [%1]"							\
+	: "+r" (val)							\
+	: "r" (mem)							\
+	: "memory" );							\
+									\
+	val;								\
+  })
+
+#define atomic_exchange_acq(mem, newval)				\
+  ({									\
+	if (sizeof(*(mem)) != 4)					\
+		abort();						\
+	__arch_exchange_32_acq(mem, newval);				\
+  })
