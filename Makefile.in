@@ -183,7 +183,7 @@ menuconfig-clean-y: HEADERCLEAN_config
 # libc/sysdeps/linux/Makefile.commonarch to headers-y
 headers-y += $(target-headers-sysdep)
 
-headers: $(top_builddir)include/bits/uClibc_config.h | subdirs
+headers: $(top_builddir)include/bits/uClibc_config.h | subdirs $(top_builddir)extra/locale
 	$(Q)$(if $(UCLIBC_HAS_LOCALE),$(MAKE) -C extra/locale locale_headers)
 
 subdirs: $(addprefix $(top_builddir),$(subdirs))
