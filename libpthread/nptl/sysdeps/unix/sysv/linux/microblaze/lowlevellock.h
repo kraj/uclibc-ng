@@ -78,8 +78,8 @@
 
 #define lll_futex_timed_wait(futexp, val, timespec, private) \
   ({									      \
-    INTERNAL_SYSCALL_DECL (__err);					      \
     long int __sysret;							      \
+    INTERNAL_SYSCALL_DECL (__err);					      \
     __sysret = INTERNAL_SYSCALL (futex, __err, 4, (futexp),		      \
 			      __lll_private_flag (FUTEX_WAIT, private),	      \
 			      (val), (timespec));			      \
@@ -88,8 +88,8 @@
 
 #define lll_futex_wake(futexp, nr, private) \
   ({									      \
-    INTERNAL_SYSCALL_DECL (__err);					      \
     long int __sysret;							      \
+    INTERNAL_SYSCALL_DECL (__err);					      \
     __sysret = INTERNAL_SYSCALL (futex, __err, 4, (futexp),		      \
 			      __lll_private_flag (FUTEX_WAKE, private),	      \
 			      (nr), 0);					      \
@@ -108,8 +108,8 @@
 /* Returns non-zero if error happened, zero if success.  */
 #define lll_futex_requeue(futexp, nr_wake, nr_move, mutex, val, private) \
   ({									      \
-    INTERNAL_SYSCALL_DECL (__err);					      \
     long int __sysret;							      \
+    INTERNAL_SYSCALL_DECL (__err);					      \
     __sysret = INTERNAL_SYSCALL (futex, __err, 6, (futexp),		      \
 			      __lll_private_flag (FUTEX_CMP_REQUEUE, private),\
 			      (nr_wake), (nr_move), (mutex), (val));	      \
@@ -120,8 +120,8 @@
 /* Returns non-zero if error happened, zero if success.  */
 #define lll_futex_wake_unlock(futexp, nr_wake, nr_wake2, futexp2, private) \
   ({									      \
-    INTERNAL_SYSCALL_DECL (__err);					      \
     long int __sysret;							      \
+    INTERNAL_SYSCALL_DECL (__err);					      \
     __sysret = INTERNAL_SYSCALL (futex, __err, 6, (futexp),		      \
 			      __lll_private_flag (FUTEX_WAKE_OP, private),    \
 			      (nr_wake), (nr_wake2), (futexp2),		      \
