@@ -65,6 +65,35 @@
   SYSCALL_ERROR_HANDLER;                            \
   END (name)
 
+# undef PSEUDO_NOERRNO
+# define PSEUDO_NOERRNO(name, syscall_name, args)   \
+  .text;                                            \
+  ENTRY (name)                                      \
+    DO_CALL (syscall_name, args);
+
+# undef PSEUDO_END_NOERRNO
+# define PSEUDO_END_NOERRNO(name)                   \
+  END (name)
+
+/* The function has to return the error code.  */
+# undef  PSEUDO_ERRVAL
+# define PSEUDO_ERRVAL(name, syscall_name, args)    \
+  .text;                                            \
+  ENTRY (name)                                      \
+    DO_CALL (syscall_name, args);                   \
+
+# undef  PSEUDO_END_ERRVAL
+# define PSEUDO_END_ERRVAL(name)                    \
+  END (name)
+
+# undef ret_NOERRNO
+# define ret_NOERRNO                                \
+  rtsd r15,8; addk r0,r0,r0;
+
+# undef ret_ERRVAL
+# define ret_ERRVAL                                 \
+  rtsd r15,8; rsubk r3,r3,r0;
+
 #ifdef __PIC__
 # define SYSCALL_ERROR_LABEL_DCL 0
 # if defined _LIBC_REENTRANT

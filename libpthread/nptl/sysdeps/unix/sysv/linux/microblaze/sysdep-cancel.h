@@ -23,12 +23,7 @@
 
 #if !defined NOT_IN_libc || defined IS_IN_libpthread || defined IS_IN_librt
 
-#ifdef __ASSEMBLER__
-
-#undef ret
-#define ret
-
-# if !IS_IN_librt || !defined(PIC)
+# if !defined IS_IN_librt || !defined(PIC)
 #  define AC_STACK_SIZE  16  /* space for r15, async_cancel arg and 2 temp words */
 #  define AC_SET_GOT /* empty */
 #  define AC_RESTORE_GOT /* empty */
@@ -54,9 +49,7 @@ __##syscall_name##_nocancel:                                         \
     DO_CALL (syscall_name, args);                                    \
     addik r4, r0, -4095;                                             \
     cmpu  r4, r4, r3;                                                \
-    rsubk   r3,r3,r0;						     \
-    rtsd    r15,8;						     \
-    addik   r3,r0,-1;						     \
+    bgei  r4, SYSCALL_ERROR_LABEL;                                   \
     rtsd  r15, 8;                                                    \
     nop;                                                             \
   .size __##syscall_name##_nocancel, .-__##syscall_name##_nocancel;  \
@@ -78,9 +71,7 @@ L(pseudo_cancel):                                                    \
     addik r1, r1, AC_STACK_SIZE;                                     \
     addik r4, r0, -4095;                                             \
     cmpu  r4, r4, r3;                                                \
-    rsubk   r3,r3,r0;						     \
-    rtsd    r15,8;						     \
-    addik   r3,r0,-1;						     \
+    bgei  r4, SYSCALL_ERROR_LABEL;                                   \
     rtsd  r15, 8;                                                    \
     nop;
 
@@ -126,14 +117,35 @@ L(pseudo_cancel):                                                    \
 #  error Unsupported library
 # endif
 
-#define SINGLE_THREAD_P(reg)                                         \
-     lwi reg, r0, MULTIPLE_THREADS_OFFSET(reg)
-
-#else /* !__ASSEMBLER__ */
-# define SINGLE_THREAD_P                                             \
+#if !defined NOT_IN_libc || defined IS_IN_libpthread
+#  ifndef __ASSEMBLER__
+extern int __local_multiple_threads attribute_hidden;
+#   define SINGLE_THREAD_P __builtin_expect (__local_multiple_threads == 0, 1)
+#  else
+#   if !defined PIC
+#    define SINGLE_THREAD_P(reg) lwi reg, r0, __local_multiple_threads;
+#   else
+#    define SINGLE_THREAD_P(reg)                                     \
+      mfs   reg, rpc;                                                \
+      addik reg, reg, _GLOBAL_OFFSET_TABLE_+8;                       \
+      lwi   reg, reg, __local_multiple_threads@GOT;                  \
+      lwi   reg, reg, 0;
+#   endif
+#  endif
+# else
+#  ifndef __ASSEMBLER__
+#   define SINGLE_THREAD_P                                           \
   __builtin_expect (THREAD_GETMEM (THREAD_SELF,                      \
                                    header.multiple_threads) == 0, 1)
+#  else
+#   define SINGLE_THREAD_P(reg)                                      \
+     lwi reg, r0, MULTIPLE_THREADS_OFFSET(reg)
+#  endif
+# endif
 
-#endif /* __ASSEMBLER__ */
+#elif !defined __ASSEMBLER__
+
+# define SINGLE_THREAD_P (1)
+# define NO_CANCELLATION (1)
 
 #endif
