@@ -369,9 +369,7 @@ __END_DECLS
 
 #ifdef _LIBC
 extern __ssize_t __getdents(int fd, char *buf, size_t count) attribute_hidden;
-# ifdef __UCLIBC_HAS_LFS__
 extern __ssize_t __getdents64 (int fd, char *buf, size_t count) attribute_hidden;
-# endif
 #endif
 
 #endif /* dirent.h  */
