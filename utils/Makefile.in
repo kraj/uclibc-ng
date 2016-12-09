@@ -25,6 +25,10 @@ else
 CFLAGS-utils-shared :=
 endif
 
+ifneq ($(HAVE_SHARED),y)
+CFLAGS-utils += -static
+endif
+
 CFLAGS-ldconfig := -DBUILDING_LINKAGE
 ifeq ($(UCLIBC_STATIC_LDCONFIG),y)
 CFLAGS-ldconfig += -static
