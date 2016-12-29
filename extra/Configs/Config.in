@@ -1442,6 +1442,7 @@ config UCLIBC_HAS_LOCALE
 	bool "Locale Support"
 	select UCLIBC_HAS_WCHAR
 	select UCLIBC_HAS_CTYPE_TABLES
+	select UCLIBC_HAS_LIBICONV
 	help
 	  uClibc now has full ANSI/ISO C99 locale support (except for
 	  wcsftime() and collating items in regex).  Be aware that enabling
