@@ -355,16 +355,10 @@ extern void __pthread_cleanup_upto (__jmp_buf target, char *targetframe);
 hidden_proto (__pthread_cleanup_upto)
 #endif
 
-
-/* Functions with versioned interfaces.  */
-extern int __pthread_create_2_1 (pthread_t *newthread,
+extern int pthread_create (pthread_t *newthread,
 				 const pthread_attr_t *attr,
 				 void *(*start_routine) (void *), void *arg);
-extern int __pthread_create_2_0 (pthread_t *newthread,
-				 const pthread_attr_t *attr,
-				 void *(*start_routine) (void *), void *arg);
-extern int __pthread_attr_init_2_1 (pthread_attr_t *attr);
-extern int __pthread_attr_init_2_0 (pthread_attr_t *attr);
+extern int pthread_attr_init (pthread_attr_t *attr);
 
 
 /* Event handlers for libthread_db interface.  */
