@@ -144,8 +144,8 @@ static __always_inline Elf32_Addr elf_machine_load_address(void)
      */
 	Elf32_Addr addr, tmp;
 	__asm__ (
-        "ld  %1, [pcl, _DYNAMIC@gotpc] ;build addr of _DYNAMIC"   "\n"
-        "add %0, pcl, _DYNAMIC@pcl     ;runtime addr of _DYNAMIC" "\n"
+        "ld  %1, [pcl, _dl_start@gotpc] ;build addr of _DYNAMIC"   "\n"
+        "add %0, pcl, _dl_start@pcl     ;runtime addr of _DYNAMIC" "\n"
         "sub %0, %0, %1                ;delta"                    "\n"
         : "=&r" (addr), "=r"(tmp)
     );
