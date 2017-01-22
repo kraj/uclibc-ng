@@ -25,18 +25,10 @@
 #define _ERRNO_H    1
 #include <bits/errno.h>
 
-#ifndef SAVE_PID
-#define SAVE_PID
-#endif
-
-#ifndef RESTORE_PID
-#define RESTORE_PID
-#endif
 /* Clone the calling process, but without copying the whole address space.
    The calling process is suspended until the new process exits or is
    replaced by a call to `execve'.  Return -1 for errors, 0 to the new process,
    and the process ID of the new process to the old process.  */
-
 
 ENTRY (__vfork)
 #ifdef PIC
@@ -44,13 +36,7 @@ ENTRY (__vfork)
 #endif
 
 #ifdef __NR_vfork
-# ifdef SAVE_PID
-    SAVE_PID
-# endif
     syscall __NR_vfork
-# ifdef RESTORE_PID
-    RESTORE_PID
-# endif
     bltz $r0, 2f
 1:
     ret

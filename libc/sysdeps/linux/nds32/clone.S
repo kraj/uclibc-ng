@@ -28,10 +28,6 @@
 #define _ERRNO_H	1
 #include <bits/errno.h>
 
-#ifdef RESET_PID
-#include <tcb-offsets.h>
-#endif
-
 #define CLONE_VM      0x00000100
 #define CLONE_THREAD  0x00010000
 
@@ -131,27 +127,7 @@ ENTRY(__clone)
 	cfi_restore(fp)
 #endif /* PIC  */
 	ret
-
-#ifdef RESET_PID
 4:
-	cfi_undefined(lp)
-	movi	$r0, CLONE_THREAD		! Skip when CLONE_THREAD is set.
-	and	$r0, $r5, $r0
-	bnez	$r0, 8f
-	movi    $r0, CLONE_VM			! Value = -1 when CLONE_VM is set.
-	and	$r0, $r5, $r0
-	beqz	$r0, 6f
-	movi	$r0, -1
-	j	7f
-6:
-        __do_syscall(getpid) ! __do_syscall(gettid) ! __do_syscall(getpid)
-7:
-	swi     $r0, [$r25 + PID_OFFSET]
-        swi     $r0, [$r25 + TID_OFFSET]
-8:
-#else
-4:
-#endif
 	/* Only in child's stack.  */
 	pop	$r1				! fn
 	pop	$r0				! arg
