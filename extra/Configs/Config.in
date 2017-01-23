@@ -566,6 +566,11 @@ config UCLIBC_HAS_SYSLOG
 	  Support sending messages to the system logger.
 	  This requires socket-support.
 
+config UCLIBC_HAS_LFS
+	def_bool y
+	help
+	  Large file support (always enabled; config symbol retained for
+	  feature test to be compatible with uClibc).
 choice
 	prompt "Malloc Implementation"
 	default MALLOC if ! ARCH_USE_MMU
