@@ -36,7 +36,11 @@
 #define INTERNAL_SYSCALL_NCS_X86_3 INTERNAL_SYSCALL_NCS_X86_UPTOFIVE
 #define INTERNAL_SYSCALL_NCS_X86_4 INTERNAL_SYSCALL_NCS_X86_UPTOFIVE
 #define INTERNAL_SYSCALL_NCS_X86_5 INTERNAL_SYSCALL_NCS_X86_UPTOFIVE
-#define INTERNAL_SYSCALL_NCS_X86_6 INTERNAL_SYSCALL_NCS_X86_UPTOFIVE
+
+extern long __libc_i386_syscall6(unsigned long, ...)
+    __attribute__((__cdecl__));
+#define INTERNAL_SYSCALL_NCS_X86_6(name, err, nr, args...) \
+	__libc_i386_syscall6((unsigned long)name, args)
 
 #define INTERNAL_SYSCALL_NCS(name, err, nr, args...) \
 	INTERNAL_SYSCALL_NCS_X86_##nr(name, err, nr, args)
@@ -104,7 +108,6 @@ __asm__ (
 #define LOADARGS_3  LOADARGS_1
 #define LOADARGS_4  LOADARGS_1
 #define LOADARGS_5  LOADARGS_1
-#define LOADARGS_6  LOADARGS_1 "push %%ebp\n\t" "movl %7, %%ebp\n\t"
 
 #define RESTOREARGS_0
 #define RESTOREARGS_1  "bpopl .L__X'%k2, %k2\n\t"
@@ -112,7 +115,6 @@ __asm__ (
 #define RESTOREARGS_3  RESTOREARGS_1
 #define RESTOREARGS_4  RESTOREARGS_1
 #define RESTOREARGS_5  RESTOREARGS_1
-#define RESTOREARGS_6  "pop %%ebp\n\t" RESTOREARGS_1
 
 #define ASMFMT_0()
 /* "acdSD" constraint would work too, but "SD" would use esi/edi and cause
@@ -132,8 +134,6 @@ __asm__ (
 	, "a" (arg1), "c" (arg2), "d" (arg3), "S" (arg4)
 #define ASMFMT_5(arg1, arg2, arg3, arg4, arg5) \
 	, "a" (arg1), "c" (arg2), "d" (arg3), "S" (arg4), "D" (arg5)
-#define ASMFMT_6(arg1, arg2, arg3, arg4, arg5, arg6) \
-	, "a" (arg1), "c" (arg2), "d" (arg3), "S" (arg4), "D" (arg5), "g" (arg6)
 
 #endif /* __ASSEMBLER__ */
 #endif /* _BITS_SYSCALLS_H */
