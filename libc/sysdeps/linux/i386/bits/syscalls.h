@@ -14,7 +14,7 @@
 
 #include <errno.h>
 
-#define INTERNAL_SYSCALL_NCS(name, err, nr, args...) \
+#define INTERNAL_SYSCALL_NCS_X86_UPTOFIVE(name, err, nr, args...) \
 (__extension__ \
  ({ \
 	register unsigned int resultvar; \
@@ -29,6 +29,17 @@
 	(int) resultvar; \
   }) \
 )
+
+#define INTERNAL_SYSCALL_NCS_X86_0 INTERNAL_SYSCALL_NCS_X86_UPTOFIVE
+#define INTERNAL_SYSCALL_NCS_X86_1 INTERNAL_SYSCALL_NCS_X86_UPTOFIVE
+#define INTERNAL_SYSCALL_NCS_X86_2 INTERNAL_SYSCALL_NCS_X86_UPTOFIVE
+#define INTERNAL_SYSCALL_NCS_X86_3 INTERNAL_SYSCALL_NCS_X86_UPTOFIVE
+#define INTERNAL_SYSCALL_NCS_X86_4 INTERNAL_SYSCALL_NCS_X86_UPTOFIVE
+#define INTERNAL_SYSCALL_NCS_X86_5 INTERNAL_SYSCALL_NCS_X86_UPTOFIVE
+#define INTERNAL_SYSCALL_NCS_X86_6 INTERNAL_SYSCALL_NCS_X86_UPTOFIVE
+
+#define INTERNAL_SYSCALL_NCS(name, err, nr, args...) \
+	INTERNAL_SYSCALL_NCS_X86_##nr(name, err, nr, args)
 
 /* This code avoids pushing/popping ebx as much as possible.
  * I think the main reason was that older GCCs had problems
