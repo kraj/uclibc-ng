@@ -112,19 +112,13 @@ END (name)
 
 # define ret_ERRVAL ret
 
-#if defined _LIBC_REENTRANT
-# if defined USE___THREAD
-#   define SYSCALL_ERROR_ERRNO errno
-# endif
-#endif
-
-#if defined USE___THREAD
+#if defined NOT_IN_libc
 # define SYSCALL_ERROR  .Lsyscall_error
 # define SYSCALL_ERROR_HANDLER					\
 .Lsyscall_error:						\
-	adrp	x1, :gottprel:SYSCALL_ERROR_ERRNO;		\
+	adrp	x1, :gottprel:errno;				\
 	neg	w2, w0;						\
-	ldr	x1, [x1, :gottprel_lo12:SYSCALL_ERROR_ERRNO];	\
+	ldr	x1, [x1, :gottprel_lo12:errno];			\
 	mrs	x3, tpidr_el0;					\
 	mov	x0, -1;						\
 	str	w2, [x1, x3];					\
