@@ -34,6 +34,9 @@ __BEGIN_DECLS
 
 /* For XPG all symbols from <sys/stat.h> should also be available.  */
 #ifdef __USE_XOPEN
+# ifdef __USE_XOPEN2K8
+#  define __need_timespec
+# endif
 # include <sys/stat.h>
 #endif
 
