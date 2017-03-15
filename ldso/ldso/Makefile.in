@@ -34,6 +34,11 @@ CFLAGS-$(DODEBUG)-ldso/ldso := -O2 -g
 
 CFLAGS-ldso.c := -DLDSO_ELFINTERP=\"$(TARGET_ARCH)/elfinterp.c\"
 
+# Search non-default multilib directories
+ifneq ($(MULTILIB_DIR),lib)
+CFLAGS-ldso.c	+= -DLDSO_MULTILIB_DIR=\"$(MULTILIB_DIR)\"
+endif
+
 ifeq ($(TARGET_ARCH),arc)
 CFLAGS-ldso.c += -mno-long-calls
 endif
