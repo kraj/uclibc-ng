@@ -1,5 +1,5 @@
-/* Copyright (C) 1997, 1998, 2000 Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
+/* pthread_spin_trylock -- trylock a spin lock.  Generic version.
+   Copyright (C) 2012-2016 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -12,20 +12,15 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; see the file COPYING.LIB.  If
-   not, see <http://www.gnu.org/licenses/>.  */
+   License along with the GNU C Library; if not, see
+   <http://www.gnu.org/licenses/>.  */
 
-/* Define the machine-dependent type `jmp_buf'.  or1k version.  */
+#include <errno.h>
+#include <atomic.h>
+#include "pthreadP.h"
 
-#ifndef _BITS_SETJMP_H
-#define _BITS_SETJMP_H  1
-
-#if !defined _SETJMP_H && !defined _PTHREAD_H
-# error "Never include <bits/setjmp.h> directly; use <setjmp.h> instead."
-#endif
-
-#ifndef	_ASM
-typedef long int __jmp_buf[32];
-#endif
-
-#endif
+int
+pthread_spin_trylock (pthread_spinlock_t *lock)
+{
+  return atomic_exchange_acq (lock, 1) ? EBUSY : 0;
+}

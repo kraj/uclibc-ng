@@ -212,7 +212,6 @@ _dl_do_reloc(struct elf_resolve *tpnt, struct r_scope_elem *scope,
 	switch (reloc_type) {
 		case R_OR1K_NONE:
 			break;
-
 		case R_OR1K_8:
 		case R_OR1K_16:
 		case R_OR1K_32:
@@ -220,23 +219,19 @@ _dl_do_reloc(struct elf_resolve *tpnt, struct r_scope_elem *scope,
 			((struct unaligned *)reloc_addr)->x = symbol_addr +
 				rpnt->r_addend;
 			break;
-
 		case R_OR1K_8_PCREL:
 		case R_OR1K_16_PCREL:
 		case R_OR1K_32_PCREL:
 		case R_OR1K_INSN_REL_26:
 			*reloc_addr = symbol_addr + rpnt->r_addend;
 			break;
-
 		case R_OR1K_GLOB_DAT:
 		case R_OR1K_JMP_SLOT:
 			*reloc_addr = symbol_addr + rpnt->r_addend;
 			break;
-/* Handled by elf_machine_relative */
 		case R_OR1K_RELATIVE:
 			*reloc_addr = (unsigned long)tpnt->loadaddr + rpnt->r_addend;
 			break;
-
 		case R_OR1K_COPY:
 			if (symbol_addr) {
 #if defined (__SUPPORT_LD_DEBUG__)
@@ -256,6 +251,18 @@ _dl_do_reloc(struct elf_resolve *tpnt, struct r_scope_elem *scope,
 				_dl_dprintf(_dl_debug_file, "no symbol_addr to copy !?\n");
 #endif
 			break;
+#if defined USE_TLS && USE_TLS
+		case R_OR1K_TLS_DTPMOD:
+			*reloc_addr = tls_tpnt->l_tls_modid;
+			break;
+		case R_OR1K_TLS_DTPOFF:
+			*reloc_addr = symbol_addr;
+			break;
+		case R_OR1K_TLS_TPOFF:
+			CHECK_STATIC_TLS ((struct link_map *) tls_tpnt);
+			*reloc_addr = tls_tpnt->l_tls_offset + symbol_addr + rpnt->r_addend;
+			break;
+#endif
 
 		default:
 			return -1;	/* Calls _dl_exit(1). */
