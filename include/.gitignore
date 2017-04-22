@@ -15,7 +15,6 @@
 /bfin_sram.h
 /dl-osinfo.h
 /fpu_control.h
-/hp-timing.h
 /jmpbuf-offsets.h
 /jmpbuf-unwind.h
 /not-cancel.h
