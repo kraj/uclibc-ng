@@ -57,12 +57,6 @@ you are hacking on.
   write them in C ... see other ports for more information
 
 ====================
-=== pthread deps ===
-====================
-
-TODO: nptl / linuxthreads / linuxthreads.old
-
-====================
 === ldso sysdeps ===
 ====================
 - elf.h - presumably you've already taught binutils all about the random ELF
@@ -72,17 +66,12 @@ TODO: nptl / linuxthreads / linuxthreads.old
 
 - enable ldso/shared options in your extra/Configs/Config.ARCH file
 - you will need to create the following files in ldso/ldso/ARCH/
-  dl-debug.h  dl-startup.h  dl-syscalls.h  dl-sysdep.h  elfinterp.c  resolve.S
-
-- dl-debug.h: define string versions of all the relocations of your arch in the
-  _dl_reltypes_tab array ... the index should match the actual reloc type, so
-  if the value of say R_X86_64_PC16 is 13, then "R_X86_64_PC16" better be at
-  index 13 of the array
+  dl-startup.h  dl-syscalls.h  dl-sysdep.h  elfinterp.c  resolve.S
 
 - dl-startup.h:
   - define the _start function which should call _dl_start which takes just one
     parameter ... a pointer to argc (usually on the stack)
-    glibc stores this function in libc/sysdeps/ARCH/dl-machine.h as RTLD_START
+    glibc stores this function in sysdeps/ARCH/dl-machine.h as RTLD_START
   - define the GET_ARGV() macro which calculates the value of argv based upon
     the parameter passed to _dl_start (usually it's simply just ARGS+1)
   - define PERFORM_BOOTSTRAP_RELOC() macro which will handle just the relocs
@@ -105,7 +94,7 @@ TODO: nptl / linuxthreads / linuxthreads.old
   - define elf_machine_type_class() macro
   - define the inline functions elf_machine_dynamic, elf_machine_load_address,
     and elf_machine_relative
-  glibc stores a bunch of these values in libc/sysdeps/ARCH/dl-machine.h
+  glibc stores a bunch of these values in sysdeps/ARCH/dl-machine.h
 
 - elfinterp.c:
   define all the relocation functions ... it's best if you just copy from
@@ -119,7 +108,7 @@ TODO: nptl / linuxthreads / linuxthreads.old
   - call _dl_linux_resolver()
   - clean up after call
   - jump to function address now stored in PLT
-  glibc stores this function in libc/sysdeps/ARCH/dl-trampoline.S
+  glibc stores this function in sysdeps/ARCH/dl-trampoline.S
 
 - utils/ldd.c - if you want support for ldso cache files (spoiler: you do),
   then you'll need to teach ldd a little.  generally, the fallback code
