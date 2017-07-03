@@ -69,7 +69,8 @@ thread_start:
 	blr	x10
 
 	/* We are done, pass the return value through x0.  */
-	b	HIDDEN_JUMPTARGET(_exit)
+	mov	x8, #SYS_ify(exit)
+	svc	0x0
 	cfi_endproc
 	.size thread_start, .-thread_start
 

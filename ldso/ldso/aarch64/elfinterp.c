@@ -233,7 +233,7 @@ _dl_do_reloc (struct elf_resolve *tpnt, struct r_scope_elem *scope,
 					else
 #endif
 					{
-					        td->arg = symbol_addr + tls_tpnt->l_tls_offset;
+					        td->arg = (void*)(symbol_addr + tls_tpnt->l_tls_offset);
 					        td->entry = _dl_tlsdesc_return;
 					}
 				}
