@@ -282,11 +282,7 @@ start_thread (void *arg)
 	}
 
       /* Run the code the user provided.  */
-#ifdef CALL_THREAD_FCT
-      THREAD_SETMEM (pd, result, CALL_THREAD_FCT (pd));
-#else
       THREAD_SETMEM (pd, result, pd->start_routine (pd->arg));
-#endif
     }
 
   /* Run the destructor for the thread-local data.  */
