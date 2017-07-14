@@ -36,8 +36,6 @@
 
 #include <features.h>
 
-#ifndef NOT_IN_libc
-
 #define __NC(name) _NC(name)
 #define _NC(name) __##name##_nocancel
 
@@ -96,7 +94,5 @@ strong_alias(__NC(name),name)
 /* disable it, useless, glibc uses it only for tests */
 # undef LIBC_CANCEL_HANDLED
 # define LIBC_CANCEL_HANDLED()
-
-#endif /* NOT_IN_libc */
 
 #endif
