@@ -1,7 +1,5 @@
 /* Copyright (C) 1996-2017 Free Software Foundation, Inc.
 
-   This file is part of the GNU C Library.
-
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
    License as published by the Free Software Foundation; either
@@ -22,12 +20,6 @@
 #include <sysdep.h>
 #define _ERRNO_H	1
 #include <bits/errno.h>
-
-#define CLONE_VM_BIT      8
-#define CLONE_VM          (1 << CLONE_VM_BIT)
-
-#define CLONE_THREAD_BIT  16
-#define CLONE_THREAD      (1 << CLONE_THREAD_BIT)
 
 /* int clone(int (*fn)(void *arg),            x0
 	     void *child_stack,               x1
