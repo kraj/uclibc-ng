@@ -33,8 +33,10 @@ int fstatfs64 (int fd, struct statfs64 *buf)
 {
     struct statfs buf32;
 
-    if (__libc_fstatfs (fd, &buf32) < 0)
+    if (__libc_fstatfs (fd, (struct statfs *)buf) < 0)
 	return -1;
+
+    buf32 = *(struct statfs *)buf;
 
     buf->f_type = buf32.f_type;
     buf->f_bsize = buf32.f_bsize;
