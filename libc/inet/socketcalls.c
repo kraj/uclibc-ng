@@ -29,6 +29,8 @@
 #define SYS_SENDMSG     16
 #define SYS_RECVMSG     17
 #define SYS_ACCEPT4     18
+#define SYS_RECVMMSG    19
+#define SYS_SENDMMSG    20
 #endif
 
 /* exposed on x86 since Linux commit 9dea5dc921b5f4045a18c63eb92e84dc274d17eb */
@@ -283,6 +285,30 @@ CANCELLABLE_SYSCALL(ssize_t, recvmsg, (int sockfd, struct msghdr *msg, int flags
 lt_libc_hidden(recvmsg)
 #endif
 
+#ifdef L_recvmmsg
+static ssize_t __NC(recvmmsg)(int sockfd, struct mmsghdr *msg, size_t vlen,
+			      int flags, struct timespec *tmo)
+{
+# ifdef __NR_recvmmsg
+	return (ssize_t)INLINE_SYSCALL(recvmmsg, 5, sockfd, msg, vlen, flags, tmo);
+# else
+	unsigned long args[5];
+
+	args[0] = sockfd;
+	args[1] = (unsigned long) msg;
+	args[2] = vlen;
+	args[3] = flags;
+	args[4] = (unsigned long) tmo;
+	return (ssize_t)__socketcall(SYS_RECVMMSG, args);
+# endif
+}
+CANCELLABLE_SYSCALL(ssize_t, recvmmsg,
+		    (int sockfd, struct mmsghdr *msg, size_t vlen, int flags,
+		     struct timespec *tmo),
+		    (sockfd, msg, vlen, flags, tmo))
+lt_libc_hidden(recvmmsg)
+#endif
+
 #ifdef L_send
 static ssize_t __NC(send)(int sockfd, const void *buffer, size_t len, int flags)
 {
@@ -322,6 +348,28 @@ static ssize_t __NC(sendmsg)(int sockfd, const struct msghdr *msg, int flags)
 CANCELLABLE_SYSCALL(ssize_t, sendmsg, (int sockfd, const struct msghdr *msg, int flags),
 		    (sockfd, msg, flags))
 lt_libc_hidden(sendmsg)
+#endif
+
+#ifdef L_sendmmsg
+static ssize_t __NC(sendmmsg)(int sockfd, struct mmsghdr *msg, size_t vlen,
+			      int flags)
+{
+# ifdef __NR_sendmmsg
+	return (ssize_t)INLINE_SYSCALL(sendmmsg, 4, sockfd, msg, vlen, flags);
+# else
+	unsigned long args[4];
+
+	args[0] = sockfd;
+	args[1] = (unsigned long) msg;
+	args[2] = vlen;
+	args[3] = flags;
+	return (ssize_t)__socketcall(SYS_SENDMMSG, args);
+# endif
+}
+CANCELLABLE_SYSCALL(ssize_t, sendmmsg,
+		    (int sockfd, struct mmsghdr *msg, size_t vlen, int flags),
+		    (sockfd, msg, vlen, flags))
+lt_libc_hidden(sendmmsg)
 #endif
 
 #ifdef L_sendto
