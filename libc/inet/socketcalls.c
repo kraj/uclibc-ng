@@ -60,7 +60,7 @@ static int __NC(accept)(int sockfd, struct sockaddr *addr, socklen_t *addrlen)
 {
 # ifdef __NR_accept
 	return INLINE_SYSCALL(accept, 3, sockfd, addr, addrlen);
-# else
+# elif defined(__NR_socketcall)
 	unsigned long args[3];
 
 	args[0] = sockfd;
@@ -120,7 +120,7 @@ int bind(int sockfd, const struct sockaddr *myaddr, socklen_t addrlen)
 {
 # ifdef __NR_bind
 	return INLINE_SYSCALL(bind, 3, sockfd, myaddr, addrlen);
-# else
+# elif defined(__NR_socketcall)
 	unsigned long args[3];
 
 	args[0] = sockfd;
@@ -137,7 +137,7 @@ static int __NC(connect)(int sockfd, const struct sockaddr *saddr, socklen_t add
 {
 # ifdef __NR_connect
 	return INLINE_SYSCALL(connect, 3, sockfd, saddr, addrlen);
-# else
+# elif defined(__NR_socketcall)
 	unsigned long args[3];
 
 	args[0] = sockfd;
@@ -156,7 +156,7 @@ int getpeername(int sockfd, struct sockaddr *addr, socklen_t *paddrlen)
 {
 # ifdef __NR_getpeername
 	return INLINE_SYSCALL(getpeername, 3, sockfd, addr, paddrlen);
-# else
+# elif defined(__NR_socketcall)
 	unsigned long args[3];
 
 	args[0] = sockfd;
@@ -172,7 +172,7 @@ int getsockname(int sockfd, struct sockaddr *addr, socklen_t * paddrlen)
 {
 # ifdef __NR_getsockname
 	return INLINE_SYSCALL(getsockname, 3, sockfd, addr, paddrlen);
-# else
+# elif defined(__NR_socketcall)
 	unsigned long args[3];
 
 	args[0] = sockfd;
@@ -190,7 +190,7 @@ int getsockopt(int fd, int level, int optname, void *optval,
 {
 # ifdef __NR_getsockopt
 	return INLINE_SYSCALL(getsockopt, 5, fd, level, optname, optval, optlen);
-# else
+# elif defined(__NR_socketcall)
 	unsigned long args[5];
 
 	args[0] = fd;
@@ -208,7 +208,7 @@ int listen(int sockfd, int backlog)
 {
 # ifdef __NR_listen
 	return INLINE_SYSCALL(listen, 2, sockfd, backlog);
-# else
+# elif defined(__NR_socketcall)
 	unsigned long args[2];
 
 	args[0] = sockfd;
@@ -226,7 +226,7 @@ static ssize_t __NC(recv)(int sockfd, void *buffer, size_t len, int flags)
 	return (ssize_t)INLINE_SYSCALL(recv, 4, sockfd, buffer, len, flags);
 # elif defined __NR_recvfrom && defined _syscall6
 	return __NC(recvfrom)(sockfd, buffer, len, flags, NULL, NULL);
-# else
+# elif defined(__NR_socketcall)
 	unsigned long args[4];
 
 	args[0] = sockfd;
@@ -248,7 +248,7 @@ ssize_t __NC(recvfrom)(int sockfd, void *buffer, size_t len, int flags,
 # if defined __NR_recvfrom && defined _syscall6
 	return (ssize_t)INLINE_SYSCALL(recvfrom, 6, sockfd, buffer, len,
 				       flags, to, tolen);
-# else
+# elif defined(__NR_socketcall)
 	unsigned long args[6];
 
 	args[0] = sockfd;
@@ -271,7 +271,7 @@ static ssize_t __NC(recvmsg)(int sockfd, struct msghdr *msg, int flags)
 {
 # ifdef __NR_recvmsg
 	return (ssize_t)INLINE_SYSCALL(recvmsg, 3, sockfd, msg, flags);
-# else
+# elif defined(__NR_socketcall)
 	unsigned long args[3];
 
 	args[0] = sockfd;
@@ -291,7 +291,7 @@ static ssize_t __NC(recvmmsg)(int sockfd, struct mmsghdr *msg, size_t vlen,
 {
 # ifdef __NR_recvmmsg
 	return (ssize_t)INLINE_SYSCALL(recvmmsg, 5, sockfd, msg, vlen, flags, tmo);
-# else
+# elif __NR_socketcall
 	unsigned long args[5];
 
 	args[0] = sockfd;
@@ -316,7 +316,7 @@ static ssize_t __NC(send)(int sockfd, const void *buffer, size_t len, int flags)
 	return (ssize_t)INLINE_SYSCALL(send, 4, sockfd, buffer, len, flags);
 # elif defined __NR_sendto && defined _syscall6
 	return __NC(sendto)(sockfd, buffer, len, flags, NULL, 0);
-# else
+# elif defined(__NR_socketcall)
 	unsigned long args[4];
 
 	args[0] = sockfd;
@@ -336,7 +336,7 @@ static ssize_t __NC(sendmsg)(int sockfd, const struct msghdr *msg, int flags)
 {
 # ifdef __NR_sendmsg
 	return (ssize_t)INLINE_SYSCALL(sendmsg, 3, sockfd, msg, flags);
-# else
+# elif defined(__NR_socketcall)
 	unsigned long args[3];
 
 	args[0] = sockfd;
@@ -356,7 +356,7 @@ static ssize_t __NC(sendmmsg)(int sockfd, struct mmsghdr *msg, size_t vlen,
 {
 # ifdef __NR_sendmmsg
 	return (ssize_t)INLINE_SYSCALL(sendmmsg, 4, sockfd, msg, vlen, flags);
-# else
+# elif __NR_socketcall
 	unsigned long args[4];
 
 	args[0] = sockfd;
@@ -378,7 +378,7 @@ ssize_t __NC(sendto)(int sockfd, const void *buffer, size_t len, int flags,
 {
 # if defined __NR_sendto && defined _syscall6
 	return (ssize_t)INLINE_SYSCALL(sendto, 6, sockfd, buffer, len, flags, to, tolen);
-# else
+# elif defined(__NR_socketcall)
 	unsigned long args[6];
 
 	args[0] = sockfd;
@@ -401,7 +401,7 @@ int setsockopt(int fd, int level, int optname, const void *optval, socklen_t opt
 {
 # ifdef __NR_setsockopt
 	return INLINE_SYSCALL(setsockopt, 5, fd, level, optname, optval, optlen);
-# else
+# elif defined(__NR_socketcall)
 	unsigned long args[5];
 
 	args[0] = fd;
@@ -420,7 +420,7 @@ int shutdown(int sockfd, int how)
 {
 # ifdef __NR_shutdown
 	return INLINE_SYSCALL(shutdown, 2, sockfd, how);
-# else
+# elif defined(__NR_socketcall)
 	unsigned long args[2];
 
 	args[0] = sockfd;
@@ -435,7 +435,7 @@ int socket(int family, int type, int protocol)
 {
 # ifdef __NR_socket
 	return INLINE_SYSCALL(socket, 3, family, type, protocol);
-# else
+# elif defined(__NR_socketcall)
 	unsigned long args[3];
 
 	args[0] = family;
@@ -452,7 +452,7 @@ int socketpair(int family, int type, int protocol, int sockvec[2])
 {
 # ifdef __NR_socketpair
 	return INLINE_SYSCALL(socketpair, 4, family, type, protocol, sockvec);
-# else
+# elif defined(__NR_socketcall)
 	unsigned long args[4];
 
 	args[0] = family;
