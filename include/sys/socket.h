@@ -269,6 +269,7 @@ libc_hidden_proto(accept)
    __THROW.  */
 extern int accept4 (int __fd, __SOCKADDR_ARG __addr,
 		    socklen_t *__restrict __addr_len, int __flags);
+libc_hidden_proto(accept4)
 #endif
 
 /* Shut down all or part of the connection open on socket FD.
