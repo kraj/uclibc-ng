@@ -28,7 +28,7 @@
 #define LARGE $120000
 
         .text
-#endif
+
 ENTRY (memset)
 #if BZERO_P
 	mov	%rsi,%rdx	/* Adjust parameter.  */
