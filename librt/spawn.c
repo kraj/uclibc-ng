@@ -158,7 +158,7 @@ __spawni(pid_t *pid, const char *file,
 		sigset_t hset;
 		sigprocmask (SIG_BLOCK, 0, &hset);
 
-		for (int sig = 1; sig < _NSIG; ++sig) {
+		for (sig = 1; sig < _NSIG; ++sig) {
 		  if ((flags & POSIX_SPAWN_SETSIGDEF)
 		  && sigismember (&attrp->__sd, sig))
 		  {
