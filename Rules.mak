@@ -458,12 +458,6 @@ ifeq ($(TARGET_ARCH),csky)
 	# So we couldn't strip them for objdump.
 	STRIP_FLAGS += -K "$$"t -K "$$"d
 
-	CPU_CFLAGS-$(CK610)	+= -mcpu=ck610f
-	CPU_CFLAGS-$(CK810)	+= -mcpu=ck810f
-	CPU_CFLAGS-$(CK807)	+= -mcpu=ck807f
-
-	CPU_CFLAGS-$(UCLIBC_HAS_FPU)		+= -mhard-float
-
 	CPU_CFLAGS-$(ARCH_LITTLE_ENDIAN)	+= -mlittle-endian
 	CPU_CFLAGS-$(ARCH_BIG_ENDIAN)		+= -mbig-endian
 endif

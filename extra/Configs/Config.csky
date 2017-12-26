@@ -10,16 +10,3 @@ config FORCE_OPTIONS_FOR_ARCH
 	select ARCH_USE_MMU
 	select ARCH_HAS_MMU
 
-choice
-	prompt "Target Processor Type"
-	default CK610
-
-config CK610
-	bool "ck610"
-config CK810
-	bool "ck810"
-config CK807
-	bool "ck807"
-
-endchoice
-
