@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2017 Hangzhou C-SKY Microsystems co.,ltd.
+ *
+ * Licensed under the LGPL v2.1 or later, see the file COPYING.LIB
+ * in this tarball.
+ */
+
 /* Note that we use the exact same include guard #define names
  * as asm/posix_types.h.  This will avoid gratuitous conflicts
  * with the posix_types.h kernel header, and will ensure that

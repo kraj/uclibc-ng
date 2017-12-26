@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2017 Hangzhou C-SKY Microsystems co.,ltd.
+ *
+ * Licensed under the LGPL v2.1 or later, see the file COPYING.LIB
+ * in this tarball.
+ */
+
 /* Copyright (C) 1996, 1997, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
