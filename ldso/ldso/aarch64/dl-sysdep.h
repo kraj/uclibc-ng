@@ -2,12 +2,12 @@
  * Various assembly language/system dependent hacks that are required
  * so that we can minimize the amount of platform specific code.
  * Copyright (C) 2000-2004 by Erik Andersen <andersen@codepoet.org>
- * Copyright (C) 2017 by Waldemar Brodkorb <wbx@uclibc-ng.org>
+ * Copyright (C) 2017-2018 by Waldemar Brodkorb <wbx@uclibc-ng.org>
  * Ported from GNU C Library
  * Licensed under the LGPL v2.1, see the file COPYING.LIB in this tarball.
  */
 
-/* Copyright (C) 1995-2016 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2017 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License as
@@ -71,26 +71,11 @@ elf_machine_load_address (void)
   /* To figure out the load address we use the definition that for any symbol:
      dynamic_addr(symbol) = static_addr(symbol) + load_addr
 
-     The choice of symbol is arbitrary. The static address we obtain
-     by constructing a non GOT reference to the symbol, the dynamic
-     address of the symbol we compute using adrp/add to compute the
-     symbol's address relative to the PC.
-     This depends on 32/16bit relocations being resolved at link time
-     and that the static address fits in the 32/16 bits.  */
+    _DYNAMIC sysmbol is used here as its link-time address stored in
+    the special unrelocated first GOT entry.  */
 
-  ElfW(Addr) static_addr;
-  ElfW(Addr) dynamic_addr;
-
-  __asm__("					\n"
-"	adrp	%1, _dl_start;			\n"
-"	add	%1, %1, #:lo12:_dl_start	\n"
-"	ldr	%w0, 1f				\n"
-"	b	2f				\n"
-"1:						\n"
-"	.word	_dl_start			\n"
-"2:						\n"
-    : "=r" (static_addr),  "=r" (dynamic_addr));
-  return dynamic_addr - static_addr;
+    extern ElfW(Dyn) _DYNAMIC[] attribute_hidden;
+    return (ElfW(Addr)) &_DYNAMIC - elf_machine_dynamic ();
 }
 
 static __always_inline void
