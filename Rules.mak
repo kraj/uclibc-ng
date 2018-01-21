@@ -562,6 +562,8 @@ endif
 WARNING_FLAGS = -Wstrict-prototypes -Wstrict-aliasing
 ifeq ($(EXTRA_WARNINGS),y)
 WARNING_FLAGS += \
+	-Wno-nonnull-compare \
+	-Wnodeclaration-after-statement \
 	-Wformat=2 \
 	-Wmissing-noreturn \
 	-Wmissing-format-attribute \
@@ -571,7 +573,6 @@ WARNING_FLAGS += \
 	-Wnonnull \
 	-Wold-style-declaration \
 	-Wold-style-definition \
-	-Wdeclaration-after-statement \
 	-Wshadow \
 	-Wundef
 endif
