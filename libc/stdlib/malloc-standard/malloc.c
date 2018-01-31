@@ -1159,3 +1159,5 @@ DONE:
     return retval;
 }
 
+/* glibc compatibilty  */
+weak_alias(malloc, __libc_malloc)
