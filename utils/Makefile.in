@@ -82,6 +82,8 @@ utils_OUT := $(top_builddir)utils
 
 DEPS-ldconfig := $(utils_DIR)/chroot_realpath.c
 DEPS-ldconfig.host := $(DEPS-ldconfig)
+DEPS-msgfmt := $(utils_DIR)/poparser.c $(utils_DIR)/StringEscape.c
+DEPS-msgmerge := $(utils_DIR)/poparser.c $(utils_DIR)/StringEscape.c
 
 utils_OBJ := getconf
 ifeq ($(HAVE_SHARED),y)
@@ -92,6 +94,10 @@ utils_LOCALE_OBJ :=
 ifeq ($(UCLIBC_HAS_LOCALE),y)
 utils_OBJ += iconv
 utils_LOCALE_OBJ += $(utils_OUT)/locale
+endif
+
+ifeq ($(UCLIBC_HAS_LIBINTL),y)
+utils_OBJ += msgfmt msgmerge
 endif
 
 utils_OBJ := $(patsubst %,$(utils_OUT)/%,$(utils_OBJ))
@@ -117,10 +123,10 @@ $(hostutils_OBJ): $(utils_OUT)/%.host : $(utils_DIR)/%.c
 install-y += utils_install
 
 # This installs both utils and hostutils, so doesn't depend on either.
-$(PREFIX)$(DEVEL_PREFIX)bin $(PREFIX)$(RUNTIME_PREFIX)sbin:
+$(PREFIX)$(DEVEL_PREFIX)bin $$(PREFIX)$(DEVEL_PREFIX)usr/bin (PREFIX)$(RUNTIME_PREFIX)sbin:
 	$(do_mkdir)
 
-utils_install: $(PREFIX)$(DEVEL_PREFIX)bin
+utils_install: $(PREFIX)$(DEVEL_PREFIX)bin $(PREFIX)$(DEVEL_PREFIX)usr/bin
 ifeq ($(HAVE_SHARED),y)
 utils_install: $(PREFIX)$(RUNTIME_PREFIX)sbin
 endif
@@ -135,11 +141,16 @@ ifeq ($(UCLIBC_HAS_LOCALE),y)
 	$(Q)$(INSTALL) -m 755 $(utils_OUT)/iconv$(DOTHOST) $(PREFIX)$(DEVEL_PREFIX)bin/iconv
 	$(Q)$(INSTALL) -m 755 $(utils_OUT)/locale$(DOTHOST) $(PREFIX)$(DEVEL_PREFIX)bin/locale
 endif
+ifeq ($(UCLIBC_HAS_LIBINTL),y)
+	$(Q)$(INSTALL) -m 755 $(utils_OUT)/msgmerge$(DOTHOST) $(PREFIX)$(DEVEL_PREFIX)usr/bin/msgmerge
+	$(Q)$(INSTALL) -m 755 $(utils_OUT)/msgfmt$(DOTHOST) $(PREFIX)$(DEVEL_PREFIX)usr/bin/msgfmt
+	$(Q)$(INSTALL) -m 755 $(utils_OUT)/xgettext $(PREFIX)$(DEVEL_PREFIX)usr/bin
+endif
 
 
 objclean-y += CLEAN_utils
 
 CLEAN_utils:
-	$(do_rm) $(addprefix $(utils_OUT)/, getconf iconv ldconfig ldd locale *.host)
+	$(do_rm) $(addprefix $(utils_OUT)/, getconf iconv ldconfig ldd locale msgfmt msgmerge *.host)
 	$(Q)# This is a hack..
 	$(Q)$(RM) $(utils_OUT)/.*.dep
