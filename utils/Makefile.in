@@ -123,10 +123,10 @@ $(hostutils_OBJ): $(utils_OUT)/%.host : $(utils_DIR)/%.c
 install-y += utils_install
 
 # This installs both utils and hostutils, so doesn't depend on either.
-$(PREFIX)$(DEVEL_PREFIX)bin $$(PREFIX)$(DEVEL_PREFIX)usr/bin (PREFIX)$(RUNTIME_PREFIX)sbin:
+$(PREFIX)$(DEVEL_PREFIX)bin $(PREFIX)$(RUNTIME_PREFIX)sbin:
 	$(do_mkdir)
 
-utils_install: $(PREFIX)$(DEVEL_PREFIX)bin $(PREFIX)$(DEVEL_PREFIX)usr/bin
+utils_install: $(PREFIX)$(DEVEL_PREFIX)bin
 ifeq ($(HAVE_SHARED),y)
 utils_install: $(PREFIX)$(RUNTIME_PREFIX)sbin
 endif
@@ -142,9 +142,9 @@ ifeq ($(UCLIBC_HAS_LOCALE),y)
 	$(Q)$(INSTALL) -m 755 $(utils_OUT)/locale$(DOTHOST) $(PREFIX)$(DEVEL_PREFIX)bin/locale
 endif
 ifeq ($(UCLIBC_HAS_LIBINTL),y)
-	$(Q)$(INSTALL) -m 755 $(utils_OUT)/msgmerge$(DOTHOST) $(PREFIX)$(DEVEL_PREFIX)usr/bin/msgmerge
-	$(Q)$(INSTALL) -m 755 $(utils_OUT)/msgfmt$(DOTHOST) $(PREFIX)$(DEVEL_PREFIX)usr/bin/msgfmt
-	$(Q)$(INSTALL) -m 755 $(utils_OUT)/xgettext $(PREFIX)$(DEVEL_PREFIX)usr/bin
+	$(Q)$(INSTALL) -m 755 $(utils_OUT)/msgmerge$(DOTHOST) $(PREFIX)$(DEVEL_PREFIX)bin/msgmerge
+	$(Q)$(INSTALL) -m 755 $(utils_OUT)/msgfmt$(DOTHOST) $(PREFIX)$(DEVEL_PREFIX)bin/msgfmt
+	$(Q)$(INSTALL) -m 755 $(utils_OUT)/xgettext $(PREFIX)$(DEVEL_PREFIX)bin
 endif
 
 
