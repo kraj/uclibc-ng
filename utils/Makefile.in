@@ -83,7 +83,9 @@ utils_OUT := $(top_builddir)utils
 DEPS-ldconfig := $(utils_DIR)/chroot_realpath.c
 DEPS-ldconfig.host := $(DEPS-ldconfig)
 DEPS-msgfmt := $(utils_DIR)/poparser.c $(utils_DIR)/StringEscape.c
+DEPS-msgfmt.host := $(DEPS-msgfmt)
 DEPS-msgmerge := $(utils_DIR)/poparser.c $(utils_DIR)/StringEscape.c
+DEPS-msgmerge.host := $(DEPS-msgmerge)
 
 utils_OBJ := getconf
 ifeq ($(HAVE_SHARED),y)
@@ -96,7 +98,7 @@ utils_OBJ += iconv
 utils_LOCALE_OBJ += $(utils_OUT)/locale
 endif
 
-ifeq ($(UCLIBC_HAS_LIBINTL),y)
+ifeq ($(UCLIBC_HAS_LIBINTL)$(UCLIBC_HAS_LIBICONV),yy)
 utils_OBJ += msgfmt msgmerge
 endif
 
@@ -141,7 +143,7 @@ ifeq ($(UCLIBC_HAS_LOCALE),y)
 	$(Q)$(INSTALL) -m 755 $(utils_OUT)/iconv$(DOTHOST) $(PREFIX)$(DEVEL_PREFIX)bin/iconv
 	$(Q)$(INSTALL) -m 755 $(utils_OUT)/locale$(DOTHOST) $(PREFIX)$(DEVEL_PREFIX)bin/locale
 endif
-ifeq ($(UCLIBC_HAS_LIBINTL),y)
+ifeq ($(UCLIBC_HAS_LIBINTL)$(UCLIBC_HAS_LIBICONV),yy)
 	$(Q)$(INSTALL) -m 755 $(utils_OUT)/msgmerge$(DOTHOST) $(PREFIX)$(DEVEL_PREFIX)bin/msgmerge
 	$(Q)$(INSTALL) -m 755 $(utils_OUT)/msgfmt$(DOTHOST) $(PREFIX)$(DEVEL_PREFIX)bin/msgfmt
 	$(Q)$(INSTALL) -m 755 $(utils_OUT)/xgettext $(PREFIX)$(DEVEL_PREFIX)bin
