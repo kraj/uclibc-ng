@@ -30,7 +30,7 @@
 #undef __UCLIBC_HAVE_ASM_WEAKEXT_DIRECTIVE__
 
 /* define if target supports CFI pseudo ops */
-#undef __UCLIBC_HAVE_ASM_CFI_DIRECTIVES__
+#define __UCLIBC_HAVE_ASM_CFI_DIRECTIVES__
 
 /* define if target supports IEEE signed zero floats */
 #define __UCLIBC_HAVE_SIGNED_ZERO__
