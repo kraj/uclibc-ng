@@ -792,7 +792,7 @@ static int do_dlclose(void *vhandle, int need_fini)
 	struct dyn_elf *handle;
 	ElfW(Addr) end = 0, start = (ElfW(Addr))(~0ULL);
 	unsigned int i, j;
-	struct r_scope_elem *ls, *ls_next = NULL, *run_scope;
+	struct r_scope_elem *ls, *ls_next = NULL;
 	struct elf_resolve **handle_rlist;
 
 #if defined(USE_TLS) && USE_TLS
@@ -999,18 +999,6 @@ static int do_dlclose(void *vhandle, int need_fini)
 						break;
 					}
 				}
-                                for (run_scope = &_dl_loaded_modules->symbol_scope; run_scope; run_scope = run_scope->next) {
-                                  for (i = 0; i < run_scope->r_nlist; ++i) {
-                                    if (run_scope->r_list[i] == tpnt) {
-                                      _dl_if_debug_print("removed from symbol_scope: %s\n", tpnt->libname);
-                                      for (j = i; j < run_scope->r_nlist - 1; ++j) {
-                                        run_scope->r_list[j] = run_scope->r_list[j + 1];
-                                      }
-                                      --run_scope->r_nlist;
-                                      break;
-                                    }
-                                  }
-                                }
 			}
 
 			/* Next, remove tpnt from the global symbol table list */
