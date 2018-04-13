@@ -40,7 +40,7 @@ ssize_t sendfile(int out_fd, int in_fd, __off_t *offset, size_t count)
 		return -1;
 	}
 
-	if (offset == NULL || (int)offset < 0) {
+	if ((int)offset < 0) {
 		__set_errno(EFAULT);
 		return -1;
 	}
