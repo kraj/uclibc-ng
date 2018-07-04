@@ -377,7 +377,7 @@ char *_dl_find_hash(const char *name, struct r_scope_elem *scope, struct elf_res
 				break;
 #endif
 			case STB_GLOBAL:
-#if defined(__FRV_FDPIC__) || defined(__BFIN_FDPIC__)
+#if defined(__FRV_FDPIC__) || defined(__BFIN_FDPIC__) || defined(__FDPIC__)
 			if (sym_ref)
 				sym_ref->tpnt = tpnt;
 #endif
@@ -386,7 +386,7 @@ char *_dl_find_hash(const char *name, struct r_scope_elem *scope, struct elf_res
 				break;
 		}
 	}
-#if defined(__FRV_FDPIC__) || defined(__BFIN_FDPIC__)
+#if defined(__FRV_FDPIC__) || defined(__BFIN_FDPIC__) || defined(__FDPIC__)
 	if (sym_ref)
 		sym_ref->tpnt = tpnt;
 #endif
