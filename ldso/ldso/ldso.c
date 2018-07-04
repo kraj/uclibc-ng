@@ -109,7 +109,13 @@ static unsigned char *_dl_mmap_zero   = NULL;	/* Also used by _dl_malloc */
 static struct elf_resolve **init_fini_list;
 static struct elf_resolve **scope_elem_list;
 static unsigned int nlist; /* # items in init_fini_list */
+#ifdef __FDPIC__
+/* We need to take the address of _start instead of its FUNCDESC:
+   declare it as void* to control the relocation emitted.  */
+extern void *_start;
+#else
 extern void _start(void);
+#endif
 
 #ifdef __UCLIBC_HAS_SSP__
 # include <dl-osinfo.h>
