@@ -165,7 +165,7 @@ _dl_do_reloc(struct elf_resolve *tpnt, struct r_scope_elem *scope,
 		*reloc_addr = tls_tpnt->l_tls_modid;
 		break;
 	case R_ARC_TLS_DTPOFF:
-		*reloc_addr = symbol_addr;
+		*reloc_addr += symbol_addr;
 		break;
 	case R_ARC_TLS_TPOFF:
 		CHECK_STATIC_TLS ((struct link_map *) tls_tpnt);
