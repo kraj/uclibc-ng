@@ -271,9 +271,10 @@ typedef struct
 #define EM_AARCH64	183		/* ARM AARCH64 */
 #define EM_MICROBLAZE	189		/* Xilinx Microblaze */
 #define EM_ARCV2	195		/* ARCv2 Cores */
+#define EM_CSKY		252		/* C-SKY Cores */
 
 /* NEXT FREE NUMBER: Increment this after adding your official arch number */
-#define EM_NUM		196
+#define EM_NUM		253
 
 /* If it is necessary to assign new unofficial EM_* values, please pick large
    random numbers (0x8523, 0xa7f2, etc.) to minimize the chances of collision
