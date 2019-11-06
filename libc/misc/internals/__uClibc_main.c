@@ -500,6 +500,7 @@ void __uClibc_main(int (*main)(int, char **, char **), int argc,
 #endif
     }
 # endif
+#endif
 
     /* Note: It is possible that any initialization done above could
      * have resulted in errno being set nonzero, so set it to 0 before
@@ -511,7 +512,6 @@ void __uClibc_main(int (*main)(int, char **, char **), int argc,
     /* Set h_errno to 0 as well */
     if (likely(not_null_ptr(__h_errno_location)))
 	*(__h_errno_location()) = 0;
-#endif
 
 #if defined HAVE_CLEANUP_JMP_BUF && defined __UCLIBC_HAS_THREADS_NATIVE__
 	/* Memory for the cancellation buffer.  */
