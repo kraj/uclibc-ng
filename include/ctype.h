@@ -350,6 +350,7 @@ libc_hidden_proto(tolower_l)
 /* Return the uppercase version of C.  */
 extern int toupper_l (int __c, __locale_t __l) __THROW;
 
+# define __isctype_l(c, type, locale) ((locale)->__ctype_b[(int) (c)] & (__ctype_mask_t) type)
 # ifndef __NO_CTYPE
 #  if (defined __USE_SVID || defined __USE_MISC || defined __USE_XOPEN) \
 	&& defined __UCLIBC_SUSV4_LEGACY__
