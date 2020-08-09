@@ -43,10 +43,9 @@ testandset (int *spinlock)
 "	movi	%0, 0			\n"
 "	wsr	%0, SCOMPARE1		\n"
 "	movi	%0, 1			\n"
-"	s32c1i	%0, %1, 0		\n"
-	: "=&a" (tmp)
-	: "a" (spinlock)
-	: "memory"
+"	s32c1i	%0, %1			\n"
+	: "=&a" (tmp), "+m" (*spinlock)
+	:: "memory"
 	);
 	return tmp;
 }
@@ -57,16 +56,16 @@ __compare_and_swap (long int *p, long int oldval, long int newval)
         unsigned long tmp;
         unsigned long value;
         __asm__ volatile (
-"1:     l32i    %0, %2, 0            \n"
+"1:     l32i    %0, %2               \n"
 "       bne     %0, %4, 2f           \n"
 "       wsr     %0, SCOMPARE1        \n"
 "       mov     %1, %0               \n"
 "       mov     %0, %3               \n"
-"       s32c1i  %0, %2, 0            \n"
+"       s32c1i  %0, %2               \n"
 "       bne     %1, %0, 1b           \n"
 "2:                                  \n"
-          : "=&a" (tmp), "=&a" (value)
-          : "a" (p), "a" (newval), "a" (oldval)
+          : "=&a" (tmp), "=&a" (value), "+m" (*p)
+          : "a" (newval), "a" (oldval)
           : "memory" );
 
         return tmp == oldval;

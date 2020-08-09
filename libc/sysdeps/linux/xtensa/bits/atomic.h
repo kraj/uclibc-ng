@@ -56,16 +56,16 @@ typedef uintmax_t uatomic_max_t;
 #define __arch_compare_and_exchange_val_32_acq(mem, newval, oldval)  \
   ({__typeof__(*(mem)) __tmp, __value;                               \
     __asm__ __volatile__(                                            \
-      "1:     l32i    %1, %2, 0               \n"                    \
+      "1:     l32i    %1, %2                  \n"                    \
       "       bne     %1, %4, 2f              \n"                    \
       "       wsr     %1, SCOMPARE1           \n"                    \
       "       mov     %0, %1                  \n"                    \
       "       mov     %1, %3                  \n"                    \
-      "       s32c1i  %1, %2, 0               \n"                    \
+      "       s32c1i  %1, %2                  \n"                    \
       "       bne     %0, %1, 1b              \n"                    \
       "2:                                     \n"                    \
-      : "=&a" (__value), "=&a" (__tmp)                               \
-      : "a" (mem), "a" (newval), "a" (oldval)                        \
+      : "=&a" (__value), "=&a" (__tmp), "+m" (*(mem))                \
+      : "a" (newval), "a" (oldval)                                   \
       : "memory" );                                                  \
     __tmp;                                                           \
   })
@@ -76,17 +76,17 @@ typedef uintmax_t uatomic_max_t;
 #define __arch_compare_and_exchange_bool_32_acq(mem, newval, oldval) \
   ({__typeof__(*(mem)) __tmp, __value;                               \
     __asm__ __volatile__(                                            \
-      "1:     l32i    %0, %2, 0               \n"                    \
+      "1:     l32i    %0, %2                  \n"                    \
       "       sub     %1, %4, %0              \n"                    \
       "       bnez    %1, 2f                  \n"                    \
       "       wsr     %0, SCOMPARE1           \n"                    \
       "       mov     %1, %3                  \n"                    \
-      "       s32c1i  %1, %2, 0               \n"                    \
+      "       s32c1i  %1, %2                  \n"                    \
       "       bne     %0, %1, 1b              \n"                    \
       "       movi    %1, 0                   \n"                    \
       "2:                                     \n"                    \
-      : "=&a" (__value), "=&a" (__tmp)                               \
-      : "a" (mem), "a" (newval), "a" (oldval)                        \
+      : "=&a" (__value), "=&a" (__tmp), "+m" (*(mem))                \
+      : "a" (newval), "a" (oldval)                                   \
       : "memory" );                                                  \
     __tmp != 0;                                                      \
   })
@@ -96,13 +96,13 @@ typedef uintmax_t uatomic_max_t;
 #define __arch_exchange_32_acq(mem, newval)                          \
   ({__typeof__(*(mem)) __tmp, __value;                               \
     __asm__ __volatile__(                                            \
-      "1:     l32i    %0, %2, 0               \n"                    \
+      "1:     l32i    %0, %2                  \n"                    \
       "       wsr     %0, SCOMPARE1           \n"                    \
       "       mov     %1, %3                  \n"                    \
-      "       s32c1i  %1, %2, 0               \n"                    \
+      "       s32c1i  %1, %2                  \n"                    \
       "       bne     %0, %1, 1b              \n"                    \
-      : "=&a" (__value), "=&a" (__tmp)                               \
-      : "a" (mem), "a" (newval)                                      \
+      : "=&a" (__value), "=&a" (__tmp), "+m" (*(mem))                \
+      : "a" (newval)                                                 \
       : "memory" );                                                  \
     __tmp;                                                           \
   })
@@ -112,13 +112,13 @@ typedef uintmax_t uatomic_max_t;
 #define __arch_atomic_exchange_and_add_32(mem, value)                \
   ({__typeof__(*(mem)) __tmp, __value;                               \
     __asm__ __volatile__(                                            \
-      "1:     l32i    %0, %2, 0               \n"                    \
+      "1:     l32i    %0, %2                  \n"                    \
       "       wsr     %0, SCOMPARE1           \n"                    \
       "       add     %1, %0, %3              \n"                    \
-      "       s32c1i  %1, %2, 0               \n"                    \
+      "       s32c1i  %1, %2                  \n"                    \
       "       bne     %0, %1, 1b              \n"                    \
-      : "=&a" (__value), "=&a" (__tmp)                               \
-      : "a" (mem), "a" (value)                                       \
+      : "=&a" (__value), "=&a" (__tmp), "+m" (*(mem))                \
+      : "a" (value)                                                  \
       : "memory" );                                                  \
     __tmp;                                                           \
   })
@@ -128,13 +128,13 @@ typedef uintmax_t uatomic_max_t;
 #define __arch_atomic_exchange_and_sub_32(mem, value)                \
   ({__typeof__(*(mem)) __tmp, __value;                               \
     __asm__ __volatile__(                                            \
-      "1:     l32i    %0, %2, 0               \n"                    \
+      "1:     l32i    %0, %2                  \n"                    \
       "       wsr     %0, SCOMPARE1           \n"                    \
       "       sub     %1, %0, %3              \n"                    \
-      "       s32c1i  %1, %2, 0               \n"                    \
+      "       s32c1i  %1, %2                  \n"                    \
       "       bne     %0, %1, 1b              \n"                    \
-      : "=&a" (__value), "=&a" (__tmp)                               \
-      : "a" (mem), "a" (value)                                       \
+      : "=&a" (__value), "=&a" (__tmp), "+m" (*(mem))                \
+      : "a" (value)                                                  \
       : "memory" );                                                  \
     __tmp;                                                           \
   })
@@ -144,16 +144,15 @@ typedef uintmax_t uatomic_max_t;
 #define __arch_atomic_decrement_if_positive_32(mem)                  \
   ({__typeof__(*(mem)) __tmp, __value;                               \
     __asm__ __volatile__(                                            \
-      "1:     l32i    %0, %2, 0               \n"                    \
+      "1:     l32i    %0, %2                  \n"                    \
       "       blti    %0, 1, 2f               \n"                    \
       "       wsr     %0, SCOMPARE1           \n"                    \
       "       addi    %1, %0, -1              \n"                    \
-      "       s32c1i  %1, %2, 0               \n"                    \
+      "       s32c1i  %1, %2                  \n"                    \
       "       bne     %0, %1, 1b              \n"                    \
       "2:                                     \n"                    \
-      : "=&a" (__value), "=&a" (__tmp)                               \
-      : "a" (mem)                                                    \
-      : "memory" );                                                  \
+      : "=&a" (__value), "=&a" (__tmp), "+m" (*(mem))                \
+      :: "memory" );                                                 \
     __value;                                                         \
   })
 
