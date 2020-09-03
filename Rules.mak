@@ -288,7 +288,7 @@ OPTIMIZATION += $(CFLAG_-fstrict-aliasing)
 
 # Why -funsigned-char: I hunted a bug related to incorrect
 # sign extension of 'char' type for 10 hours straight. Not fun.
-CPU_CFLAGS-y := -funsigned-char -fno-builtin
+CPU_CFLAGS-y := -funsigned-char -fno-builtin -fcommon
 
 $(eval $(call check-gcc-var,-fno-asm))
 CPU_CFLAGS-y += $(CFLAG_-fno-asm)
