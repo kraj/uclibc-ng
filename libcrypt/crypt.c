@@ -6,6 +6,7 @@
 
 #include <unistd.h>
 #include <crypt.h>
+#include <errno.h>
 #include "libcrypt.h"
 
 char *crypt(const char *key, const char *salt)
