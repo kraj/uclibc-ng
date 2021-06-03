@@ -483,9 +483,10 @@ ifeq ($(TARGET_ARCH),powerpc)
 	PICFLAG:=-fpic
 	PIEFLAG_NAME:=-fpie
 	PPC_HAS_REL16:=$(shell printf "\t.text\n\taddis 11,30,_GLOBAL_OFFSET_TABLE_-.@ha\n" | $(CC) -c -x assembler -o /dev/null -  2> /dev/null && echo -n y || echo -n n)
+	PPC_HAS_SECUREPLT:=$(shell $(CC) --verbose 2>&1 | grep -- --enable-secureplt > /dev/null && echo -n y || echo -n n)
+	CPU_CFLAGS-$(PPC_HAS_SECUREPLT) += -DPPC_HAS_SECUREPLT
 	CPU_CFLAGS-$(PPC_HAS_REL16)+= -DHAVE_ASM_PPC_REL16
 	CPU_CFLAGS-$(CONFIG_E500) += "-D__NO_MATH_INLINES"
-
 endif
 
 ifeq ($(TARGET_ARCH),bfin)
