@@ -560,38 +560,7 @@ void __decode_header(unsigned char *data,
    the data */
 int __encode_dotted(const char *dotted, unsigned char *dest, int maxlen)
 {
-#ifndef WHY_UCLIBC_WHY_DID_YOU_DO_THIS
 	return (dn_comp(dotted, dest, maxlen, NULL, NULL));
-#else
-	unsigned used = 0;
-
-	while (dotted && *dotted) {
-		char *c = strchr(dotted, '.');
-		int l = c ? c - dotted : strlen(dotted);
-
-		/* two consecutive dots are not valid */
-		if (l == 0)
-			return -1;
-
-		if (l >= (maxlen - used - 1))
-			return -1;
-
-		dest[used++] = l;
-		memcpy(dest + used, dotted, l);
-		used += l;
-
-		if (!c)
-			break;
-		dotted = c + 1;
-	}
-
-	if (maxlen < 1)
-		return -1;
-
-	dest[used++] = 0;
-
-	return used;
-#endif
 }
 #endif /* L_encoded */
 
@@ -606,67 +575,7 @@ int __decode_dotted(const unsigned char *packet,
 		char *dest,
 		int dest_len)
 {
-#ifndef WHY_UCLIBC_WHY_DID_YOU_DO_THIS
 	return (dn_expand(packet, packet + packet_len, packet + offset, dest, dest_len));
-#else
-	unsigned b;
-	bool measure = 1;
-	unsigned total = 0;
-	unsigned used = 0;
-	unsigned maxiter = 256;
-
-	if (!packet)
-		return -1;
-
-	dest[0] = '\0';
-	while (--maxiter) {
-		if (offset >= packet_len)
-			return -1;
-		b = packet[offset++];
-		if (b == 0)
-			break;
-
-		if (measure)
-			total++;
-
-		if ((b & 0xc0) == 0xc0) {
-			if (offset >= packet_len)
-				return -1;
-			if (measure)
-				total++;
-			/* compressed item, redirect */
-			offset = ((b & 0x3f) << 8) | packet[offset];
-			measure = 0;
-			continue;
-		}
-
-		if (used + b + 1 >= dest_len)
-			return -1;
-		if (offset + b >= packet_len)
-			return -1;
-		memcpy(dest + used, packet + offset, b);
-		offset += b;
-		used += b;
-
-		if (measure)
-			total += b;
-
-		if (packet[offset] != 0)
-			dest[used++] = '.';
-		else
-			dest[used++] = '\0';
-	}
-	if (!maxiter)
-		return -1;
-
-	/* The null byte must be counted too */
-	if (measure)
-		total++;
-
-	DPRINTF("Total decode len = %d\n", total);
-
-	return total;
-#endif
 }
 #endif /* L_decoded */
 
