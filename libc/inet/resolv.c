@@ -11,6 +11,7 @@
 /*
  * Portions Copyright (c) 1985, 1993
  *    The Regents of the University of California.  All rights reserved.
+ * Portions Copyright © 2021 mirabilos <m@mirbsd.org>
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -559,6 +560,9 @@ void __decode_header(unsigned char *data,
    the data */
 int __encode_dotted(const char *dotted, unsigned char *dest, int maxlen)
 {
+#ifndef WHY_UCLIBC_WHY_DID_YOU_DO_THIS
+	return (dn_comp(dotted, dest, maxlen, NULL, NULL));
+#else
 	unsigned used = 0;
 
 	while (dotted && *dotted) {
@@ -587,6 +591,7 @@ int __encode_dotted(const char *dotted, unsigned char *dest, int maxlen)
 	dest[used++] = 0;
 
 	return used;
+#endif
 }
 #endif /* L_encoded */
 
@@ -601,6 +606,9 @@ int __decode_dotted(const unsigned char *packet,
 		char *dest,
 		int dest_len)
 {
+#ifndef WHY_UCLIBC_WHY_DID_YOU_DO_THIS
+	return (dn_expand(packet, packet + packet_len, packet + offset, dest, dest_len));
+#else
 	unsigned b;
 	bool measure = 1;
 	unsigned total = 0;
@@ -658,6 +666,7 @@ int __decode_dotted(const unsigned char *packet,
 	DPRINTF("Total decode len = %d\n", total);
 
 	return total;
+#endif
 }
 #endif /* L_decoded */
 
