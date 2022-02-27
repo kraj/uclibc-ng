@@ -17,7 +17,9 @@
 
 #include <sys/resource.h>
 #include <sysdep.h>
+#include <bits/kernel-features.h>
 
+#if defined __ASSUME_PRLIMIT64
 int
 prlimit (__pid_t pid, enum __rlimit_resource resource,
 	     const struct rlimit *new_rlimit, struct rlimit *old_rlimit)
@@ -25,3 +27,4 @@ prlimit (__pid_t pid, enum __rlimit_resource resource,
   return INLINE_SYSCALL (prlimit64, 4, pid, resource, new_rlimit,
 			      old_rlimit);
 }
+#endif
