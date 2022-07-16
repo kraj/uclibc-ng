@@ -48,6 +48,20 @@ _start:
 	mov	x29, #0
 	mov	x30, #0
 
+#ifdef L_rcrt1
+	/* Save off the atexit pointer */
+	mov     x19, x0
+
+	/* Calculate load address... idk how this works, but it does */
+	adrp    x0, _start
+
+	/* Do relocations */
+	bl reloc_static_pie
+
+	/* restore atexit pointer */
+	mov     x0, x19
+#endif
+
 	/* Setup _fini in argument register */
 	mov	x5, x0
 
