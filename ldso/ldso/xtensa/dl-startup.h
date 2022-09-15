@@ -7,6 +7,7 @@
  * Parts taken from glibc/sysdeps/xtensa/dl-machine.h.
  */
 
+#ifndef L_rcrt1
 __asm__ (
     "	.text\n"
     "	.align  4\n"
@@ -81,6 +82,7 @@ __asm__ (
     "	addi    a5, a5, 8\n"
     "	bnez    a6, 3b\n"
     "	j      .Lfixup_stack_ret");
+#endif
 
 /* Get a pointer to the argv value.  */
 #define GET_ARGV(ARGVP, ARGS) ARGVP = (((unsigned long *) ARGS) + 1)
