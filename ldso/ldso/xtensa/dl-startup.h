@@ -88,6 +88,7 @@ __asm__ (
 /* Function calls are not safe until the GOT relocations have been done.  */
 #define NO_FUNCS_BEFORE_BOOTSTRAP
 
+#if defined(__ARCH_USE_MMU__)
 #define PERFORM_BOOTSTRAP_GOT(tpnt) \
 do { \
 	xtensa_got_location *got_loc; \
@@ -124,3 +125,4 @@ do { \
 					  PROT_READ | PROT_WRITE | PROT_EXEC); \
 	} \
 } while (0)
+#endif
