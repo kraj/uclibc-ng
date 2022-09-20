@@ -30,7 +30,7 @@
 #endif
 
 #if defined(__arc__)
-#define MATCH_MACHINE(x) (x == EM_ARCOMPACT)
+#define MATCH_MACHINE(x) (x == EM_ARCOMPACT || x == EM_ARCV2)
 #define ELFCLASSM      ELFCLASS32
 #endif
 

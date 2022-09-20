@@ -270,7 +270,7 @@ typedef struct
 #define EM_METAG	174		/* Imagination Technologies Meta */
 #define EM_AARCH64	183		/* ARM AARCH64 */
 #define EM_MICROBLAZE	189		/* Xilinx Microblaze */
-#define EM_ARCV2	195		/* ARCv2 Cores */
+#define EM_ARCV2	195		/* Synopsys ARCv2 Cores */
 #define EM_RISCV        243     	/* RISC-V */
 #define EM_CSKY		252		/* C-SKY Cores */
 #define EM_KVX		256		/* Kalray VLIW core of the MPPA processor family */
