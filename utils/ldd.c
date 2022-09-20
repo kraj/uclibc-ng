@@ -34,6 +34,11 @@
 #define ELFCLASSM      ELFCLASS32
 #endif
 
+#if defined(__ARC64_ARCH32__)
+#define MATCH_MACHINE(x) (x == EM_ARCV3_32)
+#define ELFCLASSM      ELFCLASS32
+#endif
+
 #if defined(__arm__) || defined(__thumb__)
 #define MATCH_MACHINE(x) (x == EM_ARM)
 #define ELFCLASSM	ELFCLASS32

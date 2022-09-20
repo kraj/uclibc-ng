@@ -273,6 +273,7 @@ typedef struct
 #define EM_ARCV2	195		/* Synopsys ARCv2 Cores */
 #define EM_RISCV        243     	/* RISC-V */
 #define EM_CSKY		252		/* C-SKY Cores */
+#define EM_ARCV3_32	255		/* Synopsys ARCv3 32-bit Cores */
 #define EM_KVX		256		/* Kalray VLIW core of the MPPA processor family */
 
 /* NEXT FREE NUMBER: Increment this after adding your official arch number */
