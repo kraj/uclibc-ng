@@ -98,6 +98,9 @@
 extern ElfW(Addr) _begin[] attribute_hidden;
 #endif
 
+
+ElfW(auxv_t) _dl_auxvt[AUX_MAX_AT_ID];
+
 #ifdef LDSO_NEED_DPNT
 ElfW(Dyn) *_dl_saved_dpnt = 0;
 #endif
@@ -127,7 +130,7 @@ DL_START(unsigned long args)
 	ElfW(Ehdr) *header;
 	struct elf_resolve tpnt_tmp;
 	struct elf_resolve *tpnt = &tpnt_tmp;
-	ElfW(auxv_t) auxvt[AT_EGID + 1];
+	ElfW(auxv_t) _dl_auxvt_tmp[AUX_MAX_AT_ID];
 	ElfW(Dyn) *dpnt;
 	uint32_t  *p32;
 
@@ -158,7 +161,7 @@ DL_START(unsigned long args)
 
 	/* Place -1 here as a checkpoint.  We later check if it was changed
 	 * when we read in the auxvt */
-	auxvt[AT_UID].a_type = -1;
+	_dl_auxvt_tmp[AT_UID].a_type = -1;
 
 	/* The junk on the stack immediately following the environment is
 	 * the Auxiliary Vector Table.  Read out the elements of the auxvt,
@@ -166,9 +169,11 @@ DL_START(unsigned long args)
 	while (*aux_dat) {
 		ElfW(auxv_t) *auxv_entry = (ElfW(auxv_t) *) aux_dat;
 
-		if (auxv_entry->a_type <= AT_EGID) {
-			_dl_memcpy(&(auxvt[auxv_entry->a_type]), auxv_entry, sizeof(ElfW(auxv_t)));
+		if (auxv_entry->a_type < AUX_MAX_AT_ID) {
+			_dl_memcpy(&(_dl_auxvt_tmp[auxv_entry->a_type]), auxv_entry, sizeof(ElfW(auxv_t)));
 		}
+		
+		
 		aux_dat += 2;
 	}
 
@@ -183,16 +188,16 @@ DL_START(unsigned long args)
 	 * We use it if the kernel is not passing a valid address through the auxvt.
 	 */
 
-	if (!auxvt[AT_BASE].a_un.a_val)
-		auxvt[AT_BASE].a_un.a_val =  (ElfW(Addr)) &_begin;
+	if (!_dl_auxvt_tmp[AT_BASE].a_un.a_val)
+		_dl_auxvt_tmp[AT_BASE].a_un.a_val =  (ElfW(Addr)) &_begin;
 	/* Note: if the dynamic linker itself is prelinked, the load_addr is 0 */
 	DL_INIT_LOADADDR_BOOT(load_addr, elf_machine_load_address());
 #else
-	if (!auxvt[AT_BASE].a_un.a_val)
-		auxvt[AT_BASE].a_un.a_val = elf_machine_load_address();
-	DL_INIT_LOADADDR_BOOT(load_addr, auxvt[AT_BASE].a_un.a_val);
+	if (!_dl_auxvt_tmp[AT_BASE].a_un.a_val)
+		_dl_auxvt_tmp[AT_BASE].a_un.a_val = elf_machine_load_address();
+	DL_INIT_LOADADDR_BOOT(load_addr, _dl_auxvt_tmp[AT_BASE].a_un.a_val);
 #endif
-	header = (ElfW(Ehdr) *) auxvt[AT_BASE].a_un.a_val;
+	header = (ElfW(Ehdr) *) _dl_auxvt_tmp[AT_BASE].a_un.a_val;
 
 	/* Check the ELF header to make sure everything looks ok.  */
 	if (!header || header->e_ident[EI_CLASS] != ELF_CLASS ||
@@ -353,8 +358,13 @@ DL_START(unsigned long args)
 #endif
 	__rtld_stack_end = (void *)(argv - 1);
 
+	/*
+	*  now the globals work. so copy the aux vector
+	*/
+	_dl_memcpy( _dl_auxvt, _dl_auxvt_tmp, sizeof( ElfW(auxv_t) ) * AUX_MAX_AT_ID );
+
 	_dl_elf_main = (int (*)(int, char **, char **))
-			_dl_get_ready_to_run(tpnt, load_addr, auxvt, envp, argv
+			_dl_get_ready_to_run(tpnt, load_addr, envp, argv
 					     DL_GET_READY_TO_RUN_EXTRA_ARGS);
 
 	/* Transfer control to the application.  */
