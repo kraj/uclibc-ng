@@ -9,7 +9,7 @@
 #include <sys/syscall.h>
 #include <sys/time.h>
 
-#ifdef SHARED
+#ifdef __VDSO_SUPPORT__
 #include "ldso.h"
 #endif
 
