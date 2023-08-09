@@ -94,8 +94,6 @@
 #ifdef __USE_GNU
 # define F_SETSIG	10	/* Set number of signal to be sent.  */
 # define F_GETSIG	11	/* Get number of signal to be sent.  */
-# define F_SETOWN_EX	15	/* Get owner (thread receiving SIGIO).  */
-# define F_GETOWN_EX	16	/* Set owner (thread receiving SIGIO).  */
 #endif
 
 
@@ -167,25 +165,6 @@ struct flock64
     __off64_t l_start;	/* Offset where the lock begins.  */
     __off64_t l_len;	/* Size of the locked area; zero means until EOF.  */
     __pid_t l_pid;	/* Process holding the lock.  */
-  };
-#endif
-
-
-#ifdef __USE_GNU
-/* Owner types.  */
-enum __pid_type
-  {
-    F_OWNER_TID = 0,		/* Kernel thread.  */
-    F_OWNER_PID,		/* Process.  */
-    F_OWNER_PGRP,		/* Process group.  */
-    F_OWNER_GID = F_OWNER_PGRP	/* Alternative, obsolete name.  */
-  };
-
-/* Structure to use with F_GETOWN_EX and F_SETOWN_EX.  */
-struct f_owner_ex
-  {
-    enum __pid_type type;	/* Owner type of ID.  */
-    __pid_t pid;		/* ID of owner.  */
   };
 #endif
 
