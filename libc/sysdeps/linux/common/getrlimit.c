@@ -9,10 +9,11 @@
 #include <sys/syscall.h>
 #include <sys/resource.h>
 #include <bits/wordsize.h>
+#include <stddef.h> // needed for NULL to be defined
 
 /* Only wrap getrlimit if the new ugetrlimit is not present and getrlimit sucks */
 
-#if defined __NR_ugetrlimit
+#if defined(__NR_ugetrlimit)
 
 /* just call ugetrlimit() */
 # define __NR___syscall_ugetrlimit __NR_ugetrlimit
@@ -24,16 +25,25 @@ int getrlimit(__rlimit_resource_t resource, struct rlimit *rlimits)
 	return __syscall_ugetrlimit(resource, rlimits);
 }
 
-#elif !defined(__UCLIBC_HANDLE_OLDER_RLIMIT__)
+#else
 
+# if !defined(__UCLIBC_HANDLE_OLDER_RLIMIT__)
+
+#  if defined(__NR_prlimit64)
+int getrlimit(__rlimit_resource_t resource, struct rlimit *rlimits)
+{
+	return INLINE_SYSCALL (prlimit64, 4, 0, resource, NULL, rlimits);
+}
+#  else
 /* We don't need to wrap getrlimit() */
 _syscall2(int, getrlimit, __rlimit_resource_t, resource,
 	  struct rlimit *, rlim)
+#  endif
 
-#else
+# else
 
 /* we have to handle old style getrlimit() */
-# define __NR___syscall_getrlimit __NR_getrlimit
+#  define __NR___syscall_getrlimit __NR_getrlimit
 static __always_inline
 _syscall2(int, __syscall_getrlimit, int, resource, struct rlimit *, rlim)
 
@@ -41,7 +51,11 @@ int getrlimit(__rlimit_resource_t resource, struct rlimit *rlimits)
 {
 	int result;
 
+#  if defined(__NR_prlimit64)
+	result = INLINE_SYSCALL (prlimit64, 4, 0, resource, NULL, rlimits);
+#  else
 	result = __syscall_getrlimit(resource, rlimits);
+#  endif
 
 	if (result == -1)
 		return result;
@@ -54,6 +68,7 @@ int getrlimit(__rlimit_resource_t resource, struct rlimit *rlimits)
 		rlimits->rlim_max = RLIM_INFINITY;
 	return result;
 }
+# endif
 #endif
 libc_hidden_def(getrlimit)
 
