@@ -106,6 +106,10 @@ libc_hidden_proto(setpriority)
 extern int prlimit (__pid_t __pid, enum __rlimit_resource __resource,
 		      const struct rlimit *__new_limit,
 		      struct rlimit *__old_limit) __THROW;
+
+extern int prlimit64 (__pid_t __pid, enum __rlimit_resource __resource,
+		      const struct rlimit64 *__new_limit,
+		      struct rlimit64 *__old_limit) __THROW;
 #endif
 
 __END_DECLS

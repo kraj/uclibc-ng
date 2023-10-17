@@ -24,21 +24,53 @@ int getrlimit(__rlimit_resource_t resource, struct rlimit *rlimits)
 {
 	return __syscall_ugetrlimit(resource, rlimits);
 }
+libc_hidden_def(getrlimit)
+
+#elif defined(__NR_prlimit64)
+/* Use prlimit64 if present, the prlimit64 syscall is free from a back 
+   compatibility stuff for an old getrlimit */
+
+# if __WORDSIZE == 32 && !defined(__USE_FILE_OFFSET64)
+/* If struct rlimit has 64-bit fields (if __WORDSIZE == 64 or __USE_FILE_OFFSET64
+   is defined), then use getrlimit as an alias to getrlimit64, see getrlimit64.c */
+int getrlimit(__rlimit_resource_t resource, struct rlimit *rlimits)
+{
+	struct rlimit64 rlimits64;
+	int res = INLINE_SYSCALL (prlimit64, 4, 0, resource, NULL, &rlimits64);
+
+	if (res == 0) {
+		/* If the syscall succeeds but the values do not fit into a
+		   rlimit structure set EOVERFLOW errno and retrun -1. */
+		rlimits->rlim_cur = rlimits64.rlim_cur;
+ 		if (rlimits64.rlim_cur != rlimits->rlim_cur) {
+			if (rlimits64.rlim_cur != RLIM64_INFINITY) {
+				__set_errno(EOVERFLOW);
+				return -1;
+			}
+			rlimits->rlim_cur = RLIM_INFINITY;
+		}
+
+		rlimits->rlim_max = rlimits64.rlim_max;
+		if (rlimits64.rlim_max != rlimits->rlim_max) {
+			if (rlimits64.rlim_max != RLIM64_INFINITY) {
+				__set_errno(EOVERFLOW);
+				return -1;
+			}
+			rlimits->rlim_max = RLIM_INFINITY;
+		}
+	}
+	return res;
+}
+libc_hidden_def(getrlimit)
+# endif
 
 #else
 
 # if !defined(__UCLIBC_HANDLE_OLDER_RLIMIT__)
 
-#  if defined(__NR_prlimit64)
-int getrlimit(__rlimit_resource_t resource, struct rlimit *rlimits)
-{
-	return INLINE_SYSCALL (prlimit64, 4, 0, resource, NULL, rlimits);
-}
-#  else
 /* We don't need to wrap getrlimit() */
 _syscall2(int, getrlimit, __rlimit_resource_t, resource,
 	  struct rlimit *, rlim)
-#  endif
 
 # else
 
@@ -51,11 +83,7 @@ int getrlimit(__rlimit_resource_t resource, struct rlimit *rlimits)
 {
 	int result;
 
-#  if defined(__NR_prlimit64)
-	result = INLINE_SYSCALL (prlimit64, 4, 0, resource, NULL, rlimits);
-#  else
 	result = __syscall_getrlimit(resource, rlimits);
-#  endif
 
 	if (result == -1)
 		return result;
@@ -69,9 +97,6 @@ int getrlimit(__rlimit_resource_t resource, struct rlimit *rlimits)
 	return result;
 }
 # endif
-#endif
-libc_hidden_def(getrlimit)
 
-#if __WORDSIZE == 64
-strong_alias_untyped(getrlimit, getrlimit64)
+libc_hidden_def(getrlimit)
 #endif

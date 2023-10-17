@@ -23,21 +23,41 @@ int setrlimit(__rlimit_resource_t resource, const struct rlimit *rlimits)
 {
 	return __syscall_usetrlimit(resource, rlimits);
 }
+libc_hidden_def(setrlimit)
+
+#elif defined(__NR_prlimit64)
+
+/* Use prlimit64 if present, the prlimit64 syscall is free from a back
+   compatibility stuff for setrlimit */
+
+ # if __WORDSIZE == 32 && !defined(__USE_FILE_OFFSET64)
+/* If struct rlimit has 64-bit fields (if __WORDSIZE == 64 or __USE_FILE_OFFSET64
+   is defined), then use setrlimit as an alias to setrlimit64, see setrlimit64.c */
+int setrlimit(__rlimit_resource_t resource, const struct rlimit *rlimits)
+{
+	struct rlimit64 rlimits64;
+
+	if (rlimits->rlim_cur == RLIM_INFINITY)
+		rlimits64.rlim_cur = RLIM64_INFINITY;
+	else
+		rlimits64.rlim_cur = rlimits->rlim_cur;
+	if (rlimits->rlim_max == RLIM_INFINITY)
+		rlimits64.rlim_max = RLIM64_INFINITY;
+	else
+		rlimits64.rlim_max = rlimits->rlim_max;
+
+	return INLINE_SYSCALL (prlimit64, 4, 0, resource, &rlimits64, NULL);
+}
+libc_hidden_def(setrlimit)
+# endif
 
 #else
 
 # if !defined(__UCLIBC_HANDLE_OLDER_RLIMIT__)
 
-#  if defined(__NR_prlimit64)
-int setrlimit(__rlimit_resource_t resource, const struct rlimit *rlimits)
-{
-	return INLINE_SYSCALL (prlimit64, 4, 0, resource, rlimits, NULL);
-}
-#  else
 /* We don't need to wrap setrlimit() */
 _syscall2(int, setrlimit, __rlimit_resource_t, resource,
 		const struct rlimit *, rlim)
-#  endif
 
 # else
 
@@ -66,16 +86,9 @@ int setrlimit(__rlimit_resource_t resource, const struct rlimit *rlimits)
 								  RLIM_INFINITY >> 1);
 	rlimits_small.rlim_max = MIN((unsigned long int) rlimits->rlim_max,
 								  RLIM_INFINITY >> 1);
-#  if defined(__NR_prlimit64)
-	return INLINE_SYSCALL (prlimit64, 4, 0, resource, &rlimits_small, NULL);
-#  else
 	return __syscall_setrlimit(resource, &rlimits_small);
-#  endif
 }
 # endif
-#endif
-libc_hidden_def(setrlimit)
 
-#if __WORDSIZE == 64
-strong_alias_untyped(setrlimit, setrlimit64)
+libc_hidden_def(setrlimit)
 #endif
