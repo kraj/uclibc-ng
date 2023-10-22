@@ -94,8 +94,10 @@ __END_DECLS
 #ifdef _LIBC
 extern void __longjmp(__jmp_buf __env, int __val) __THROWNL attribute_noreturn;
 libc_hidden_proto(__longjmp)
-extern __typeof(longjmp) __libc_longjmp __THROWNL attribute_noreturn;
-extern __typeof(siglongjmp) __libc_siglongjmp __THROWNL attribute_noreturn;
+extern void __libc_longjmp(struct __jmp_buf_tag __env[1], int __val)
+  __THROWNL attribute_noreturn;
+extern void __libc_siglongjmp(sigjmp_buf __env, int __val)
+  __THROWNL attribute_noreturn;
 extern void _longjmp_unwind(jmp_buf __env, int __val);
 libc_hidden_proto(_longjmp_unwind)
 extern int __sigjmp_save(sigjmp_buf __env, int __savemask) attribute_hidden;
