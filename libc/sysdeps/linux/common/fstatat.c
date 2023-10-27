@@ -32,7 +32,7 @@ int fstatat(int fd, const char *file, struct stat *buf, int flag)
 libc_hidden_def(fstatat)
 #else
 
-#if defined(__NR_statx)
+#if defined(__NR_statx) && defined __UCLIBC_HAVE_STATX__
 #include <sys/sysmacros.h> // for makedev
 
 int fstatat(int fd, const char *file, struct stat *buf, int flag)
