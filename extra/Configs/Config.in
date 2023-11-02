@@ -644,6 +644,15 @@ config PTHREADS_DEBUG_SUPPORT
 	  If you are doing development and want to debug applications using
 	  uClibc's pthread library, answer Y.  Otherwise, answer N.
 
+config PTHREADS_STACK_DEFAULT_SIZE
+	int "Default thread stack size"
+	default 4194304 if TARGET_alpha # 4 MiB
+	default 4194304 if TARGET_powerpc # 4 MiB
+	default 2097152 # 2 MiB
+	help
+	  Set the default thread stack size. This option is useful on MMU-less
+	  systems where the stack size is fixed and the default stack size may
+	  be excessively large and waste memory.
 
 config UCLIBC_HAS_SYSLOG
 	bool "Syslog support"
