@@ -25,7 +25,9 @@ prlimit (__pid_t pid, enum __rlimit_resource resource,
 	 const struct rlimit *new_rlimit, struct rlimit *old_rlimit)
 {
 	struct rlimit64 new_rlimit64;
+	struct rlimit64 *new_rlimit64_ptr = NULL;
 	struct rlimit64 old_rlimit64;
+	struct rlimit64 *old_rlimit64_ptr = (old_rlimit != NULL ? &old_rlimit64 : NULL);
 	int res;
 
 	if (new_rlimit != NULL) {
@@ -37,10 +39,11 @@ prlimit (__pid_t pid, enum __rlimit_resource resource,
 			new_rlimit64.rlim_max = RLIM64_INFINITY;
 		else
 			new_rlimit64.rlim_max = new_rlimit->rlim_max;
+		new_rlimit64_ptr = &new_rlimit64;
 	}
 
-	res = INLINE_SYSCALL (prlimit64, 4, pid, resource, &new_rlimit64,
-			      &old_rlimit64);
+	res = INLINE_SYSCALL (prlimit64, 4, pid, resource, new_rlimit64_ptr,
+			      old_rlimit64_ptr);
 
 	if (res == 0 && old_rlimit != NULL) {
 		/* If the syscall succeeds but the values do not fit into a
@@ -64,7 +67,7 @@ prlimit (__pid_t pid, enum __rlimit_resource resource,
 				__set_errno(EOVERFLOW);
 				return -1;
 			}
-			old_rlimit->rlim_cur = RLIM_INFINITY;
+			old_rlimit->rlim_max = RLIM_INFINITY;
 		}
 	}
 
