@@ -103,23 +103,21 @@ ENTRY(strcmp)
 	brne	r2, 0, @.Lcharloop
 
 ;;; s1 and s2 are word aligned
-	ld.ab	r2, [r0, 4]
 
 	mov_s	r12, 0x01010101
 	ror	r11, r12
 	.align  4
 .LwordLoop:
+	ld.ab	r2, [r0, 4]
+	sub	r4, r2, r12
 	ld.ab	r3, [r1, 4]
 	;; Detect NULL char in str1
-	sub	r4, r2, r12
-	ld.ab	r5, [r0, 4]
 	bic	r4, r4, r2
 	and	r4, r4, r11
 	brne.d.nt	r4, 0, .LfoundNULL
 	;; Check if the read locations are the same
 	cmp	r2, r3
-	beq.d	.LwordLoop
-	mov.eq	r2, r5
+	beq	.LwordLoop
 
 	;; A match is found, spot it out
 #ifdef __LITTLE_ENDIAN__
