@@ -56,12 +56,10 @@ int fstatat64(int fd, const char *file, struct stat64 *buf, int flag)
 	int r = INLINE_SYSCALL(statx, 5, fd, file, AT_NO_AUTOMOUNT | flag,
 			       STATX_BASIC_STATS, &tmp);
 
-	if (r != 0)
-		return r;
+	if (r == 0)
+		__cp_stat64_statx ((struct stat *)buf, &tmp);
 
-	__cp_stat_statx ((struct stat *)buf, &tmp);
-
-	return 0;
+	return r;
 }
 libc_hidden_def(fstatat64)
 #endif
