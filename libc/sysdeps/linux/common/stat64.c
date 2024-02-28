@@ -10,7 +10,7 @@
 #include <sys/syscall.h>
 #include <sys/stat.h>
 
-#if defined __NR_fstatat64 && !defined __NR_stat64
+#if defined __NR_fstatat64 && !defined __NR_stat64 && !defined(__UCLIBC_USE_TIME64__)
 #include <fcntl.h>
 #include <unistd.h>
 

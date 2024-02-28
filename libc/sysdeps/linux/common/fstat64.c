@@ -9,7 +9,7 @@
 #include <_lfs_64.h>
 #include <sys/syscall.h>
 
-#ifdef __NR_fstat64
+#if defined(__NR_fstat64) && !defined(__UCLIBC_USE_TIME64__)
 # include <unistd.h>
 # include <sys/stat.h>
 # include "xstatconv.h"

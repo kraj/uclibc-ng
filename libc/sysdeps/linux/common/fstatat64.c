@@ -23,7 +23,7 @@
 # define __NR_fstatat64 __NR_newfstatat
 #endif
 
-#ifdef __NR_fstatat64
+#if defined(__NR_fstatat64) && !defined(__UCLIBC_USE_TIME64__)
 # include <sys/stat.h>
 # include "xstatconv.h"
 int fstatat64(int fd, const char *file, struct stat64 *buf, int flag)
@@ -57,7 +57,7 @@ int fstatat64(int fd, const char *file, struct stat64 *buf, int flag)
 			       STATX_BASIC_STATS, &tmp);
 
 	if (r == 0)
-		__cp_stat64_statx ((struct stat *)buf, &tmp);
+		__cp_stat64_statx ((struct stat64 *)buf, &tmp);
 
 	return r;
 }
