@@ -20,7 +20,7 @@ extern int _dl_errno;
 #define _SYS_MMAN_H 1
 #include <bits/mman.h>
 
-#if defined(__ARCH_HAS_DEPRECATED_SYSCALLS__) && !defined(__UCLIBC_USE_TIME64__)
+#if defined(__ARCH_HAS_DEPRECATED_SYSCALLS__) && (!defined(__UCLIBC_USE_TIME64__) || defined(__sparc__))
 /* Pull in whatever this particular arch's kernel thinks the kernel version of
  * struct stat should look like.  It turns out that each arch has a different
  * opinion on the subject, and different kernel revs use different names... */
@@ -116,7 +116,7 @@ static __always_inline _syscall3(unsigned long, _dl_read, int, fd,
 static __always_inline _syscall3(int, _dl_mprotect, const void *, addr,
                         unsigned long, len, int, prot)
 
-#if defined __NR_fstatat64 && !defined __NR_stat && !defined(__UCLIBC_USE_TIME64__)
+#if defined __NR_fstatat64 && !defined __NR_stat && (!defined(__UCLIBC_USE_TIME64__) || defined(__sparc__))
 # define __NR__dl_fstatat64 __NR_fstatat64
 static __always_inline _syscall4(int, _dl_fstatat64, int, fd, const char *,
 				 fn, struct stat *, stat, int, flags)
@@ -126,7 +126,7 @@ static __always_inline int _dl_stat(const char *file_name,
 {
 	return _dl_fstatat64(AT_FDCWD, file_name, buf, 0);
 }
-#elif defined __NR_newfstatat && !defined __NR_stat && !defined(__UCLIBC_USE_TIME64__)
+#elif defined __NR_newfstatat && !defined __NR_stat && (!defined(__UCLIBC_USE_TIME64__) || defined(__sparc__))
 # define __NR__dl_newfstatat __NR_newfstatat
 static __always_inline _syscall4(int, _dl_newfstatat, int, fd, const char *,
 				 fn, struct stat *, stat, int, flags)
@@ -136,7 +136,7 @@ static __always_inline int _dl_stat(const char *file_name,
 {
 	return _dl_newfstatat(AT_FDCWD, file_name, buf, 0);
 }
-#elif defined __NR_stat && !defined(__UCLIBC_USE_TIME64__)
+#elif defined __NR_stat && (!defined(__UCLIBC_USE_TIME64__) || defined(__sparc__))
 # define __NR__dl_stat __NR_stat
 static __always_inline _syscall2(int, _dl_stat, const char *, file_name,
                         struct stat *, buf)
@@ -160,7 +160,7 @@ static __always_inline int _dl_stat(const char *file_name,
 }
 #endif
 
-#if defined __NR_fstat64 && !defined __NR_fstat && !defined(__UCLIBC_USE_TIME64__)
+#if defined __NR_fstat64 && !defined __NR_fstat && (!defined(__UCLIBC_USE_TIME64__) || defined(__sparc__))
 # define __NR__dl_fstat __NR_fstat64
 static __always_inline _syscall2(int, _dl_fstat, int, fd, struct stat *, buf)
 #elif defined __NR_fstat
