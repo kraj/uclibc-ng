@@ -63,6 +63,6 @@ y0f (float x)
 	return __kernel_standard_f (x, x, 135);
     }
 # endif /* __UCLIBC_HAS_FENV__ */
-  return (float) __ieee754_y0f ((double) x);
+  return (float) __ieee754_y0 ((double) x);
 }
 #endif /* __DO_XSI_MATH__ */
