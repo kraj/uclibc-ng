@@ -5,7 +5,7 @@
 #ifndef _BITS_UCLIBC_ARCH_FEATURES_H
 #define _BITS_UCLIBC_ARCH_FEATURES_H
 
-#undef __UCLIBC_ABORT_INSTRUCTION__
+#define __UCLIBC_ABORT_INSTRUCTION__ "unimp"
 
 /* can your target use syscall6() for mmap ? */
 #define __UCLIBC_MMAP_HAS_6_ARGS__
