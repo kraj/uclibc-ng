@@ -3,6 +3,14 @@
 #include <string.h>
 #include "sys/auxv.h"
 
+#define __ARCH_VDSO_GETTIMEOFDAY_NAME    "__vdso_gettimeofday"
+#define __ARCH_VDSO_CLOCK_GETTIME_NAME   "__vdso_clock_gettime"
+
+#if defined(__UCLIBC_USE_TIME64__)
+#define __ARCH_VDSO_CLOCK_GETTIME64_NAME "__vdso_clock_gettime64"
+#endif
+
+/* Maybe override default vDSO functions names by arch-specific */
 #include "ldso.h"
 #include "generated/autoconf.h"
 
@@ -321,7 +329,7 @@ void load_vdso(void *sys_info_ehdr, char **envp ){
             continue;
         }
 
-        if ( 0 == _dl_strcmp( name, "__vdso_gettimeofday" ) ){
+        if ( 0 == _dl_strcmp( name, __ARCH_VDSO_GETTIMEOFDAY_NAME ) ){
             _dl__vdso_gettimeofday = func_addr;
 #ifdef __SUPPORT_LD_DEBUG__
             if ( _dl_debug_vdso != 0 ){
@@ -330,7 +338,7 @@ void load_vdso(void *sys_info_ehdr, char **envp ){
 #endif
             continue;
         }
-        if ( 0 == _dl_strcmp( name, "__vdso_clock_gettime" ) ){
+        if ( 0 == _dl_strcmp( name, __ARCH_VDSO_CLOCK_GETTIME_NAME ) ){
             _dl__vdso_clock_gettime = func_addr;
 #ifdef __SUPPORT_LD_DEBUG__
             if ( _dl_debug_vdso != 0 ){
@@ -341,7 +349,7 @@ void load_vdso(void *sys_info_ehdr, char **envp ){
         }
 
 #if defined(__UCLIBC_USE_TIME64__)
-        if ( 0 == _dl_strcmp( name, "__vdso_clock_gettime64" ) ){
+        if ( 0 == _dl_strcmp( name, __ARCH_VDSO_CLOCK_GETTIME64_NAME ) ){
             _dl__vdso_clock_gettime64 = func_addr;
 #ifdef __SUPPORT_LD_DEBUG__
             if ( _dl_debug_vdso != 0 ){

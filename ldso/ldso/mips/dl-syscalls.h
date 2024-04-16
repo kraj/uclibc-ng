@@ -1,5 +1,8 @@
 /* stub for arch-specific syscall issues/specific implementations */
 
+#ifndef _DL_SYSCALLS_H
+#define _DL_SYSCALLS_H
+
 #if defined(__VDSO_SUPPORT__) && !defined(UCLIBC_LDSO)
 
 #include "../dl-vdso-calls.h"
@@ -20,3 +23,6 @@ static int __attribute__ ((used)) __mips_vdso_gettimeofday(struct timeval *tv, _
 #define ARCH_VDSO_CLOCK_GETTIME(clock_id, tp) __mips_vdso_clock_gettime(clock_id, tp)
 
 #endif /* defined(__VDSO_SUPPORT__) && !defined(UCLIBC_LDSO) */
+
+#endif /* _DL_SYSCALLS_H */
+
