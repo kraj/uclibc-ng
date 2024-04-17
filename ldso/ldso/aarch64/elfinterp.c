@@ -238,6 +238,12 @@ _dl_do_reloc (struct elf_resolve *tpnt, struct r_scope_elem *scope,
 					}
 				}
 			break;
+		case R_AARCH64_TLS_DTPMOD:
+			*reloc_addr = tls_tpnt->l_tls_modid;
+			break;
+		case R_AARCH64_TLS_DTPREL:
+			*reloc_addr = symbol_addr + rpnt->r_addend;
+			break;
 #endif
 		default:
 			return -1; /*call _dl_exit(1) */
