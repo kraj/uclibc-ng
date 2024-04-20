@@ -336,8 +336,6 @@ $(eval $(call check-gcc-var,-ffunction-sections))
 
 # Some nice CPU specific optimizations
 ifeq ($(TARGET_ARCH),i386)
-$(eval $(call check-gcc-var,-fomit-frame-pointer))
-	OPTIMIZATION += $(CFLAG_-fomit-frame-pointer)
 
 ifeq ($(CONFIG_386)$(CONFIG_486)$(CONFIG_586),y)
 	# TODO: Change this to a gcc version check.  This bug
@@ -661,6 +659,9 @@ endif
 
 ifneq ($(strip $(UCLIBC_EXTRA_CFLAGS)),"")
 CFLAGS += $(call qstrip,$(UCLIBC_EXTRA_CFLAGS))
+endif
+ifeq ($(TARGET_ARCH),i386)
+CFLAGS += -fno-omit-frame-pointer
 endif
 ifneq ($(strip $(UCLIBC_EXTRA_LDFLAGS)),"")
 LDFLAGS += $(call qstrip,$(UCLIBC_EXTRA_LDFLAGS))
