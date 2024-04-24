@@ -604,6 +604,7 @@ CFLAGS := $(XWARNINGS) $(CPU_CFLAGS) $(SSP_CFLAGS) \
 	-nostdinc -I$(top_builddir)include \
 	-I$(top_srcdir)include -include libc-symbols.h \
 	-I$(top_srcdir)libc/sysdeps/linux/$(TARGET_ARCH) \
+	-I$(top_builddir)libc/sysdeps/linux/$(TARGET_ARCH) \
 	-I$(top_srcdir)libc/sysdeps/linux \
 	-I$(top_srcdir)ldso/ldso/$(TARGET_ARCH) \
 	-I$(top_srcdir)ldso/include -I.
