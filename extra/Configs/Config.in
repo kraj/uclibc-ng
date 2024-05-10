@@ -1028,6 +1028,7 @@ config UCLIBC_USE_TIME64
 	bool "Use *time64 syscalls instead of 32bit ones (if possible)"
 	depends on TARGET_arc                            || \
 		   TARGET_arm                            || \
+		   TARGET_csky                           || \
 		   TARGET_i386                           || \
 		   TARGET_m68k                           || \
 		   TARGET_microblaze                     || \
