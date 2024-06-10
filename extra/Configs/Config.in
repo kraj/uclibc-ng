@@ -545,7 +545,7 @@ config LDSO_LD_LIBRARY_PATH
 	  If unsure, simply say Y here.
 
 config UCLIBC_CTOR_DTOR
-	bool
+	bool "Support global constructors and destructors"
 	default y
 	help
 	  If you wish to build uClibc with support for global constructor
