@@ -1040,8 +1040,7 @@ config UCLIBC_USE_TIME64
 		   TARGET_sh                             || \
 		   TARGET_xtensa
 	# TODO: add support for other architectures
-	default y if TARGET_riscv32
-	default n
+	default y
 
 	help
 	  Replace 32bit syscalls to their 64/time64 analog if possible.
