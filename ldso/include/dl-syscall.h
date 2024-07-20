@@ -17,6 +17,8 @@ extern int _dl_errno;
 #define __set_errno(X) {(_dl_errno) = (X);}
 #endif
 
+#include <linux/version.h>
+
 /* Pull in the arch specific syscall implementation */
 #include <dl-syscalls.h>
 /*  For MAP_ANONYMOUS -- differs between platforms */
@@ -139,7 +141,7 @@ static __always_inline int _dl_stat(const char *file_name,
 {
 	return _dl_newfstatat(AT_FDCWD, file_name, buf, 0);
 }
-#elif defined __NR_stat && (!defined(__UCLIBC_USE_TIME64__) || defined(__sparc__))
+#elif defined __NR_stat && (!defined(__UCLIBC_USE_TIME64__) || defined(__sparc__)) || (LINUX_VERSION_CODE <= KERNEL_VERSION(5,1,0))
 # define __NR__dl_stat __NR_stat
 static __always_inline _syscall2(int, _dl_stat, const char *, file_name,
                         struct stat *, buf)
