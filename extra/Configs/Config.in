@@ -1032,7 +1032,7 @@ config UCLIBC_USE_TIME64
 		   TARGET_i386                           || \
 		   TARGET_m68k                           || \
 		   TARGET_microblaze                     || \
-		   (TARGET_mips && !CONFIG_MIPS_N64_ABI) || \
+		   (TARGET_mips && !(CONFIG_MIPS_N64_ABI || CONFIG_MIPS_N32_ABI)) || \
 		   TARGET_or1k                           || \
 		   TARGET_powerpc                        || \
 		   TARGET_riscv32                        || \
