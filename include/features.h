@@ -449,12 +449,6 @@
 # include <libc-internal.h>
 #endif
 
-#include <linux/version.h>
-
-#if defined(__UCLIBC_USE_TIME64__) && __TARGET_ARCH_BITS__ == 32 && LINUX_VERSION_CODE < KERNEL_VERSION(5,1,0)
-#error 64bit time on 32bit targets is not supported on Linux < 5.1.0
-#endif
-
 #if defined(__UCLIBC_USE_TIME64__) || __TARGET_ARCH_BITS__ == 64
 #define __USE_TIME_BITS64 1
 #endif
