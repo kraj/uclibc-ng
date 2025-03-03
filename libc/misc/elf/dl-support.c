@@ -12,6 +12,7 @@
  */
 
 #include <link.h>
+#include <ldso.h>
 #include <elf.h>
 #if defined(USE_TLS) && USE_TLS
 #include <assert.h>
@@ -31,17 +32,26 @@ ElfW(Phdr) *_dl_phdr;
 size_t _dl_phnum;
 size_t _dl_pagesize;
 
+ElfW(auxv_t) _dl_auxvt[AUX_MAX_AT_ID];
+
 void internal_function _dl_aux_init (ElfW(auxv_t) *av);
 void internal_function _dl_aux_init (ElfW(auxv_t) *av)
 {
+   memset(_dl_auxvt, 0x00, sizeof(_dl_auxvt));
+   for (; av->a_type != AT_NULL; av++)
+     {
+       if (av->a_type < AUX_MAX_AT_ID)
+         _dl_auxvt[av->a_type] = *av;
+     }
+
    /* Get the program headers base address from the aux vect */
-   _dl_phdr = (ElfW(Phdr) *) av[AT_PHDR].a_un.a_val;
+   _dl_phdr = (ElfW(Phdr) *) _dl_auxvt[AT_PHDR].a_un.a_val;
 
    /* Get the number of program headers from the aux vect */
-   _dl_phnum = (size_t) av[AT_PHNUM].a_un.a_val;
+   _dl_phnum = (size_t) _dl_auxvt[AT_PHNUM].a_un.a_val;
 
    /* Get the pagesize from the aux vect */
-   _dl_pagesize = (av[AT_PAGESZ].a_un.a_val) ? (size_t) av[AT_PAGESZ].a_un.a_val : PAGE_SIZE;
+   _dl_pagesize = (_dl_auxvt[AT_PAGESZ].a_un.a_val) ? (size_t) _dl_auxvt[AT_PAGESZ].a_un.a_val : PAGE_SIZE;
 }
 
 #if defined(USE_TLS) && USE_TLS
