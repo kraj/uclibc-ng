@@ -84,6 +84,8 @@ static void fdpic_init_array_jump(void *addr)
 #ifndef SHARED
 void *__libc_stack_end = NULL;
 
+#include "ldso.h" /* Needed for _dl_auxvt */
+
 # ifdef __UCLIBC_HAS_SSP__
 #  include <dl-osinfo.h>
 static uintptr_t stack_chk_guard;
