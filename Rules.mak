@@ -668,6 +668,9 @@ endif
 ifeq ($(TARGET_ARCH),i386)
 CFLAGS += -fno-omit-frame-pointer
 endif
+ifeq ($(TARGET_ARCH),bfin)
+CFLAGS += -Wno-implicit-function-declaration
+endif
 ifneq ($(strip $(UCLIBC_EXTRA_LDFLAGS)),"")
 LDFLAGS += $(call qstrip,$(UCLIBC_EXTRA_LDFLAGS))
 endif
