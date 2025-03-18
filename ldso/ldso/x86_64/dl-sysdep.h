@@ -52,48 +52,21 @@ extern unsigned long _dl_linux_resolver(struct elf_resolve * tpnt, int reloc_ent
     * ELF_RTYPE_CLASS_PLT)						      \
    | (((type) == R_X86_64_COPY) * ELF_RTYPE_CLASS_COPY))
 
-/* Return the link-time address of _DYNAMIC.  Conveniently, this is the
-   first element of the GOT.  This must be inlined in a function which
-   uses global data.  */
-static __always_inline Elf64_Addr __attribute__ ((unused))
-elf_machine_dynamic (void)
-{
-  Elf64_Addr addr;
-
-  /* This works because we have our GOT address available in the small PIC
-     model.  */
-  addr = (Elf64_Addr) &_DYNAMIC;
-
-  return addr;
-}
-
 
 /* Return the run-time load address of the shared object.  */
 static __always_inline Elf64_Addr __attribute__ ((unused))
 elf_machine_load_address (void)
 {
-  register Elf64_Addr addr, tmp;
+  extern const Elf64_Ehdr __ehdr_start attribute_hidden;
+  return (Elf64_Addr) &__ehdr_start;
+}
 
-  /* The easy way is just the same as on x86:
-       leaq _dl_start, %0
-       leaq _dl_start(%%rip), %1
-       subq %0, %1
-     but this does not work with binutils since we then have
-     a R_X86_64_32S relocation in a shared lib.
-
-     Instead we store the address of _dl_start in the data section
-     and compare it with the current value that we can get via
-     an RIP relative addressing mode.  */
-
-  __asm__ ("movq 1f(%%rip), %1\n"
-       "0:\tleaq _dl_start(%%rip), %0\n\t"
-       "subq %1, %0\n\t"
-       ".section\t.data\n"
-       "1:\t.quad _dl_start\n\t"
-       ".previous\n\t"
-       : "=r" (addr), "=r" (tmp) : : "cc");
-
-  return addr;
+/* Return the link-time address of _DYNAMIC. */
+static __always_inline Elf64_Addr __attribute__ ((unused))
+elf_machine_dynamic (void)
+{
+  extern Elf64_Dyn _DYNAMIC[] attribute_hidden;
+  return (Elf64_Addr) _DYNAMIC - elf_machine_load_address ();
 }
 
 static __always_inline void
