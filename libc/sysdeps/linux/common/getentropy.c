@@ -13,6 +13,7 @@
 #include <unistd.h>
 #include <sys/random.h>
 
+#ifdef __NR_getrandom
 int
 getentropy(void *__buf, size_t __len)
 {
@@ -41,3 +42,4 @@ getentropy(void *__buf, size_t __len)
 		goto again;
 	return (0);
 }
+#endif
