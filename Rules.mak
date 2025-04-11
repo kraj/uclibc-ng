@@ -671,6 +671,9 @@ endif
 ifeq ($(TARGET_ARCH),bfin)
 CFLAGS += -Wno-implicit-function-declaration
 endif
+ifeq ($(TARGET_ARCH),frv)
+CFLAGS += -Wno-implicit-function-declaration
+endif
 ifneq ($(strip $(UCLIBC_EXTRA_LDFLAGS)),"")
 LDFLAGS += $(call qstrip,$(UCLIBC_EXTRA_LDFLAGS))
 endif
