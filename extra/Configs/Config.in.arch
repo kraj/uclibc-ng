@@ -167,6 +167,7 @@ config UCLIBC_HAS_FENV
 		   TARGET_aarch64 || \
 		   TARGET_arm || \
 		   TARGET_metag || \
+		   TARGET_mips || \
 		   TARGET_nds32 || \
 		   (TARGET_powerpc && CONFIG_E500) || \
 		   TARGET_x86_64
