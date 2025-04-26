@@ -166,6 +166,7 @@ config UCLIBC_HAS_FENV
 	depends on TARGET_i386 || \
 		   TARGET_aarch64 || \
 		   TARGET_arm || \
+		   TARGET_m68k || \
 		   TARGET_metag || \
 		   TARGET_mips || \
 		   TARGET_nds32 || \
