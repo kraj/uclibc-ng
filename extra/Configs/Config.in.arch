@@ -170,6 +170,7 @@ config UCLIBC_HAS_FENV
 		   TARGET_metag || \
 		   TARGET_mips || \
 		   TARGET_nds32 || \
+		   TARGET_or1k || \
 		   (TARGET_powerpc && CONFIG_E500) || \
 		   TARGET_riscv32 || \
 		   TARGET_riscv64 || \
