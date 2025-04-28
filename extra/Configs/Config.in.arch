@@ -175,6 +175,7 @@ config UCLIBC_HAS_FENV
 		   (TARGET_powerpc && CONFIG_E500) || \
 		   TARGET_riscv32 || \
 		   TARGET_riscv64 || \
+		   (TARGET_sh && (CONFIG_SH4 || CONFIG_SH4A)) || \
 		   TARGET_sparc || \
 		   TARGET_x86_64
 	help

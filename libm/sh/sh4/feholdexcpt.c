@@ -1,13 +1,19 @@
-/*
- *
- * Copyright (c) 2007  STMicroelectronics Ltd
- * Filippo Arcidiacono (filippo.arcidiacono@st.com)
- *
- * Licensed under the LGPL v2.1, see the file COPYING.LIB in this tarball.
- *
- * Taken from glibc 2.6
- *
- */
+/* Store current floating-point environment and clear exceptions.
+   Copyright (C) 1997-2025 Free Software Foundation, Inc.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <https://www.gnu.org/licenses/>.  */
 
 #include <fenv.h>
 #include <fpu_control.h>
@@ -15,15 +21,20 @@
 int
 feholdexcept (fenv_t *envp)
 {
-  unsigned long int temp;
+  fpu_control_t temp;
 
   /* Store the environment.  */
   _FPU_GETCW (temp);
   envp->__fpscr = temp;
 
-  /* Now set all exceptions to non-stop.  */
+  /* Clear the status flags.  */
   temp &= ~FE_ALL_EXCEPT;
+
+  /* Now set all exceptions to non-stop.  */
+  temp &= ~(FE_ALL_EXCEPT << 5);
+
   _FPU_SETCW (temp);
 
-  return 1;
+  /* Success.  */
+  return 0;
 }
