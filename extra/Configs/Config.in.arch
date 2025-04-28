@@ -167,6 +167,7 @@ config UCLIBC_HAS_FENV
 		   TARGET_aarch64 || \
 		   TARGET_arc || \
 		   TARGET_arm || \
+		   TARGET_csky || \
 		   TARGET_m68k || \
 		   TARGET_metag || \
 		   TARGET_mips || \
