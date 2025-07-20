@@ -12,6 +12,7 @@
 #include <errno.h>
 #include <unistd.h>
 #include <sys/random.h>
+#include <sys/syscall.h>
 
 #ifdef __NR_getrandom
 int
